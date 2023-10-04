@@ -1,0 +1,25 @@
+{
+  "dogs": [
+    {
+      "dog_id": "1",
+      "dog_name": "Buddy",
+      "dog_age": 3,
+      "dog_gender": "male",
+      "notes": "Friendly and energetic"
+    },
+    {
+      "dog_id": "2",
+      "dog_name": "Max",
+      "dog_age": 4,
+      "dog_gender": "male",
+      "notes": "Loyal and intelligent"
+    },
+    {
+      "dog_id": "3",
+      "dog_name": "Lola",
+      "dog_age": 1,
+      "dog_gender": "female",
+      "notes": "Loyal and intelligent"
+    }
+  ]
+}

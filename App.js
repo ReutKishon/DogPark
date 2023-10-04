@@ -1,20 +1,34 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { useState, useEffect } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import DrawerNavigation from "./src/navigation/DrawerNavigation";
+import { Welcome, Register, MyDogs, DogDetails, Home } from "./src/screens";
+import { useFonts } from "expo-font";
+const Stack = createStackNavigator();
 
-export default function App() {
+function App() {
+  const [fontsLoaded] = useFonts({
+    DMBold: require("./src/assets/fonts/DMSans-Bold.ttf"),
+    DMMedium: require("./src/assets/fonts/DMSans-Medium.ttf"),
+    DMRegular: require("./src/assets/fonts/DMSans-Regular.ttf"),
+    UbuntuCondensed: require("./src/assets/fonts/UbuntuCondensed-Regular.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Welcome" component={Welcome} />
+        <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="MyDogs" component={MyDogs} />
+        <Stack.Screen name="DogDetails" component={DogDetails} />
+        <Stack.Screen name="Home" component={Home} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
