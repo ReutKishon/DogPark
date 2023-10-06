@@ -3,7 +3,16 @@ import { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import DrawerNavigation from "./src/navigation/DrawerNavigation";
-import { Welcome, Register, MyDogs, DogDetails, Home } from "./src/screens";
+import {
+  Welcome,
+  Register,
+  MyDogs,
+  DogDetails,
+  Home,
+  Parks,
+  ParkDetails,
+} from "./src/screens";
+
 import { useFonts } from "expo-font";
 const Stack = createStackNavigator();
 
@@ -26,6 +35,8 @@ function App() {
         <Stack.Screen name="MyDogs" component={MyDogs} />
         <Stack.Screen name="DogDetails" component={DogDetails} />
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Parks" component={Parks} />
+        <Stack.Screen name="ParkDetails" component={ParkDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );

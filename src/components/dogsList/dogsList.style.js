@@ -24,18 +24,7 @@ const styles = StyleSheet.create({
   },
   cardsContainer: {
     marginTop: SIZES.medium,
-    gap: SIZES.medium,
-  },
-  footContainer: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: SIZES.xLarge,
-    paddingBottom: SIZES.xxxLarge,
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
+    gap: SIZES.small,
   },
 });
 

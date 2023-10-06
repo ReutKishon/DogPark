@@ -4,8 +4,6 @@ import { COLORS, SHADOWS, SIZES } from "../../../constants";
 
 const styles = StyleSheet.create({
   container: {
-    //flex: 1,
-
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
@@ -18,14 +16,7 @@ const styles = StyleSheet.create({
     shadowRadius: 0,
     elevation: 0,
   },
-  selectedContainer: {
-    //backgroundColor: "rgba(255, 0, 0, 0.1)",
-    shadowColor: "rgba(0, 255, 0, 0.5)", // Change the shadow color to green
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.99,
-    shadowRadius: 3,
-    elevation: 4,
-  },
+
   profileContainer: {
     width: 100,
     height: 100,
@@ -43,17 +34,37 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: SIZES.medium,
   },
-  dogName: {
-    fontSize: SIZES.medium,
+  parkName: {
+    fontSize: SIZES.large,
     fontFamily: "DMBold",
     color: COLORS.primary,
   },
-  dogGender: {
+  parkLocation: {
     fontSize: SIZES.small + 2,
     fontFamily: "DMRegular",
-    color: COLORS.gray,
+    marginLeft: 5,
     marginTop: 3,
     textTransform: "capitalize",
+  },
+  dogsNumber: {
+    fontSize: SIZES.medium,
+    fontFamily: "DMRegular",
+    marginTop: 3,
+    textTransform: "capitalize",
+    marginLeft: 5,
+  },
+  iconBox: {
+    marginTop: SIZES.small / 2,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  dogImage: {
+    width: 25,
+    height: 25,
+  },
+  locationImage: {
+    width: 14,
+    height: 14,
   },
 });
 

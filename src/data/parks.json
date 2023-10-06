@@ -1,0 +1,52 @@
+{
+  "parks": [
+    {
+      "park_id": "1",
+      "park_name": "Yuvel Park",
+      "park_location": "Derech Jerusalem,Rehovot",
+      "dogs": [
+        {
+          "dog_id": "1",
+          "dog_name": "Buddy",
+          "dog_age": 3,
+          "dog_gender": "male",
+          "notes": "Friendly and energetic"
+        },
+        {
+          "dog_id": "2",
+          "dog_name": "Max",
+          "dog_age": 4,
+          "dog_gender": "male",
+          "notes": "Loyal and intelligent"
+        },
+        {
+          "dog_id": "3",
+          "dog_name": "Lola",
+          "dog_age": 1,
+          "dog_gender": "female",
+          "notes": "Loyal and intelligent"
+        }
+      ]
+    },
+    {
+      "park_id": "2",
+      "park_name": "Lev Hamoshava Park",
+      "park_location": "Carmel 1,Rehovot",
+      "dogs": []
+    },
+    {
+      "park_id": "3",
+      "park_name": "Holandit Park",
+      "park_location": "Har Hatzofim 8,Rehovot",
+      "dogs": [
+        {
+          "dog_id": "2",
+          "dog_name": "Max",
+          "dog_age": 4,
+          "dog_gender": "male",
+          "notes": "Loyal and intelligent"
+        }
+      ]
+    }
+  ]
+}

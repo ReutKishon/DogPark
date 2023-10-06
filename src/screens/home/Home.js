@@ -26,6 +26,9 @@ const Home = ({ navigation }) => {
         : [...prevSelectedDogs, dogId]
     );
   };
+  const navigateToParks = () => {
+    navigation.navigate("Parks", { selectedDogs });
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.lightWhite }}>
@@ -49,7 +52,7 @@ const Home = ({ navigation }) => {
       <View style={styles.footContainer}>
         <Button
           buttonText="Let's go"
-          onPress={() => {}}
+          onPress={navigateToParks}
           buttonSize={{ width: 300, height: 50 }}
         ></Button>
       </View>

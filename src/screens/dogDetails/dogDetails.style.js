@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   profileContainer: {
-    width: 200,
-    height: 250,
+    width: 350,
+    height: 400,
     backgroundColor: COLORS.green,
     borderRadius: SIZES.medium,
     justifyContent: "center",

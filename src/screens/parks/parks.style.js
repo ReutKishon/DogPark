@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     right: 0,
     padding: SIZES.xLarge,
     paddingBottom: SIZES.xxxLarge,
+    backgroundColor: "#FFF",
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",

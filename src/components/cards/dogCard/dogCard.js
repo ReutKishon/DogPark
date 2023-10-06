@@ -2,8 +2,9 @@ import { Text, TouchableOpacity, Image, View } from "react-native";
 import styles from "./dogCard.style";
 import { checkImageURL } from "../../../utils";
 import { COLORS } from "../../../constants";
+
 const DogCard = ({ dog, isSelected, handleNavigate }) => {
-  console.log(isSelected);
+  console.log("iaSelected " + isSelected);
   return (
     <TouchableOpacity
       onPress={handleNavigate}
