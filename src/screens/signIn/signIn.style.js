@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor: "#f0f2f5",
+    backgroundColor: COLORS.lightWhite,
     paddingTop: 50,
     paddingHorizontal: 20,
   },
@@ -36,6 +36,12 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  errorText: {
+    color: "#ed4337",
+    fontSize: 14,
+    marginTop: 10,
+    marginBottom: 20,
   },
 });
 

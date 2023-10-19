@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import DrawerNavigation from "./src/navigation/DrawerNavigation";
 import {
+  AddDog,
   Welcome,
   Register,
   SignIn,
@@ -43,6 +44,7 @@ function App() {
         <Stack.Screen name="Parks" component={Parks} />
         <Stack.Screen name="ParkDetails" component={ParkDetails} />
         <Stack.Screen name="Trip" component={Trip} />
+        <Stack.Screen name="AddDog" component={AddDog} />
       </Stack.Navigator>
     </NavigationContainer>
   );

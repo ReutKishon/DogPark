@@ -11,7 +11,7 @@ import React, { useState, useEffect } from "react";
 import dogsData from "../../data/dogs.json";
 import { COLORS } from "../../constants";
 
-const Trip = ({ navigation }) => {
+const Trip = ({ navigation, user }) => {
   const [dogs, setDogs] = useState([]);
   const [selectedDogs, setSelectedDogs] = useState([]);
 
