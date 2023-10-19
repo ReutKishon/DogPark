@@ -10,35 +10,32 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingHorizontal: 20,
   },
-  headerText: {
+  title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 100,
   },
   input: {
-    width: "100%",
-    backgroundColor: "white",
-    padding: 15,
-    marginBottom: 20,
+    width: "80%",
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
     borderRadius: 5,
+    marginBottom: 20,
+    paddingHorizontal: 10,
   },
-  registerButton: {
-    width: "100%",
-    backgroundColor: "#1877f2",
-    padding: 15,
+  button: {
+    backgroundColor: "#4267B2",
+    width: "80%",
+    height: 40,
+    justifyContent: "center",
     alignItems: "center",
     borderRadius: 5,
   },
   buttonText: {
     color: "white",
+    fontSize: 16,
     fontWeight: "bold",
-  },
-
-  errorText: {
-    color: "#ed4337",
-    fontSize: 14,
-    marginTop: 10,
-    marginBottom: 20,
   },
 });
 

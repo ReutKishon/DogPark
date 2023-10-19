@@ -5,6 +5,7 @@ import { COLORS, icons } from "../../../constants";
 import { useState } from "react";
 
 const ParkCard = ({ park, handleNavigate }) => {
+  console.log("ParkCard " + park.dogs.length);
   const [dogsNumber, setDogsNumber] = useState(park.dogs.length);
   return (
     <TouchableOpacity onPress={handleNavigate} style={styles.container}>

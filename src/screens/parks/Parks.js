@@ -2,8 +2,9 @@ import { Text, View, ScrollView, SafeAreaView } from "react-native";
 import styles from "./parks.style";
 import { ParkCard } from "../../components";
 import React, { useState, useEffect } from "react";
-import parksData from "../../data/parks.json";
 import { COLORS } from "../../constants";
+import { useFocusEffect } from "@react-navigation/native";
+import { parksData } from "../../data";
 
 const Parks = ({ navigation, route }) => {
   const { selectedDogs } = route.params;
@@ -11,11 +12,8 @@ const Parks = ({ navigation, route }) => {
 
   useEffect(() => {
     setParks(parksData.parks);
+    console.log("Component updated");
   }, []);
-
-  const navigateToParkDetails = (park) => {
-    navigation.navigate("ParkDetails", { park, selectedDogs });
-  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.lightWhite }}>

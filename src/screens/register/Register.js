@@ -1,70 +1,65 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, SafeAreaView, ScrollView } from "react-native";
-import { Picker } from "@react-native-picker/picker";
-import { Button } from '../../components';
-import { COLORS, SIZES } from "../../constants";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import styles from "./register.style";
+import { auth, firestore } from "../../../firebase";
+import { Keyboard } from "react-native";
 
 const Register = () => {
-  const [dogName, setDogName] = useState("");
-  const [gender, setGender] = useState("female");
-  const [notes, setNotes] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // Function to handle the "Create Account" button press
-  const handleCreateAccount = () => {
-    // You can perform actions with the input values here
-    console.log("Dog Name:", dogName);
-    console.log("Gender:", gender);
-    console.log("Notes:", notes);
+  const handleRegister = () => {
+    const userData = { dogs: null, name, password };
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        if (user) {
+          firestore.collection("users").doc(user.uid).set(userData);
+        }
+        setErrorMessage("");
+      })
+      .catch((error) => {
+        if (error.code === "auth/email-already-in-use") {
+          setErrorMessage("The email address is already in use.");
+        } else {
+          setErrorMessage("An error occurred. Please try again later.");
+        }
+        console.error(error);
+      });
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <Text style={styles.headerText}>Create a New Account</Text>
       <TextInput
-        style={styles.inputText}
-        placeholder="Enter your dog name"
-        value={dogName}
-        onChangeText={(text) => setDogName(text)}
+        style={styles.input}
+        placeholder="Name"
+        value={name}
+        onChangeText={setName}
       />
-
-      <Picker
-        style={styles.picker}
-        selectedValue={gender}
-        onValueChange={(itemValue) => setGender(itemValue)}
-      >
-        <Picker.Item label="Female" value="female" />
-        <Picker.Item label="Male" value="male" />
-      </Picker>
-
       <TextInput
-        style={[styles.inputText, { height: 200 }]}
-        placeholder="Enter here important things to know about your dog"
-        multiline
-        numberOfLines={5}
-        value={notes}
-        onChangeText={(text) => setNotes(text)}
+        style={styles.input}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
       />
-        
-      <View
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          padding: SIZES.xxxLarge,
-          // backgroundColor: "#FFF",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "row",
-        }}
-      >
-        <Button
-          buttonText="Create Account"
-          onPress={handleCreateAccount}
-          buttonSize={{ width: 300, height: 50 }}
-        />
-      </View>
-    </SafeAreaView>
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+      />
+      {errorMessage ? (
+        <Text style={styles.errorText}>{errorMessage}</Text>
+      ) : null}
+      <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
+        <Text style={styles.buttonText}>Register</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 

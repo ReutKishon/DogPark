@@ -4,13 +4,11 @@ import { useState } from "react";
 import styles from "./parkDetails.style";
 import { icons } from "../../constants";
 import { parksData, dogsData } from "../../data";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AsyncStorage } from "react-native";
 
 const ParkDetails = ({ navigation, route }) => {
   const { park, selectedDogs } = route.params;
-  console.log("number of selected dogs " + selectedDogs.length);
   const [dogsInThePark, setDogsInThePark] = useState(park.dogs);
-  console.log("number of dogs playing in the park " + dogsInThePark.length);
 
   const filterSelectedDogs = (selectedDogs, parkDogs) => {
     const parkDogIds = parkDogs.map((dog) => parseInt(dog.dog_id, 10));
@@ -37,6 +35,42 @@ const ParkDetails = ({ navigation, route }) => {
 
   const updateParkData = async (parkIdToUpdate) => {
     try {
+      const jsonData = await AsyncStorage.getItem("parksData");
+      if (jsonData !== null) {
+        const data = JSON.parse(jsonData);
+        console.log(data);
+      } else {
+        const dataObj = {
+          parks: [
+            {
+              park_id: 1,
+              park_name: "Yuvel Park",
+              park_location: "Derech Jerusalem,Rehovot",
+              dogs: [
+                {
+                  dog_id: 1,
+                  dog_name: "Buddy",
+                  dog_age: 3,
+                  dog_gender: "male",
+                  notes: "Friendly and energetic",
+                },
+              ],
+            },
+          ],
+        };
+
+        const jsonData = JSON.stringify(dataObj);
+        await AsyncStorage.setItem("parksData", jsonData);
+      }
+    } catch (error) {
+      console.error("Error saving data:", error);
+    }
+   
+    /*
+        const parkIndex = data.parks.findIndex(
+      (park) => park.park_id === parkIdToUpdate
+    );
+    try {
       const parkIndex = parksData.parks.findIndex(
         (park) => park.park_id === parkIdToUpdate
       );
@@ -52,6 +86,7 @@ const ParkDetails = ({ navigation, route }) => {
 
         await AsyncStorage.setItem("parksData", JSON.stringify(parksData));
         setDogsInThePark(parksData.parks[parkIndex].dogs);
+        route.params.updateParksData(parksData.parks);
         console.log("Park updated successfully.");
       } else {
         console.error("Park not found.");
@@ -59,6 +94,7 @@ const ParkDetails = ({ navigation, route }) => {
     } catch (error) {
       console.error("Error updating park data:", error);
     }
+    */
   };
 
   return (
