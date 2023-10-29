@@ -5,28 +5,48 @@ import { COLORS, FONT, SIZES } from "../../constants";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+  },
+  headerContainer: {
+    paddingTop: 30,
+    paddingLeft: 25,
+    gap: SIZES.small,
+    height: 130,
+  },
+  helloText: {
+    fontSize: 50,
+    fontFamily: FONT.title,
+    color: COLORS.primary,
+  },
+  contentText: {
+    fontSize: 20,
+    fontFamily: FONT.medium,
+    color: COLORS.secondary,
+  },
+  buttonContainer: {
+    //position: "absolute",
+    bottom: 0,
+    width: "100%",
+    height: 50,
     alignItems: "center",
+    marginBottom: 50,
+    marginTop: 30,
   },
   button: {
-    backgroundColor: "#4267B2",
-    borderRadius: 5,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    margin: 10,
-    width: 240,
+    width: "85%",
+    backgroundColor: COLORS.green,
+    tintColor: "#fff",
+    padding: 12,
+    borderRadius: 15,
+
   },
   buttonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
+    color: "#fff",
     textAlign: "center",
+    fontWeight: "bold",
+    fontSize: SIZES.large,
   },
-  signUpButton: {
-    backgroundColor: "#34B7F1",
-  },
-  signUpText: {
-    fontSize: 16,
+  listContainer: {
+    flex: 1,
   },
 });
 

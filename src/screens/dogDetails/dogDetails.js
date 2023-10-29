@@ -13,7 +13,7 @@ const DogDetails = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.dogName}>{dog.dog_name}</Text>
+      <Text style={styles.dogName}>{dog.name}</Text>
       <TouchableOpacity style={styles.profileContainer}>
         <Image
           source={
@@ -29,11 +29,11 @@ const DogDetails = ({ route }) => {
       <View style={styles.infoContainer}>
         <View style={styles.infoRow}>
           <View style={styles.pointDot} />
-          <Text style={styles.infoText}>gender: {dog.dog_gender}</Text>
+          <Text style={styles.infoText}>gender: {dog.gender}</Text>
         </View>
         <View style={styles.infoRow}>
           <View style={styles.pointDot} />
-          <Text style={styles.infoText}>notes: {dog.notes}</Text>
+          <Text style={styles.infoText}>age: {dog.age} years old</Text>
         </View>
       </View>
     </View>

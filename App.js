@@ -2,24 +2,26 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import DrawerNavigation from "./src/navigation/DrawerNavigation";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { UserIdProvider } from "./src/contexts/UserIdContext";
+import { UserDataProvider } from "./src/contexts/UserDataContext";
 import {
-  AddDog,
   Welcome,
   Register,
   SignIn,
-  MyDogs,
   DogDetails,
-  Trip,
   Home,
   Parks,
   ParkDetails,
+  AddDog,
+  MyDogs,
 } from "./src/screens";
-
+//import DrawerNavigation from "./src/navigation/DrawerNavigation"
 import { useFonts } from "expo-font";
-import firebaseApp from "./firebase";
+import { COLORS } from "./src/constants";
 
 const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 function App() {
   const [fontsLoaded] = useFonts({
@@ -32,21 +34,35 @@ function App() {
   if (!fontsLoaded) {
     return null;
   }
+
+  const DrawerNavigation = () => {
+    return (
+      <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Screen name="Home" component={Home} />
+        <Drawer.Screen name="MyDogs" component={MyDogs} />
+        <Drawer.Screen name="AddDog" component={AddDog} />
+      </Drawer.Navigator>
+    );
+  };
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="SignIn">
-        <Stack.Screen name="Welcome" component={Welcome} />
-        <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen name="SignIn" component={SignIn} />
-        <Stack.Screen name="MyDogs" component={MyDogs} />
-        <Stack.Screen name="DogDetails" component={DogDetails} />
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Parks" component={Parks} />
-        <Stack.Screen name="ParkDetails" component={ParkDetails} />
-        <Stack.Screen name="Trip" component={Trip} />
-        <Stack.Screen name="AddDog" component={AddDog} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <UserIdProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Parks">
+          <Stack.Screen name="Welcome" component={Welcome} />
+          <Stack.Screen name="Register" component={Register} />
+          <Stack.Screen name="SignIn" component={SignIn} />
+          <Stack.Screen name="DogDetails" component={DogDetails} />
+          <Stack.Screen name="Parks" component={Parks} />
+          <Stack.Screen name="ParkDetails" component={ParkDetails} />
+          <Stack.Screen
+            name="DrawerNavigation"
+            options={{ headerShown: false }}
+            component={DrawerNavigation}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </UserIdProvider>
   );
 }
 

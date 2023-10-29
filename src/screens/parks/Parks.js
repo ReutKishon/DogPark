@@ -1,39 +1,44 @@
-import { Text, View, ScrollView, SafeAreaView } from "react-native";
-import styles from "./parks.style";
-import { ParkCard } from "../../components";
-import React, { useState, useEffect } from "react";
-import { COLORS } from "../../constants";
-import { useFocusEffect } from "@react-navigation/native";
-import { parksData } from "../../data";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import * as Location from "expo-location";
+import { View, Text } from "react-native";
 
-const Parks = ({ navigation, route }) => {
-  const { selectedDogs } = route.params;
-  const [parks, setParks] = useState([]);
+const API_KEY = "AIzaSyCnAEFDXfQTt0A4UYn5srE0jOGGrGfjEhk";
+//const LATITUDE = "YOUR_USERS_LATITUDE";
+//const LONGITUDE = "YOUR_USERS_LONGITUDE";
+
+const Parks = () => {
+  const [dogParks, setDogParks] = useState([]);
 
   useEffect(() => {
-    setParks(parksData.parks);
-    console.log("Component updated");
+    const getCurrentLocation = async () => {
+      try {
+        let location = await Location.getCurrentPositionAsync({});
+        let { latitude, longitude } = location.coords;
+        console.log("Latitude:", latitude, "Longitude:", longitude);
+        const response = await axios.get(
+          `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=1500&type=park&keyword=dog&key=${API_KEY}`
+        );
+        setDogParks(response.data.results);
+      } catch (error) {
+        console.error("Error fetching location: ", error);
+        // Handle error
+      }
+    };
+
+    getCurrentLocation();
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.lightWhite }}>
-      <ScrollView>
-        <View style={styles.container}>
-          <View style={styles.cardsContainer}>
-            {parks?.map((park) => (
-              <View key={park?.park_id}>
-                <ParkCard
-                  park={park}
-                  handleNavigate={() => {
-                    navigateToParkDetails(park);
-                  }}
-                />
-              </View>
-            ))}
-          </View>
+    <View>
+      <Text>Dog Parks Nearby:</Text>
+      {dogParks.map((park, index) => (
+        <View key={index}>
+          <Text>{park.name}</Text>
+          <Text>{park.vicinity}</Text>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      ))}
+    </View>
   );
 };
 

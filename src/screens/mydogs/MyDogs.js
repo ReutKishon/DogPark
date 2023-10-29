@@ -1,17 +1,23 @@
-import { Text, View, ActivityIndicator, ScrollView } from "react-native";
+import { ActivityIndicator } from "react-native";
 import styles from "./mydogs.style";
 import { DogsList } from "../../components";
-import React, { useState, useEffect } from "react";
-import dogsData from "../../data/dogs.json";
+import React, { useState, useEffect, useContext } from "react";
+import { UserIdContext } from "../../contexts/UserIdContext";
 
 const MyDogs = ({ navigation }) => {
-  const [dogs, setDogs] = useState([]);
+  const { userData } = useContext(UserIdContext);
 
-  useEffect(() => {
-    setDogs(dogsData.dogs);
-  }, []);
+  const handleNavigate = (dog) => {
+    navigation.navigate("DogDetails", { dog });
+  };
 
-  return <DogsList navigation={navigation} dogs={dogs} />;
+  return (
+    <DogsList
+      navigation={navigation}
+      userData={userData}
+      handleNavigate={handleNavigate}
+    />
+  );
 };
 
 export default MyDogs;

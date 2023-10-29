@@ -1,44 +1,31 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, TextInput, Button } from "react-native";
 import styles from "./addDog.style";
 import { auth, firestore } from "../../../firebase";
 import { Keyboard } from "react-native";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  updateDoc,
-  arrayUnion,
-  doc,
-} from "firebase/firestore";
+import { UserIdContext } from "../../contexts/UserIdContext";
+import { AddDogToUser } from "../../utils/userDataOperations";
 
-const AddDog = ({ route }) => {
-  const userId = route.params.userId;
+const AddDog = ({ navigation }) => {
+  const { userData, setUserData } = useContext(UserIdContext);
   const [dogName, setDogName] = useState("");
   const [dogGender, setDogGender] = useState("");
   const [dogAge, setDogAge] = useState("");
 
-  const handleAddDog = () => {
+  const handleAddDog = async () => {
+    if (dogName == "" || dogGender == "" || dogAge == "") {
+      alert("some data is missing!");
+      return;
+    }
     const dogData = {
       name: dogName,
       gender: dogGender,
       age: dogAge,
-      owner: userId,
+      owner: userData.id,
     };
-
-    let newDogRef;
-
-    addDoc(collection(firestore, "dogs"), dogData)
-      .then((docRef) => {
-        newDogRef = docRef;
-        updateDoc(doc(firestore, "users", userId), {
-          dogs: arrayUnion(newDogRef),
-        });
-        Keyboard.dismiss();
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    await AddDogToUser(userData, setUserData, dogData);
+    Keyboard.dismiss();
+    navigation.navigate("Home");
   };
 
   return (

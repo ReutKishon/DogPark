@@ -1,22 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import styles from "./signIn.style";
 import { auth, firestore } from "../../../firebase";
+import { UserIdContext } from "../../contexts/UserIdContext";
+import { UserDataContext } from "../../contexts/UserDataContext";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
+  const { setUserData } = useContext(UserIdContext);
+  //const { setUserData } = useContext(UserDataContext);
   const handleSignIn = () => {
     auth
       .signInWithEmailAndPassword(email, password)
       .then((userCredential) => {
         var user = userCredential.user;
+        const userId = user.uid;
 
         setErrorMessage("");
-        console.log(user.uid)
-        navigation.navigate("AddDog", { userId: user.uid });
+        firestore
+          .collection("users")
+          .doc(userId)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              
+              docData = doc.data();
+              docData["id"] = userId;
+              console.log(docData);
+              setUserData(docData);
+              navigation.navigate("DrawerNavigation", { screen: "Home" });
+            } else {
+              console.log("No such document!");
+            }
+          })
+          .catch((error) => {
+            console.log("Error getting document:", error);
+          });
       })
       .catch((error) => {
         if (error.code === "auth/invalid-email") {
@@ -26,7 +47,7 @@ const SignIn = ({ navigation }) => {
         } else {
           setErrorMessage("An error occurred. Please try again later.");
         }
-        console.error(error);
+        //console.error(error);
       });
   };
 
