@@ -3,7 +3,6 @@ import { DogsList, Button } from "../../components";
 import { useState } from "react";
 import styles from "./parkDetails.style";
 import { icons } from "../../constants";
-import { parksData, dogsData } from "../../data";
 import { AsyncStorage } from "react-native";
 
 const ParkDetails = ({ navigation, route }) => {
@@ -65,7 +64,7 @@ const ParkDetails = ({ navigation, route }) => {
     } catch (error) {
       console.error("Error saving data:", error);
     }
-   
+
     /*
         const parkIndex = data.parks.findIndex(
       (park) => park.park_id === parkIdToUpdate
