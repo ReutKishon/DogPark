@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import { getDogsPark } from "../../utils/parkDataOperations";
-
+import { ParkCard } from "../../components";
+import styles from "./parks.style";
 const Parks = () => {
   const [dogParks, setDogParks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,7 +10,7 @@ const Parks = () => {
   useEffect(() => {
     const fetchDogParks = async () => {
       const parks = await getDogsPark();
-      console.log(parks);
+      //console.log(parks);
       if (parks != undefined) {
         setDogParks(parks);
         setLoading(false);
@@ -23,13 +24,9 @@ const Parks = () => {
   }
 
   return (
-    <View>
-      <Text>Dog Parks Nearby:</Text>
+    <View style={styles.cardsContainer}>
       {dogParks.map((park, index) => (
-        <View key={index}>
-          <Text>name: {park.name}</Text>
-          <Text>location: {park.vicinity}</Text>
-        </View>
+        <ParkCard park={park} key={index} />
       ))}
     </View>
   );

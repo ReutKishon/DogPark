@@ -46,6 +46,12 @@ const styles = StyleSheet.create({
     marginTop: 3,
     textTransform: "capitalize",
   },
+  parkDistance: {
+    fontSize: SIZES.small + 2,
+    fontFamily: "DMRegular",
+    color: "#50C878",
+    fontFamily: "DMBold",
+  },
   dogsNumber: {
     fontSize: SIZES.medium,
     fontFamily: "DMRegular",
