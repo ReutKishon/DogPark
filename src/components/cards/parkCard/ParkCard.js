@@ -5,15 +5,17 @@ import { COLORS, icons } from "../../../constants";
 import { useState, useEffect } from "react";
 import { GetDistanceAndAddress } from "../../../utils/parkDataOperations";
 
-const ParkCard = ({ park }) => {
+const ParkCard = ({ navigation, park, selectedDogs }) => {
+  const [parkId, setParkId] = useState("");
   const [dogsNumber, setDogsNumber] = useState(0);
   const [parkName, setParkName] = useState("");
   const [parkLocation, setParkLocation] = useState("");
   const [parkDistance, setParkDistance] = useState("");
-  //const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setParkName(park.name);
+    setParkId(park.place_id);
     const fetchParkDistance = async () => {
       const parkLatitude = park.geometry.location.lat;
       const parkLongitude = park.geometry.location.lng;
@@ -26,6 +28,7 @@ const ParkCard = ({ park }) => {
         );
         setParkLocation(address);
         setParkDistance(distance);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching park distance", error);
       }
@@ -33,7 +36,16 @@ const ParkCard = ({ park }) => {
     fetchParkDistance();
   }, []);
 
-  const handleNavigate = () => {};
+  const handleNavigate = () => {
+    navigation.navigate("ParkDetails", {
+      parkId,
+      parkName,
+      parkLocation,
+      selectedDogs,
+    });
+  };
+
+  if (isLoading) return;
   return (
     <TouchableOpacity onPress={handleNavigate} style={styles.container}>
       <View style={styles.textContainer}>
@@ -72,7 +84,4 @@ const ParkCard = ({ park }) => {
   );
 };
 
-/*
-      
-*/
 export default ParkCard;

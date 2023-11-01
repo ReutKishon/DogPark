@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
-import { getDogsPark } from "../../utils/parkDataOperations";
+import { getNearestDogParks } from "../../utils/parkDataOperations";
 import { ParkCard } from "../../components";
 import styles from "./parks.style";
-const Parks = () => {
-  const [dogParks, setDogParks] = useState([]);
+const Parks = ({ navigation, route }) => {
+  const { selectedDogs } = route.params || {};
+  const [parks, setParks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchDogParks = async () => {
-      const parks = await getDogsPark();
-      //console.log(parks);
-      if (parks != undefined) {
-        setDogParks(parks);
+    const fetchNearestParks = async () => {
+      const nearestParks = await getNearestDogParks();
+      //console.log(nearestParks);
+      if (nearestParks != undefined) {
+        setParks(nearestParks);
         setLoading(false);
       }
     };
-    fetchDogParks();
+    fetchNearestParks();
   }, []);
 
   if (loading) {
@@ -25,8 +26,13 @@ const Parks = () => {
 
   return (
     <View style={styles.cardsContainer}>
-      {dogParks.map((park, index) => (
-        <ParkCard park={park} key={index} />
+      {parks.map((park, index) => (
+        <ParkCard
+          navigation={navigation}
+          park={park}
+          key={index}
+          selectedDogs={selectedDogs}
+        />
       ))}
     </View>
   );

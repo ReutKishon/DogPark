@@ -48,7 +48,7 @@ function App() {
   return (
     <UserIdProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Parks">
+        <Stack.Navigator initialRouteName="Welcome">
           <Stack.Screen name="Welcome" component={Welcome} />
           <Stack.Screen name="Register" component={Register} />
           <Stack.Screen name="SignIn" component={SignIn} />

@@ -1,5 +1,13 @@
 import axios from "axios";
 import * as Location from "expo-location";
+import { firestore } from "../../firebase";
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  arrayUnion,
+  doc,
+} from "firebase/firestore";
 
 const API_KEY = "AIzaSyCnAEFDXfQTt0A4UYn5srE0jOGGrGfjEhk";
 
@@ -19,7 +27,7 @@ export const getUserLocation = async () => {
   }
 };
 
-export const getDogsPark = async () => {
+export const getNearestDogParks = async () => {
   const location = await getUserLocation();
   //console.log("Latitude:", location[0], "Longitude:", location[1]);
   const response = await axios.get(
@@ -64,4 +72,30 @@ export const GetDistanceAndAddress = async (destinations, name) => {
     console.error("Error fetching data from Google Maps API", error);
     throw error; // Re-throw the error to be caught by the caller
   }
+};
+
+// if park contains already dogs so add the dogs to that park document
+// else add a new park document and add the dogs to that park document
+export const AddDogsToPark = async (parkId, dogs) => {
+  console.log("selectedDogs: " + JSON.stringify(dogs));
+  const parkDocRef = doc(collection(firestore, "parks"), parkId);
+  try {
+    const parkDocSnapshot = await getDoc(documentRef);
+    if (parkDocSnapshot.exists()) {
+      await updateDoc(parkDocRef, {
+        currentDogs: arrayUnion(...dogs),
+      });
+      console.log("Dogs added to existing park document.");
+    } else {
+      await setDoc(parkDocRef, { currentDogs: dogs });
+      console.log("New park document created with dogs added.");
+    }
+  } catch (error) {
+    console.error("Error adding dogs to park:", error);
+  }
+};
+
+export const GetDogsInPark = async (parkId) => {
+  try {
+  } catch {}
 };
