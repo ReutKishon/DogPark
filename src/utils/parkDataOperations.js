@@ -7,6 +7,8 @@ import {
   updateDoc,
   arrayUnion,
   doc,
+  getDoc,
+  setDoc,
 } from "firebase/firestore";
 
 const API_KEY = "AIzaSyCnAEFDXfQTt0A4UYn5srE0jOGGrGfjEhk";
@@ -70,24 +72,25 @@ export const GetDistanceAndAddress = async (destinations, name) => {
     }
   } catch (error) {
     console.error("Error fetching data from Google Maps API", error);
-    throw error; // Re-throw the error to be caught by the caller
+    throw error; 
   }
 };
 
 // if park contains already dogs so add the dogs to that park document
 // else add a new park document and add the dogs to that park document
-export const AddDogsToPark = async (parkId, dogs) => {
-  console.log("selectedDogs: " + JSON.stringify(dogs));
-  const parkDocRef = doc(collection(firestore, "parks"), parkId);
+export const AddDogsToPark = async (parkId, dogKeys) => {
+  const dogRefs = dogKeys.map((dogKey) => doc(firestore, "dogs", dogKey));
+
   try {
-    const parkDocSnapshot = await getDoc(documentRef);
+    const parkDocRef = doc(collection(firestore, "parks"), parkId);
+    const parkDocSnapshot = await getDoc(parkDocRef);
     if (parkDocSnapshot.exists()) {
       await updateDoc(parkDocRef, {
-        currentDogs: arrayUnion(...dogs),
+        currentDogs: arrayUnion(...dogRefs),
       });
       console.log("Dogs added to existing park document.");
     } else {
-      await setDoc(parkDocRef, { currentDogs: dogs });
+      await setDoc(parkDocRef, { currentDogs: dogRefs });
       console.log("New park document created with dogs added.");
     }
   } catch (error) {
@@ -97,5 +100,32 @@ export const AddDogsToPark = async (parkId, dogs) => {
 
 export const GetDogsInPark = async (parkId) => {
   try {
-  } catch {}
+    const parkDoc = await firestore.collection("parks").doc(parkId).get();
+    const parkData = parkDoc.data();
+    if (parkData) {
+      const dogRefs = parkData.currentDogs;
+      const dogDataPromises = dogRefs.map(async (dogRef) => {
+        try {
+          const doc = await dogRef.get();
+          if (doc && doc.data()) {
+            let docData = doc.data();
+
+            docData.key = dogRef.id;
+            docData.isSelected = 0;
+            return docData;
+          }
+          return null;
+        } catch (error) {
+          console.error("Error fetching dog data:", error);
+          return null;
+        }
+      });
+
+      const parkDogsData = (await Promise.all(dogDataPromises)).filter(Boolean);
+      return parkDogsData;
+    }
+  } catch (error) {
+    console.error("Error fetching park data:", error);
+    return null;
+  }
 };

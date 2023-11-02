@@ -7,24 +7,27 @@ import { AddDogsToPark, GetDogsInPark } from "../../utils/parkDataOperations";
 const ParkDetails = ({ navigation, route }) => {
   const { parkId, parkName, parkLocation, selectedDogs } = route.params || {};
   const [dogsInThePark, setDogsInThePark] = useState([]);
-  /*
+
   useEffect(() => {
     const fetchDogsInPark = async () => {
       const dogs = await GetDogsInPark(parkId);
-      if (dogs) {
+      if (dogs != undefined) {
         setDogsInThePark(dogs);
       }
     };
 
     fetchDogsInPark();
-  }, [dogsInThePark]);
-*/
-  console.log("dogsInThePark: " + dogsInThePark);
+  }, []);
+
+  console.log("dogsInThePark: " + JSON.stringify(dogsInThePark));
   const handleDogPress = (dog) => {
     navigation.navigate("DogDetails", { dog });
   };
-  const handlePlayPress = () => {
-    const updatedParkDogs = AddDogsToPark(parkId, selectedDogs);
+  const handlePlayPress = async () => {
+    const selectedDogsRefs = selectedDogs.map((dog) => dog.key);
+
+    await AddDogsToPark(parkId, selectedDogsRefs);
+    const updatedParkDogs = await GetDogsInPark(parkId);
     setDogsInThePark(updatedParkDogs);
   };
 

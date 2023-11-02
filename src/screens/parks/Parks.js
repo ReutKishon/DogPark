@@ -12,7 +12,7 @@ const Parks = ({ navigation, route }) => {
     const fetchNearestParks = async () => {
       const nearestParks = await getNearestDogParks();
       //console.log(nearestParks);
-      if (nearestParks != undefined) {
+      if (nearestParks) {
         setParks(nearestParks);
         setLoading(false);
       }

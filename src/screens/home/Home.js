@@ -23,7 +23,6 @@ const Home = ({ navigation }) => {
     };
 
     fetchUserDogs();
-    setLoading(false);
   }, [userData]);
 
   const handleDogSelection = (dog) => {
