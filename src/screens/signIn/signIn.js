@@ -4,6 +4,7 @@ import styles from "./signIn.style";
 import { auth, firestore } from "../../../firebase";
 import { UserIdContext } from "../../contexts/UserIdContext";
 import { UserDataContext } from "../../contexts/UserDataContext";
+import { Button } from "../../components";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -25,7 +26,6 @@ const SignIn = ({ navigation }) => {
           .get()
           .then((doc) => {
             if (doc.exists) {
-              
               docData = doc.data();
               docData["id"] = userId;
               console.log(docData);
@@ -70,9 +70,13 @@ const SignIn = ({ navigation }) => {
       {errorMessage ? (
         <Text style={styles.errorText}>{errorMessage}</Text>
       ) : null}
-      <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-        <Text style={styles.buttonText}>Sign In</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <Button
+          buttonText="Sign in"
+          onPress={handleSignIn}
+          buttonSize={{ width: 300, height: 50 }}
+        />
+      </View>
     </View>
   );
 };

@@ -45,7 +45,7 @@ const ParkCard = ({ navigation, park, selectedDogs }) => {
     });
   };
 
-  if (isLoading) return;
+ //if (isLoading) return;
   return (
     <TouchableOpacity onPress={handleNavigate} style={styles.container}>
       <View style={styles.textContainer}>

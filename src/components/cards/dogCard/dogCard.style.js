@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   profileContainer: {
     width: 100,
     height: 100,
-    backgroundColor: COLORS.green,
+    backgroundColor: COLORS.background,
     borderRadius: SIZES.medium,
     justifyContent: "center",
     alignItems: "center",

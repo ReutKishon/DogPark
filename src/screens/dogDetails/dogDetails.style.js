@@ -3,20 +3,20 @@ import { COLORS, FONT, SIZES } from "../../constants";
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLORS.lightWhite,
+    //backgroundColor: COLORS.lightWhite,
     flex: 1,
-    alignItems: "center",
-    //justifyContent: "center",
-    paddingTop: 17,
-    gap: 15,
+    //alignItems: "center",
   },
+
   dogName: {
     fontFamily: FONT.title,
     fontSize: SIZES.xxxLarge,
+    //marginTop: 13,
+    //right: 90,
   },
   infoContainer: {
-    backgroundColor: COLORS.white,
-    borderRadius: 10,
+    //backgroundColor: COLORS.white,
+    //borderRadius: 10,
     padding: 20,
     width: 380,
     rowGap: 10,
@@ -28,29 +28,32 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontFamily: FONT.title,
-    fontSize: SIZES.large,
+    fontSize: SIZES.xLarge,
     marginLeft: SIZES.small,
   },
-  pointDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 6,
-    backgroundColor: COLORS.green,
-    marginTop: 6,
-  },
-  profileContainer: {
-    width: 350,
-    height: 400,
-    backgroundColor: COLORS.green,
+
+  imageContainer: {
+    width: 150,
+    height: 150,
     borderRadius: SIZES.medium,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 20
+    marginBottom: 20,
+  },
+
+  profileContainer: {
+    paddingTop: 30,
+    paddingLeft: 20,
   },
   profileImage: {
-    width: "96%",
-    height: "96%",
+    width: "100%",
+    height: "100%",
     borderRadius: SIZES.medium,
+  },
+  pawIcon: {
+    width: 17,
+    height: 17,
+    tintColor: COLORS.green,
   },
 });
 

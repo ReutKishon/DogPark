@@ -19,6 +19,7 @@ import {
 //import DrawerNavigation from "./src/navigation/DrawerNavigation"
 import { useFonts } from "expo-font";
 import { COLORS } from "./src/constants";
+import { View } from "react-native";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();

@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor: "#f0f2f5",
+    backgroundColor: COLORS.background,
     paddingTop: 50,
     paddingHorizontal: 20,
   },
@@ -16,11 +16,11 @@ const styles = StyleSheet.create({
     marginBottom: 100,
   },
   input: {
-    width: "100%",
+    width: 350,
     backgroundColor: "white",
     padding: 15,
     marginBottom: 20,
-    borderRadius: 5,
+    borderRadius: 15,
   },
   registerButton: {
     width: "100%",

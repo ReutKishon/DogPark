@@ -48,6 +48,7 @@ export const getUserDogs = async (userId) => {
   const userData = await getUserData(userId);
   if (userData) {
     const dogRefs = userData.dogs;
+    if (!dogRefs) return null;
     const dogDataPromises = dogRefs.map(async (dogRef) => {
       try {
         const doc = await dogRef.get();
@@ -66,5 +67,21 @@ export const getUserDogs = async (userId) => {
     });
     const userDogsData = (await Promise.all(dogDataPromises)).filter(Boolean);
     return userDogsData;
+  }
+};
+
+const getUserDogById = (userId, dogId) => {};
+
+export const updateUserDog = (userId, dogId, updatedDetails) => {
+  const userDog = doc(firestore, "users", userId, "dogs", dogId);
+  console.log(userDog);
+  if (userDog) {
+    userDog.name = updatedDetails.name;
+    userDog.age = updatedDetails.age;
+    userDog.gender = updatedDetails.gender;
+
+    return userDog;
+  } else {
+    throw new Error("User dog not found");
   }
 };

@@ -3,12 +3,10 @@ import { COLORS, FONT, SIZES } from "../../constants";
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLORS.lightWhite,
+    backgroundColor: COLORS.background,
     flex: 1,
-    alignItems: "center",
-    //justifyContent: "center",
-    paddingTop: 17,
-    gap: 15,
+    //paddingTop: 17,
+    //gap: 15,
   },
   parkName: {
     //fontFamily: FONT.title,
@@ -31,7 +29,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   infoContainer: {
-    backgroundColor: COLORS.white,
+    //backgroundColor: COLORS.white,
     //borderRadius: 10,
     padding: 20,
     rowGap: 10,

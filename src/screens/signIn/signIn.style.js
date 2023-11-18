@@ -4,11 +4,16 @@ import { COLORS } from "../../constants";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-start",
+    //justifyContent: "center",
     alignItems: "center",
-    backgroundColor: COLORS.lightWhite,
+    backgroundColor: COLORS.background,
     paddingTop: 50,
     paddingHorizontal: 20,
+  },
+  buttonContainer: {
+    marginBottom: 20,
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
   title: {
     fontSize: 24,
@@ -16,22 +21,16 @@ const styles = StyleSheet.create({
     marginBottom: 100,
   },
   input: {
-    width: "80%",
+    width: 300,
     height: 40,
-    borderColor: "gray",
+    borderColor: COLORS.white,
+    backgroundColor: COLORS.white,
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 15,
     marginBottom: 20,
     paddingHorizontal: 10,
   },
-  button: {
-    backgroundColor: "#4267B2",
-    width: "80%",
-    height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 5,
-  },
+
   buttonText: {
     color: "white",
     fontSize: 16,

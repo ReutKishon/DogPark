@@ -16,7 +16,9 @@ const Home = ({ navigation }) => {
     setUserName(userData.name);
     const fetchUserDogs = async () => {
       const userDogs = await getUserDogs(userData.id);
+
       if (userDogs) {
+        console.log("1:" + userDogs);
         setDogs(userDogs);
         setLoading(false);
       }
@@ -57,7 +59,7 @@ const Home = ({ navigation }) => {
             navigation.navigate("Parks", { selectedDogs });
           }}
           buttonSize={{ width: 300, height: 50 }}
-        ></Button>
+        />
       </View>
     </View>
   );

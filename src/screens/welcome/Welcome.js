@@ -1,26 +1,25 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import styles from "./welcome.style";
+import { Button } from "../../components";
 
 const Welcome = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.button}
+      <Button
+        buttonText="Register"
         onPress={() => {
           navigation.navigate("Register");
         }}
-      >
-        <Text style={styles.buttonText}>Register</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.button, styles.signUpButton]}
+        buttonSize={{ width: 300, height: 50 }}
+      />
+      <Button
+        buttonText="Sign in"
         onPress={() => {
           navigation.navigate("SignIn");
         }}
-      >
-        <Text style={[styles.buttonText, styles.signUpText]}>Sign In</Text>
-      </TouchableOpacity>
+        buttonSize={{ width: 300, height: 50 }}
+      />
     </View>
   );
 };

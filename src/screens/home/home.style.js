@@ -5,6 +5,7 @@ import { COLORS, FONT, SIZES } from "../../constants";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: COLORS.background,
   },
   headerContainer: {
     paddingTop: 30,
@@ -37,7 +38,6 @@ const styles = StyleSheet.create({
     tintColor: "#fff",
     padding: 12,
     borderRadius: 15,
-
   },
   buttonText: {
     color: "#fff",

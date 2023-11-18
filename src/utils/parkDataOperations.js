@@ -9,6 +9,8 @@ import {
   doc,
   getDoc,
   setDoc,
+  arrayRemove,
+  deleteDoc,
 } from "firebase/firestore";
 
 const API_KEY = "AIzaSyCnAEFDXfQTt0A4UYn5srE0jOGGrGfjEhk";
@@ -72,7 +74,7 @@ export const GetDistanceAndAddress = async (destinations, name) => {
     }
   } catch (error) {
     console.error("Error fetching data from Google Maps API", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -95,6 +97,27 @@ export const AddDogsToPark = async (parkId, dogKeys) => {
     }
   } catch (error) {
     console.error("Error adding dogs to park:", error);
+  }
+};
+
+export const RemoveDogsFromPark = async (parkId, dogKeys) => {
+  const dogRefs = dogKeys.map((dogKey) => doc(firestore, "dogs", dogKey));
+  try {
+    const parkDocRef = doc(collection(firestore, "parks"), parkId);
+
+    await updateDoc(parkDocRef, {
+      currentDogs: arrayRemove(...dogRefs),
+    });
+    const updatedParkDoc = await getDoc(parkDocRef);
+    const updatedParkData = updatedParkDoc.data();
+    if (
+      !updatedParkData.currentDogs ||
+      updatedParkData.currentDogs.length === 0
+    ) {
+      await deleteDoc(parkDocRef);
+    }
+  } catch (error) {
+    console.error("Error removing dogs from park:", error);
   }
 };
 

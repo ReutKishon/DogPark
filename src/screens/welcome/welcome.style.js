@@ -7,6 +7,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: COLORS.background,
+    gap: 15,
   },
   button: {
     backgroundColor: "#4267B2",

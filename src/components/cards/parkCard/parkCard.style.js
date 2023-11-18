@@ -17,14 +17,7 @@ const styles = StyleSheet.create({
     elevation: 0,
   },
 
-  profileContainer: {
-    width: 100,
-    height: 100,
-    backgroundColor: COLORS.green,
-    borderRadius: SIZES.medium,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+
   profileImage: {
     width: "96%",
     height: "96%",
