@@ -1,5 +1,5 @@
 const COLORS = {
-  primary: "#312651",
+  primary: "#61210F",
   secondary: "#444262",
   tertiary: "#FF7754",
   shadow: "rgba(0, 0, 0, 0.2)",

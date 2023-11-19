@@ -21,11 +21,12 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 300,
-    height: 40,
-    borderColor: COLORS.white,
+    height: 60,
+    padding: 10,
+    borderColor: COLORS.black,
     backgroundColor: COLORS.white,
-    borderWidth: 1,
-    borderRadius: 15,
+    borderWidth: 2,
+    borderRadius: 100,
   },
 
   buttonText: {

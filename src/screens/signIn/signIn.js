@@ -52,33 +52,33 @@ const SignIn = ({ navigation }) => {
   };
 
   return (
-    <View className="flex flex-col items-center justify-end gap-">
+    <View className="flex flex-col items-center mt-24">
 
-      <View>
-        <Text className="text-4xl mt-24" >Sign In</Text>
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        secureTextEntry={true}
-        onChangeText={setPassword}
-      />
-      {errorMessage ? (
-        <Text style={styles.errorText}>{errorMessage}</Text>
-      ) : null}
-      <View>
-        <Button
-          buttonText="Sign in"
-          onPress={handleSignIn}
-          buttonSize={{ width: 300, height: 50 }}
+      <View className="flex flex-col gap-8">
+
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
         />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          value={password}
+          secureTextEntry={true}
+          onChangeText={setPassword}
+        />
+        {errorMessage ? (
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        ) : null}
+        <View>
+          <Button
+            buttonText="Sign in"
+            onPress={handleSignIn}
+            buttonSize={{ width: 300, height: 60 }}
+          />
+        </View>
       </View>
     </View>
   );
