@@ -7,7 +7,7 @@ import { getUserDogs } from "../../utils/userDataOperations";
 
 const Home = ({ navigation }) => {
   const { userData } = useContext(UserIdContext);
-  const [userName, setUserName] = useState("");
+  const [userName, setUserName] = useState("elad.636@gmail.com");
   const [dogs, setDogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedDogs, setSelectedDogs] = useState([]);
@@ -16,11 +16,11 @@ const Home = ({ navigation }) => {
     setUserName(userData.name);
     const fetchUserDogs = async () => {
       const userDogs = await getUserDogs(userData.id);
+      setLoading(false);
 
       if (userDogs) {
         console.log("1:" + userDogs);
         setDogs(userDogs);
-        setLoading(false);
       }
     };
 
@@ -41,7 +41,7 @@ const Home = ({ navigation }) => {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
   return (
-    <View style={styles.container}>
+    <View className="flex mt-10">
       <View style={styles.headerContainer}>
         <Text style={styles.helloText}>Hello {userName},</Text>
         <Text style={styles.contentText}>

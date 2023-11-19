@@ -7,8 +7,8 @@ import { UserDataContext } from "../../contexts/UserDataContext";
 import { Button } from "../../components";
 
 const SignIn = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("elad.636@gmail.com");
+  const [password, setPassword] = useState("Elad9352221");
   const [errorMessage, setErrorMessage] = useState("");
   const { setUserData } = useContext(UserIdContext);
   //const { setUserData } = useContext(UserDataContext);
@@ -52,8 +52,11 @@ const SignIn = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign In</Text>
+    <View className="flex flex-col items-center justify-end gap-">
+
+      <View>
+        <Text className="text-4xl mt-24" >Sign In</Text>
+      </View>
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -70,7 +73,7 @@ const SignIn = ({ navigation }) => {
       {errorMessage ? (
         <Text style={styles.errorText}>{errorMessage}</Text>
       ) : null}
-      <View style={styles.buttonContainer}>
+      <View>
         <Button
           buttonText="Sign in"
           onPress={handleSignIn}

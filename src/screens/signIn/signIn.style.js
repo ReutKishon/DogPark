@@ -11,7 +11,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   buttonContainer: {
-    marginBottom: 20,
     justifyContent: "flex-end",
     alignItems: "center",
   },
@@ -27,8 +26,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     borderWidth: 1,
     borderRadius: 15,
-    marginBottom: 20,
-    paddingHorizontal: 10,
   },
 
   buttonText: {
