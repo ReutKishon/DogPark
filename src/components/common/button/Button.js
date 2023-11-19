@@ -5,12 +5,12 @@ import React from "react";
 const Button = ({ buttonText: text, onPress: onClick }) => {
   return (
     <View>
-      <TouchableOpacity
+      <Pressable className="active:opacity-80"
         style={[buttonStyles.button, {width: 300, height: 60}]}
         onPress={onClick}
       >
         <Text style={buttonStyles.btnText}>{text}</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
 
   );

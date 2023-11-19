@@ -68,6 +68,12 @@ function App() {
     return null;
   }
 
+  const routerToIcon = {
+    Home: 'home',
+    MyDogs: 'ios-list',
+    AddDog: 'add-circle',
+  };
+
   const DrawerNavigation = () => {
     return (
       <Tab.Navigator initialRouteName="Home" screenOptions={({ route }) => ({
@@ -75,12 +81,9 @@ function App() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === 'Home') {
-            iconName = focused
-              ? 'home'
-              : 'home-outline';
-          } else if (route.name === 'Settings') {
-            iconName = focused ? 'ios-list' : 'ios-list-outline';
+          iconName = routerToIcon[route.name];
+          if (focused) {
+            iconName = iconName + '-outline';
           }
 
           // You can return any component that you like here!

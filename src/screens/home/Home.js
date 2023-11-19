@@ -4,6 +4,7 @@ import styles from "./home.style";
 import { DogsList, Button } from "../../components";
 import { UserIdContext } from "../../contexts/UserIdContext";
 import { getUserDogs } from "../../utils/userDataOperations";
+import MapView from 'react-native-maps'
 
 const Home = ({ navigation }) => {
   const { userData } = useContext(UserIdContext);
@@ -47,13 +48,21 @@ const Home = ({ navigation }) => {
 
   return (
     <View className="flex mt-10 items-center justify-center h-full relative w-full">
- 
-     <View style={styles.headerContainer}>
-        <Text className="text-2xl" style={{fontFamily: "Poppins_700Bold"}}>Hello {userName}</Text>
+      <View style={styles.headerContainer}>
+        <Text className="text-2xl" style={{ fontFamily: "Poppins_700Bold" }}>Hello {userName}</Text>
         <Text style={styles.contentText}>
           It's a good time to take your dog out!
         </Text>
       </View>
+      <MapView
+        style={{width: 400, height: 400}  }
+        initialRegion={{
+          latitude: 37.78825,
+          longitude: -122.4324,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      />
 
       <View style={styles.listContainer}>
         <DogsList dogs={dogs} handleDogPress={handleDogSelection} />
