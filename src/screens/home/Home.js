@@ -38,11 +38,17 @@ const Home = ({ navigation }) => {
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return (
+      <View className="flex mt-10 items-center justify-center h-full relative w-full">
+        <ActivityIndicator className="absolute bottom-0 top-0 z-50" size="large" color="#0000ff" />
+      </View>
+    );
   }
+
   return (
-    <View className="flex mt-10">
-      <View style={styles.headerContainer}>
+    <View className="flex mt-10 items-center justify-center h-full relative w-full">
+ 
+     <View style={styles.headerContainer}>
         <Text style={styles.helloText}>Hello {userName},</Text>
         <Text style={styles.contentText}>
           It's a good time to take your dog out!
@@ -58,7 +64,6 @@ const Home = ({ navigation }) => {
           onPress={() => {
             navigation.navigate("Parks", { selectedDogs });
           }}
-          buttonSize={{ width: 300, height: 50 }}
         />
       </View>
     </View>

@@ -76,7 +76,6 @@ const SignIn = ({ navigation }) => {
           <Button
             buttonText="Sign in"
             onPress={handleSignIn}
-            buttonSize={{ width: 300, height: 60 }}
           />
         </View>
       </View>
