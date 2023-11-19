@@ -49,7 +49,7 @@ const Home = ({ navigation }) => {
     <View className="flex mt-10 items-center justify-center h-full relative w-full">
  
      <View style={styles.headerContainer}>
-        <Text style={styles.helloText}>Hello {userName},</Text>
+        <Text className="text-2xl" style={{fontFamily: "Poppins_700Bold"}}>Hello {userName}</Text>
         <Text style={styles.contentText}>
           It's a good time to take your dog out!
         </Text>

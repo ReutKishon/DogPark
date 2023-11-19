@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, useWindowDimensions, Image } from "react-native";
 import styles from "./signIn.style";
 import { auth, firestore } from "../../../firebase";
 import { UserIdContext } from "../../contexts/UserIdContext";
@@ -50,11 +50,13 @@ const SignIn = ({ navigation }) => {
         //console.error(error);
       });
   };
+  const imageUrl = 'https://media1.giphy.com/media/k6sC1yPY1fhbKzXdY4/giphy.gif?cid=ecf05e47gtkcg6y1tqza7sfmcmrcwos2vge6avgzgn2vmf04&ep=v1_stickers_search&rid=giphy.gif&ct=s';
+  const { width } = useWindowDimensions();
 
   return (
     <View className="flex flex-col items-center mt-24">
-
-      <View className="flex flex-col gap-8">
+      <View className="flex flex-col gap-8 items-center ">
+        <Image source={{ uri: imageUrl }} style={{ width: 200, height: 200 }} />
 
         <TextInput
           style={styles.input}

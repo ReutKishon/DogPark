@@ -1,4 +1,4 @@
-import { TouchableOpacity, Text, View } from "react-native";
+import { TouchableOpacity, Text, View, Pressable } from "react-native";
 import buttonStyles from "./button.style";
 import React from "react";
 
