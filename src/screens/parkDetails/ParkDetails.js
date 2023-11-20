@@ -7,7 +7,7 @@ import {
   AddDogsToPark,
   GetDogsInPark,
   RemoveDogsFromPark,
-} from "../../utils/parkDataOperations";
+} from "../../api/parkDataOperations";
 
 const ParkDetails = ({ navigation, route }) => {
   const { parkId, parkName, parkLocation, selectedDogs } = route.params || {};
