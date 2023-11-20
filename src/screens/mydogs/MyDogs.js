@@ -3,27 +3,30 @@ import styles from "./mydogs.style";
 import { DogsList } from "../../components";
 import React, { useState, useEffect, useContext } from "react";
 import { getUserDogs } from "../../utils/userDataOperations";
+import { useStore } from "../../store";
 
 const MyDogs = ({ navigation }) => {
-  const [dogs, setDogs] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+  const user = useStore((state) => state.user);
+  const dogs = useStore((state) => state.dogs);
+  const setDogs = useStore((state) => state.setDogs);
 
   useEffect(() => {
     const fetchUserDogs = async () => {
-      const userDogs = await getUserDogs(userData.id);
-      if (userDogs) {
-        setDogs(userDogs);
-        setLoading(false);
+      const dogs = await getUserDogs(user.id);
+      if (dogs) {
+        console.log("dogs", dogs);
+        setDogs(dogs);
       }
     };
 
     fetchUserDogs();
-  }, [userData]);
+  }, [user]);
 
   const handleDogPress = (dog) => {
     navigation.navigate("DogDetails", { dog });
   };
-  if (loading) {
+  if (!dogs) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
   return <DogsList dogs={dogs} handleDogPress={handleDogPress} />;
