@@ -109,7 +109,7 @@ const Home = ({ navigation }) => {
             className="text-3xl text-left"
             style={{ fontFamily: "Poppins_700Bold" }}
           >
-            Hello {user.name} {animatedPosition.value}
+            Hello {user.name}
           </Text>
         </View>
 
@@ -118,6 +118,7 @@ const Home = ({ navigation }) => {
             {
               console.log("sign out");
               auth.signOut();
+              navigation.navigate("SignIn");
             }
           }}
         >
