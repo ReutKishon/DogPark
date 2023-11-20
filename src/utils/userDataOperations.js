@@ -10,6 +10,7 @@ import {
 
 export const getUserData = async (userId) => {
   try {
+    console.log("fetching userId:" + userId);
     const userDoc = await firestore.collection("users").doc(userId).get();
     const userData = userDoc.data();
     return userData;

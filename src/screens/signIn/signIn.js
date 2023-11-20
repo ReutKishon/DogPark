@@ -6,6 +6,7 @@ import { UserIdContext } from "../../contexts/UserIdContext";
 import { UserDataContext } from "../../contexts/UserDataContext";
 import { Button } from "../../components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import firebase from "firebase/compat";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("elad.636@gmail.com");
@@ -13,24 +14,50 @@ const SignIn = ({ navigation }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const { setUserData } = useContext(UserIdContext);
 
+  // useEffect(() => {
+  //   const checkIfLoggedIn = async () => {
+  //     try {
+  //       const value = await AsyncStorage.getItem('user');
+  //       if (value !== null) {
+  //         // value previously stored
+
+  //         const user = JSON.parse(value)
+  //         setUserData(user);
+  //         console.log(user.id);
+  //         console.log(user)
+
+  //         navigation.navigate("DrawerNavigation", { screen: "Home" });
+  //       }
+  //     }
+  //     catch (e) {
+  //       // error reading value
+  //       console.log(e);
+  //     }
+  //   }
+  //   checkIfLoggedIn();
+  // }, []);
+
   useEffect(() => {
-    const checkIfLoggedIn = async () => {
-      try {
-        const value = await AsyncStorage.getItem('user');
-        if (value !== null) {
-          // value previously stored
-          console.log(value);
-          setUserData(JSON.parse(value));
-          navigation.navigate("DrawerNavigation", { screen: "Home" });
-        }
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log(user.id)
+        user.id = user.uid;
+        setUserData(user);
+        navigation.navigate("DrawerNavigation", { screen: "Home" });
       }
-      catch (e) {
-        // error reading value
-        console.log(e);
-      }
-    }
-    checkIfLoggedIn();
+    });
   }, []);
+
+
+
+  // auth.onAuthStateChanged((user) => {
+  //   if (user) {
+  //     console.log("user is signed in");
+  //     user.id = user.uid;
+  //     setUserData(user);
+  //     navigation.navigate("DrawerNavigation", { screen: "Home" });
+  //   }
+  // });
 
   const handleSignIn = () => {
     auth
@@ -52,8 +79,7 @@ const SignIn = ({ navigation }) => {
               setUserData(docData);
               // save user data to async storage
               try {
-                const jsonValue = JSON.stringify(docData)
-                AsyncStorage.setItem('user', jsonValue)
+                AsyncStorage.setItem('user', JSON.stringify(docData));
               } catch (e) {
                 // saving error
                 console.log(e);
