@@ -1,10 +1,19 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, Text, ActivityIndicator, FlatList } from "react-native";
 import styles from "./home.style";
 import { DogsList, Button } from "../../components";
 import { UserIdContext } from "../../contexts/UserIdContext";
 import { getUserDogs } from "../../utils/userDataOperations";
 import MapView from 'react-native-maps'
+
+
+
+const DogItem = ({dog}) => (
+  <View className="w-full h-24 flex justify-center p-10">
+    <Text>{dog.name}</Text>
+  </View>
+);
+
 
 const Home = ({ navigation }) => {
   const { userData } = useContext(UserIdContext);
@@ -47,15 +56,12 @@ const Home = ({ navigation }) => {
   }
 
   return (
-    <View className="flex mt-10 items-center justify-center h-full relative w-full">
-      <View style={styles.headerContainer}>
-        <Text className="text-2xl" style={{ fontFamily: "Poppins_700Bold" }}>Hello {userName}</Text>
-        <Text style={styles.contentText}>
-          It's a good time to take your dog out!
-        </Text>
+    <View className="flex mt-10 items-center justify-start h-full w-full relative">
+      <View className="py-8 px-4 w-full ">
+        <Text className="text-3xl text-left" style={{ fontFamily: "Poppins_700Bold" }}>Hello {userName}</Text>
       </View>
       <MapView
-        style={{width: 400, height: 400}  }
+        style={{ width: 400, height: 200 }}
         initialRegion={{
           latitude: 37.78825,
           longitude: -122.4324,
@@ -64,17 +70,14 @@ const Home = ({ navigation }) => {
         }}
       />
 
-      <View style={styles.listContainer}>
-        <DogsList dogs={dogs} handleDogPress={handleDogSelection} />
+      <View className="flex w-full">
+        <FlatList
+          ItemSeparatorComponent={() => <View style={{height:1}} className="bg-gray-200 mx-10"></View>}
+          data={dogs}
+          renderItem={({item}) => <DogItem dog={item} />}>
+          </FlatList>
       </View>
-      <View style={styles.buttonContainer}>
-        <Button
-          buttonText="Let's travel"
-          onPress={() => {
-            navigation.navigate("Parks", { selectedDogs });
-          }}
-        />
-      </View>
+
     </View>
   );
 };
