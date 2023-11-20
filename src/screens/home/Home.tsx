@@ -47,11 +47,11 @@ const Home = ({ navigation }) => {
   const snapPoints = useMemo(() => ["30%", "60%"], []);
   const handleSheetChanges = useCallback(
     (fromIndex: number, toIndex: number) => {
-      if (toIndex === 0) {
-        setMapHeight("100%");
-      } else {
-        setMapHeight("40%");
-      }
+      // if (toIndex === 0) {
+      //   setMapHeight("100%");
+      // } else {
+      //   setMapHeight("40%");
+      // }
     },
     []
   );
@@ -62,7 +62,7 @@ const Home = ({ navigation }) => {
 
   useEffect(() => {
     console.log("animatedPosition", animatedPosition.value);
-  }, [animatedPosition])
+  }, [animatedPosition]);
 
   useEffect(() => {
     (async () => {
@@ -99,14 +99,20 @@ const Home = ({ navigation }) => {
   }, [location]);
 
   return (
-    <View className="flex mt-10 items-center justify-start h-full w-full relative">
-      <View className="py-4 px-4 w-full ">
-        <Text
-          className="text-3xl text-left"
-          style={{ fontFamily: "Poppins_700Bold" }}
-        >
-          Hello {user.name}
-        </Text>
+    <View className="flex items-center justify-start h-full w-full relative">
+      <View
+        className="py-4  px-4 w-full absolute top-0 bg-white"
+        style={{ zIndex: 9999 }}
+      >
+        <View className="mt-10 w-full py-4">
+          <Text
+            className="text-3xl text-left"
+            style={{ fontFamily: "Poppins_700Bold" }}
+          >
+            Hello {user.name} {animatedPosition.value}
+          </Text>
+        </View>
+
         <Pressable
           onPress={() => {
             {
@@ -119,9 +125,10 @@ const Home = ({ navigation }) => {
         </Pressable>
       </View>
       <MapView.Animated
+        className="w-full h-full"
         ref={mapRef}
         followsUserLocation
-        style={{ width: 400, height: mapHeight }}
+        style={{ transform: [{ translateY: -150 }] }}
         initialRegion={location?.coords}
         region={location?.coords}
         showsUserLocation
