@@ -1,17 +1,37 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, useWindowDimensions, Image } from "react-native";
 import styles from "./signIn.style";
 import { auth, firestore } from "../../../firebase";
 import { UserIdContext } from "../../contexts/UserIdContext";
 import { UserDataContext } from "../../contexts/UserDataContext";
 import { Button } from "../../components";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("elad.636@gmail.com");
   const [password, setPassword] = useState("Elad9352221");
   const [errorMessage, setErrorMessage] = useState("");
   const { setUserData } = useContext(UserIdContext);
-  //const { setUserData } = useContext(UserDataContext);
+
+  useEffect(() => {
+    const checkIfLoggedIn = async () => {
+      try {
+        const value = await AsyncStorage.getItem('user');
+        if (value !== null) {
+          // value previously stored
+          console.log(value);
+          setUserData(JSON.parse(value));
+          navigation.navigate("DrawerNavigation", { screen: "Home" });
+        }
+      }
+      catch (e) {
+        // error reading value
+        console.log(e);
+      }
+    }
+    checkIfLoggedIn();
+  }, []);
+
   const handleSignIn = () => {
     auth
       .signInWithEmailAndPassword(email, password)
@@ -30,6 +50,14 @@ const SignIn = ({ navigation }) => {
               docData["id"] = userId;
               console.log(docData);
               setUserData(docData);
+              // save user data to async storage
+              try {
+                const jsonValue = JSON.stringify(docData)
+                AsyncStorage.setItem('user', jsonValue)
+              } catch (e) {
+                // saving error
+                console.log(e);
+              }
               navigation.navigate("DrawerNavigation", { screen: "Home" });
             } else {
               console.log("No such document!");
