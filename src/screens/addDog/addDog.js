@@ -3,11 +3,9 @@ import { View, Text, TextInput, Button } from "react-native";
 import styles from "./addDog.style";
 import { auth, firestore } from "../../../firebase";
 import { Keyboard } from "react-native";
-import { UserIdContext } from "../../contexts/UserIdContext";
 import { AddDogToUser } from "../../utils/userDataOperations";
 
 const AddDog = ({ navigation }) => {
-  const { userData, setUserData } = useContext(UserIdContext);
   const [dogName, setDogName] = useState("");
   const [dogGender, setDogGender] = useState("");
   const [dogAge, setDogAge] = useState("");

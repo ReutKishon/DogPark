@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext, useMemo, useRef, useCallback } from "react";
-import { View, Text, ActivityIndicator, FlatList } from "react-native";
+import { View, Text, ActivityIndicator, FlatList, Pressable } from "react-native";
 import styles from "./home.style";
 import { DogsList, Button } from "../../components";
-import { UserIdContext } from "../../contexts/UserIdContext";
 import { getUserDogs } from "../../utils/userDataOperations";
 import MapView from 'react-native-maps'
 import BottomSheet from '@gorhom/bottom-sheet';
-import { useStore } from "../../../App";
+import { auth } from "../../../firebase";
+import { useStore } from "../../store";
 
 
 
@@ -19,10 +19,9 @@ const DogItem = ({ dog }) => (
 
 const Home = ({ navigation }) => {
   const user = useStore((state) => state.user)
-  const [userName, setUserName] = useState("elad.636@gmail.com");
+
   const [dogs, setDogs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDogs, setSelectedDogs] = useState([]);
   const bottomSheetRef = useRef(null);
   // variables
   const snapPoints = useMemo(() => ['60%', '80%'], []);
@@ -33,7 +32,8 @@ const Home = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    setUserName(user.name);
+    if (!user) return;
+    console.log("Home user", user)
     const fetchUserDogs = async () => {
       const userDogs = await getUserDogs(user.id);
       setLoading(false);
@@ -47,17 +47,8 @@ const Home = ({ navigation }) => {
     fetchUserDogs();
   }, [user]);
 
-  // const handleDogSelection = (dog) => {
-  //   const isSelected = selectedDogs.includes(dog);
-  //   setSelectedDogs((prevSelectedDogs) =>
-  //     prevSelectedDogs.includes(dog)
-  //       ? prevSelectedDogs.filter((selectedDog) => selectedDog.key !== dog.key)
-  //       : [...prevSelectedDogs, dog]
-  //   );
-  //   dog.isSelected = !isSelected;
-  // };
 
-  if (loading) {
+  if (loading || !user) {
     return (
       <View className="flex mt-10 items-center justify-center h-full relative w-full">
         <ActivityIndicator className="absolute bottom-0 top-0 z-50" size="large" color="#0000ff" />
@@ -68,7 +59,14 @@ const Home = ({ navigation }) => {
   return (
     <View className="flex mt-10 items-center justify-start h-full w-full relative">
       <View className="py-8 px-4 w-full ">
-        <Text className="text-3xl text-left" style={{ fontFamily: "Poppins_700Bold" }}>Hello {userName}</Text>
+        <Text className="text-3xl text-left" style={{ fontFamily: "Poppins_700Bold" }}>Hello {user.name}</Text>
+        <Pressable onPress={() => {
+          {
+            console.log("sign out");
+            auth.signOut()
+          }
+        }
+        }><Text>Sign out</Text></Pressable>
       </View>
       <MapView
         className="grow"
@@ -89,9 +87,6 @@ const Home = ({ navigation }) => {
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
       >
-        <View>
-          <Text>Awesome 🎉</Text>
-        </View>
         <View className="flex w-full">
         <FlatList
           ItemSeparatorComponent={() => <View style={{ height: 1 }} className="bg-gray-200 mx-10"></View>}

@@ -2,11 +2,9 @@ import { ActivityIndicator } from "react-native";
 import styles from "./mydogs.style";
 import { DogsList } from "../../components";
 import React, { useState, useEffect, useContext } from "react";
-import { UserIdContext } from "../../contexts/UserIdContext";
 import { getUserDogs } from "../../utils/userDataOperations";
 
 const MyDogs = ({ navigation }) => {
-  const { userData } = useContext(UserIdContext);
   const [dogs, setDogs] = useState([]);
   const [loading, setLoading] = useState(true);
 

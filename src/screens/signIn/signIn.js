@@ -1,50 +1,26 @@
-import React, { useState, useContext, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, useWindowDimensions, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, Image } from "react-native";
 import styles from "./signIn.style";
-import { auth, firestore } from "../../../firebase";
-import { UserIdContext } from "../../contexts/UserIdContext";
-import { UserDataContext } from "../../contexts/UserDataContext";
+import { auth } from "../../../firebase";
 import { Button } from "../../components";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import firebase from "firebase/compat";
-import { useNavigation } from "@react-navigation/native";
+import { getUser } from "../../api";
+import { useStore } from "zustand";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("elad.636@gmail.com");
   const [password, setPassword] = useState("Elad9352221");
   const [errorMessage, setErrorMessage] = useState("");
-  const { setUserData } = useContext(UserIdContext);
 
-  // useEffect(() => {
-  //   const checkIfLoggedIn = async () => {
-  //     try {
-  //       const value = await AsyncStorage.getItem('user');
-  //       if (value !== null) {
-  //         // value previously stored
-
-  //         const user = JSON.parse(value)
-  //         setUserData(user);
-  //         console.log(user.id);
-  //         console.log(user)
-
-  //         navigation.navigate("DrawerNavigation", { screen: "Home" });
-  //       }
-  //     }
-  //     catch (e) {
-  //       // error reading value
-  //       console.log(e);
-  //     }
-  //   }
-  //   checkIfLoggedIn();
-  // }, []);
-
+  const setUser = useStore((state) => state.setUser)
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
+    auth.onAuthStateChanged(async (user) => {
       if (user) {
-        console.log(user.id)
+        console.log("user is signed in");
         user.id = user.uid;
-        setUserData(user);
+        user = await getUser(user.id);
+        setUser(user)
+        console.log("user found and set in context", user);
         navigation.navigate("DrawerNavigation", { screen: "Home" });
       }
     });
@@ -52,49 +28,9 @@ const SignIn = ({ navigation }) => {
 
 
 
-  // auth.onAuthStateChanged((user) => {
-  //   if (user) {
-  //     console.log("user is signed in");
-  //     user.id = user.uid;
-  //     setUserData(user);
-  //     navigation.navigate("DrawerNavigation", { screen: "Home" });
-  //   }
-  // });
-
-  const handleSignIn = () => {
-    auth
+  const handleSignIn = async () => {
+    const { user } = await auth
       .signInWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        var user = userCredential.user;
-        const userId = user.uid;
-
-        setErrorMessage("");
-        firestore
-          .collection("users")
-          .doc(userId)
-          .get()
-          .then((doc) => {
-            if (doc.exists) {
-              docData = doc.data();
-              docData["id"] = userId;
-              console.log(docData);
-              setUserData(docData);
-              // save user data to async storage
-              try {
-                AsyncStorage.setItem('user', JSON.stringify(docData));
-              } catch (e) {
-                // saving error
-                console.log(e);
-              }
-              navigation.navigate("DrawerNavigation", { screen: "Home" });
-            } else {
-              console.log("No such document!");
-            }
-          })
-          .catch((error) => {
-            console.log("Error getting document:", error);
-          });
-      })
       .catch((error) => {
         if (error.code === "auth/invalid-email") {
           setErrorMessage("Please enter a valid email address");
@@ -103,11 +39,9 @@ const SignIn = ({ navigation }) => {
         } else {
           setErrorMessage("An error occurred. Please try again later.");
         }
-        //console.error(error);
       });
   };
   const imageUrl = 'https://media1.giphy.com/media/k6sC1yPY1fhbKzXdY4/giphy.gif?cid=ecf05e47gtkcg6y1tqza7sfmcmrcwos2vge6avgzgn2vmf04&ep=v1_stickers_search&rid=giphy.gif&ct=s';
-  const { width } = useWindowDimensions();
 
   return (
     <View className="flex flex-col items-center mt-24">

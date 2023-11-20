@@ -2,19 +2,21 @@ import React, { useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 // import styles from "./welcome.style";
 import { Button } from "../../components";
-import firebase from "firebase/compat";
-import { useStore } from "../../../App";
+import { auth } from "../../../firebase";
+import { useStore } from "../../store";
+import { getUser } from "../../api";
 
 const Welcome = ({ navigation }) => {
   const setUser = useStore((state) => state.setUser)
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
+    auth.onAuthStateChanged(async (user) => {
       if (user) {
-        console.log("user is signed in", user);
-        console.log(user.id)
+        console.log("user is signed in");
         user.id = user.uid;
-        setUser(user);
+        user = await getUser(user.id);
+        setUser(user)
+        console.log("user found and set in context", user);
         navigation.navigate("DrawerNavigation", { screen: "Home" });
       }
     });
