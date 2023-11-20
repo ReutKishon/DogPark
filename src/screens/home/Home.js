@@ -6,6 +6,7 @@ import { UserIdContext } from "../../contexts/UserIdContext";
 import { getUserDogs } from "../../utils/userDataOperations";
 import MapView from 'react-native-maps'
 import BottomSheet from '@gorhom/bottom-sheet';
+import { useStore } from "../../../App";
 
 
 
@@ -17,7 +18,7 @@ const DogItem = ({ dog }) => (
 
 
 const Home = ({ navigation }) => {
-  const { userData } = useContext(UserIdContext);
+  const user = useStore((state) => state.user)
   const [userName, setUserName] = useState("elad.636@gmail.com");
   const [dogs, setDogs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,9 +33,9 @@ const Home = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    setUserName(userData.name);
+    setUserName(user.name);
     const fetchUserDogs = async () => {
-      const userDogs = await getUserDogs(userData.id);
+      const userDogs = await getUserDogs(user.id);
       setLoading(false);
 
       if (userDogs) {
@@ -44,7 +45,7 @@ const Home = ({ navigation }) => {
     };
 
     fetchUserDogs();
-  }, [userData]);
+  }, [user]);
 
   // const handleDogSelection = (dog) => {
   //   const isSelected = selectedDogs.includes(dog);

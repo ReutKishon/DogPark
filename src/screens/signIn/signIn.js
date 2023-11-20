@@ -7,6 +7,7 @@ import { UserDataContext } from "../../contexts/UserDataContext";
 import { Button } from "../../components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import firebase from "firebase/compat";
+import { useNavigation } from "@react-navigation/native";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("elad.636@gmail.com");
@@ -36,6 +37,7 @@ const SignIn = ({ navigation }) => {
   //   }
   //   checkIfLoggedIn();
   // }, []);
+
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {

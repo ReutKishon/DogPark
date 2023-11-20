@@ -1,5 +1,5 @@
-import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import React, { useEffect } from "react";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { UserIdProvider } from "./src/contexts/UserIdContext";
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -41,6 +41,17 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from '@expo-google-fonts/poppins';
+
+import { create } from 'zustand'
+import firebase from "firebase/compat";
+
+export const useStore = create((set) => ({
+  user: null,
+  bears: 0,
+  setUser: (user) => set({ user }),
+  increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
+  removeAllBears: () => set({ bears: 0 }),
+}))
 
 function App() {
   const [fontsLoaded] = useFonts({
@@ -96,6 +107,11 @@ function App() {
       </Tab.Navigator>
     );
   };
+
+
+  
+
+
 
   return (
     <UserIdProvider>
