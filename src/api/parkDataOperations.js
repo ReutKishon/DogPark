@@ -23,19 +23,17 @@ export const getUserLocation = async () => {
       return;
     }
     let location = await Location.getCurrentPositionAsync({});
-    let { latitude, longitude } = location.coords;
-    return [latitude, longitude];
+    return location
   } catch (error) {
     console.error("Error fetching location: ", error);
     return error;
   }
 };
 
-export const getNearestDogParks = async () => {
-  const location = await getUserLocation();
-  //console.log("Latitude:", location[0], "Longitude:", location[1]);
+export const getNearestDogParks = async (location) => {
+  const {longitude, latitude} = location
   const response = await axios.get(
-    `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location[0]},${location[1]}&radius=1000&type=park&keyword=dog&key=${API_KEY}`
+    `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=1000&type=park&keyword=dog&key=${API_KEY}`
   );
   return response.data.results;
 };

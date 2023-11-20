@@ -42,9 +42,12 @@ import {
 } from '@expo-google-fonts/poppins';
 
 import firebase from "firebase/compat";
+import { useStore } from "./src/store";
+import { getUserLocation } from "./src/api/parkDataOperations";
 
 
 function App() {
+
   const [fontsLoaded] = useFonts({
     Poppins_100Thin,
     Poppins_100Thin_Italic,
@@ -99,6 +102,10 @@ function App() {
     );
   };
 
+
+
+
+      
 
   
 

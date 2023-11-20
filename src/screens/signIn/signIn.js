@@ -4,13 +4,12 @@ import styles from "./signIn.style";
 import { auth } from "../../../firebase";
 import { Button } from "../../components";
 import { getUser } from "../../api";
-import { useStore } from "zustand";
+import { useStore } from "../../store";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("elad.636@gmail.com");
   const [password, setPassword] = useState("Elad9352221");
   const [errorMessage, setErrorMessage] = useState("");
-
   const setUser = useStore((state) => state.setUser)
 
   useEffect(() => {
