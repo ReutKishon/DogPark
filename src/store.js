@@ -8,6 +8,6 @@ export const useStore = create((set) => ({
     dogs: [],
     setUser: (user) => set({ user }),
     setDogs: (dogs) => set({ dogs }),
-    setNearParks: (parks) => set({ parks }),
+    setParks: (parks) => set({ parks }),
     setLocation: (location) => set({ location }),
 }))

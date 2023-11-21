@@ -22,6 +22,7 @@ import {
   getUserLocation,
 } from "../../api/parkDataOperations";
 import { useSharedValue } from "react-native-reanimated";
+import List from "../../components/List";
 
 const DogItem = ({ dog }) => (
   <View className="w-full h-24 flex justify-center p-10">
@@ -29,32 +30,24 @@ const DogItem = ({ dog }) => (
   </View>
 );
 
-const ParkItem = ({ park }) => (
-  <View className="w-full h-24 flex justify-center p-10">
-    <Text>{park.name}</Text>
-  </View>
-);
+const ParkItem = ({ item }) => {
+  console.log("park", item.name);
+  return (
+    <View className="w-full h-24 flex justify-center p-10">
+      <Text>{item.name}</Text>
+    </View>
+  );
+};
 
 const Home = ({ navigation }) => {
   const user = useStore((state) => state.user);
   const parks = useStore((state) => state.parks);
-  const setNearParks = useStore((state) => state.setNearParks);
-  const [mapHeight, setMapHeight] = useState("40%");
+  const setParks = useStore((state) => state.setParks);
   // animated shared value
   const animatedPosition = useSharedValue(0);
 
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["30%", "60%"], []);
-  const handleSheetChanges = useCallback(
-    (fromIndex: number, toIndex: number) => {
-      // if (toIndex === 0) {
-      //   setMapHeight("100%");
-      // } else {
-      //   setMapHeight("40%");
-      // }
-    },
-    []
-  );
 
   const mapRef = useRef(null);
   const setLocation = useStore((state) => state.setLocation);
@@ -91,8 +84,7 @@ const Home = ({ navigation }) => {
     const fetchNearestParks = async () => {
       const nearestParks = await getNearestDogParks(location.coords);
       if (nearestParks) {
-        console.log("nearest parks:" + nearestParks);
-        setNearParks(nearestParks);
+        setParks(nearestParks);
       }
     };
     fetchNearestParks();
@@ -141,7 +133,6 @@ const Home = ({ navigation }) => {
         ref={bottomSheetRef}
         index={1}
         snapPoints={snapPoints}
-        onAnimate={handleSheetChanges}
       >
         {!parks && (
           <View className="flex mt-10 items-center justify-center h-full relative w-full">
@@ -154,16 +145,10 @@ const Home = ({ navigation }) => {
         )}
         {parks && (
           <View className="w-full h-full">
-            <FlatList
-              ItemSeparatorComponent={() => (
-                <View
-                  style={{ height: 1 }}
-                  className="bg-gray-200 mx-10"
-                ></View>
-              )}
+            <List
               data={parks}
-              renderItem={({ item }) => <ParkItem park={item} />}
-            ></FlatList>
+              renderItem={({item}) => <ParkItem item={item} />}
+            />
           </View>
         )}
       </BottomSheet>
