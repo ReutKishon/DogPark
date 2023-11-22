@@ -1,6 +1,7 @@
 import { TouchableOpacity, Text, View, Pressable } from "react-native";
 import buttonStyles from "./button.style";
 import React from "react";
+import { COLORS } from "../../../constants";
 
 const Button = ({ buttonText: text, onPress: onClick, children }) => {
   return (
@@ -18,7 +19,7 @@ const Button = ({ buttonText: text, onPress: onClick, children }) => {
 };
 
 
-export const Button2 = ({ onPress: onClick, children, className, size, text }) => {
+export const Button2 = ({ onPress: onClick, children, className, size, text, secondary }) => {
 
   const dimensions = { width: 300, height: 50 };
   if (size === "small") {
@@ -32,11 +33,12 @@ export const Button2 = ({ onPress: onClick, children, className, size, text }) =
 
 
 
+
   return (
     <Pressable className="active:opacity-90"
       onPress={onClick}
     >
-      <View className={"flex justify-center items-center " + className} style={[dimensions, buttonStyles.button,]}>
+      <View className={"flex justify-center items-center " + className} style={[dimensions, buttonStyles.button]}>
         {text && <Text style={{ fontSize: 12 }} className="text-white"> {text}</Text>}
         {children}
       </View>
