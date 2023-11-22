@@ -29,80 +29,83 @@ import {
 import { useSharedValue } from "react-native-reanimated";
 import List from "../../components/List";
 import MainView from "./MainView";
-import { MenuView } from '@react-native-menu/menu';
+import { MenuView } from "@react-native-menu/menu";
+import { Avatar } from 'tamagui'
 
 const HeaderItems = (props) => {
-  return     <View className="w-full">
-  <MenuView
-    title="Menu Title"
-    onPressAction={({ nativeEvent }) => {
-      console.warn(JSON.stringify(nativeEvent));
-    }}
-    actions={[
-      {
-        id: 'add',
-        titleColor: '#2367A2',
-        image: Platform.select({
-          ios: 'plus',
-          android: 'ic_menu_add',
-        }),
-        imageColor: '#2367A2',
-        subactions: [
+  return (
+    <View className="w-full">
+      <MenuView
+        title="Menu Title"
+        onPressAction={({ nativeEvent }) => {
+          console.warn(JSON.stringify(nativeEvent));
+        }}
+        actions={[
           {
-            id: 'nested1',
-            title: 'Nested action',
-            titleColor: 'rgba(250,180,100,0.5)',
-            subtitle: 'State is mixed',
+            id: "add",
+            titleColor: "#2367A2",
             image: Platform.select({
-              ios: 'heart.fill',
-              android: 'ic_menu_today',
+              ios: "plus",
+              android: "ic_menu_add",
             }),
-            imageColor: 'rgba(100,200,250,0.3)',
-            state: 'mixed',
+            imageColor: "#2367A2",
+            subactions: [
+              {
+                id: "nested1",
+                title: "Nested action",
+                titleColor: "rgba(250,180,100,0.5)",
+                subtitle: "State is mixed",
+                image: Platform.select({
+                  ios: "heart.fill",
+                  android: "ic_menu_today",
+                }),
+                imageColor: "rgba(100,200,250,0.3)",
+                state: "mixed",
+              },
+              {
+                id: "nestedDestructive",
+                title: "Destructive Action",
+                attributes: {
+                  destructive: true,
+                },
+                image: Platform.select({
+                  ios: "trash",
+                  android: "ic_menu_delete",
+                }),
+              },
+            ],
           },
           {
-            id: 'nestedDestructive',
-            title: 'Destructive Action',
+            id: "share",
+            title: "Share Action",
+            titleColor: "#46F289",
+            subtitle: "Share action on SNS",
+            image: Platform.select({
+              ios: "square.and.arrow.up",
+              android: "ic_menu_share",
+            }),
+            imageColor: "#46F289",
+            state: "on",
+          },
+          {
+            id: "destructive",
+            title: "Destructive Action",
             attributes: {
               destructive: true,
             },
             image: Platform.select({
-              ios: 'trash',
-              android: 'ic_menu_delete',
+              ios: "trash",
+              android: "ic_menu_delete",
             }),
           },
-        ],
-      },
-      {
-        id: 'share',
-        title: 'Share Action',
-        titleColor: '#46F289',
-        subtitle: 'Share action on SNS',
-        image: Platform.select({
-          ios: 'square.and.arrow.up',
-          android: 'ic_menu_share',
-        }),
-        imageColor: '#46F289',
-        state: 'on',
-      },
-      {
-        id: 'destructive',
-        title: 'Destructive Action',
-        attributes: {
-          destructive: true,
-        },
-        image: Platform.select({
-          ios: 'trash',
-          android: 'ic_menu_delete',
-        }),
-      },
-    ]}
-    shouldOpenOnLongPress={false}
-  >
-    <Button title="elad"/>
-    </MenuView>
-  </View>
-}
+        ]}
+        shouldOpenOnLongPress={false}
+      >
+        <Button title="elad" />
+      </MenuView>
+    </View>
+  );
+};
 
 const Home = ({ navigation }) => {
   const user = useStore((state) => state.user);
@@ -147,6 +150,9 @@ const Home = ({ navigation }) => {
         style={{ zIndex: 9999 }}
       >
         <View className="mt-10 w-full py-4">
+          <Avatar circular size="$6">
+            <Avatar.Image src="http://placekitten.com/200/300" />
+          </Avatar>
           <Text
             className="text-3xl text-left font-bold"
             // style={{ fontFamily: "Poppins_700Bold" }}

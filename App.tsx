@@ -3,7 +3,8 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { BlurView } from "@react-native-community/blur";
-
+import { TamaguiProvider } from "tamagui";
+import tamaguiConfig from "./tamagui.config";
 import {
   Welcome,
   Register,
@@ -100,11 +101,7 @@ function App() {
             blurType="light"
             blurAmount={100}
           >
-            <BottomTabBar
-              style={{
-              }}
-              {...props}
-            />
+            <BottomTabBar style={{}} {...props} />
           </BlurView>
         )}
         screenOptions={({ route }) => ({
@@ -131,24 +128,26 @@ function App() {
   };
 
   return (
-    <NavigationContainer theme={{ colors: { background: "white",  } }}>
-      <Stack.Navigator
-        initialRouteName="Welcome"
-        screenOptions={{ headerShown: false }}
-      >
-        <Stack.Screen name="Welcome" component={Welcome} />
-        <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen name="SignIn" component={SignIn} />
-        <Stack.Screen name="DogDetails" component={DogDetails} />
-        <Stack.Screen name="Parks" component={Parks} />
-        <Stack.Screen name="ParkDetails" component={ParkDetails} />
-        <Stack.Screen
-          name="DrawerNavigation"
-          options={{ headerShown: false, gestureEnabled: false }}
-          component={DrawerNavigation}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <TamaguiProvider config={tamaguiConfig}>
+      <NavigationContainer theme={{ colors: { background: "white" } }}>
+        <Stack.Navigator
+          initialRouteName="Welcome"
+          screenOptions={{ headerShown: false }}
+        >
+          <Stack.Screen name="Welcome" component={Welcome} />
+          <Stack.Screen name="Register" component={Register} />
+          <Stack.Screen name="SignIn" component={SignIn} />
+          <Stack.Screen name="DogDetails" component={DogDetails} />
+          <Stack.Screen name="Parks" component={Parks} />
+          <Stack.Screen name="ParkDetails" component={ParkDetails} />
+          <Stack.Screen
+            name="DrawerNavigation"
+            options={{ headerShown: false, gestureEnabled: false }}
+            component={DrawerNavigation}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </TamaguiProvider>
   );
 }
 
