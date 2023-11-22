@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
-import { getNearestDogParks } from "../../utils/parkDataOperations";
+import { getNearestDogParks } from "../../api/parkDataOperations";
 import { ParkCard } from "../../components";
 import styles from "./parks.style";
 const Parks = ({ navigation, route }) => {

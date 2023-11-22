@@ -3,7 +3,7 @@ import styles from "./parkCard.style";
 import { checkImageURL } from "../../../utils";
 import { COLORS, icons } from "../../../constants";
 import { useState, useEffect } from "react";
-import { GetDistanceAndAddress } from "../../../utils/parkDataOperations";
+import { GetDistanceAndAddress } from "../../../api/parkDataOperations";
 
 const ParkCard = ({ navigation, park, selectedDogs }) => {
   const [parkId, setParkId] = useState("");
@@ -45,7 +45,7 @@ const ParkCard = ({ navigation, park, selectedDogs }) => {
     });
   };
 
- //if (isLoading) return;
+  //if (isLoading) return;
   return (
     <TouchableOpacity onPress={handleNavigate} style={styles.container}>
       <View style={styles.textContainer}>

@@ -3,17 +3,16 @@ import { COLORS, SIZES } from "../../../constants";
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: COLORS.lightWhite,
-    padding: 14,
-    borderRadius: 15,
+    backgroundColor: COLORS.primary,
+    padding: 10,
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
   },
   btnText: {
-    //color: "white",
+    color: COLORS.white,
     textAlign: "center",
     fontWeight: "bold",
-    textAlign: "center",
     fontSize: SIZES.large,
   },
 });
