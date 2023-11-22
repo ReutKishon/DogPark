@@ -26,32 +26,10 @@ import {
 } from "../../api/parkDataOperations";
 import { useSharedValue } from "react-native-reanimated";
 import List from "../../components/List";
-
-const DogItem = ({ dog }) => (
-  <View className="w-full h-24 flex justify-center p-10">
-    <Text>{dog.name}</Text>
-  </View>
-);
-
-const ParkItem = ({ item }) => {
-  console.log("park", item);
-  return (
-    <View className="w-full flex justify-center p-10 gap-2">
-      <View className="flex flex-row">
-        <Text className="font-bold">{item.name}</Text>
-        <Text className="font-bold">{item.distance}</Text>
-
-      </View>
-      <Text className="font-regular" style={{fontSize: 12}}>{item.vicinity}</Text>
-    </View>
-  );
-};
+import MainView from "./MainView";
 
 const Home = ({ navigation }) => {
   const user = useStore((state) => state.user);
-  const parks = useStore((state) => state.parks);
-  const setParks = useStore((state) => state.setParks);
-
   const bottomSheetRef = useRef(null);
   const bottomSheetModalPark = useRef(null);
   const snapPoints = useMemo(() => ["30%", "60%"], []);
@@ -59,7 +37,6 @@ const Home = ({ navigation }) => {
   const mapRef = useRef(null);
   const setLocation = useStore((state) => state.setLocation);
   const location = useStore((state) => state.location);
-
 
   useEffect(() => {
     (async () => {
@@ -80,19 +57,6 @@ const Home = ({ navigation }) => {
       }
     })();
   }, []);
-
-  useEffect(() => {
-    if (!location) {
-      return;
-    }
-    const fetchNearestParks = async () => {
-      const nearestParks = await getNearestDogParks(location.coords);
-      if (nearestParks) {
-        setParks(nearestParks);
-      }
-    };
-    fetchNearestParks();
-  }, [location]);
 
   useEffect(() => {
     if (bottomSheetModalPark.current) {
@@ -138,58 +102,9 @@ const Home = ({ navigation }) => {
         zoomEnabled
       />
 
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={1}
-        snapPoints={snapPoints}
-      >
-        {!parks && (
-          <View className="flex mt-10 items-center justify-center h-full relative w-full">
-            <ActivityIndicator
-              className="absolute bottom-0 top-0 z-50"
-              size="large"
-              color="#0000ff"
-            />
-          </View>
-        )}
-        {parks && (
-          <View className="w-full h-full">
-            <List
-              data={parks}
-              renderItem={({ item }) => <ParkItem item={item} />}
-            />
-          </View>
-        )}
+      <BottomSheet ref={bottomSheetRef} index={1} snapPoints={snapPoints}>
+        <MainView />
       </BottomSheet>
-
-      <BottomSheetModalProvider>
-        <View className="w-full">
-          <BottomSheetModal
-            enableDismissOnClose={false}
-            ref={bottomSheetModalPark}
-            index={1}
-            snapPoints={snapPoints}
-          >
-            {!parks && (
-              <View className="flex mt-10 items-center justify-center h-full relative w-full">
-                <ActivityIndicator
-                  className="absolute bottom-0 top-0 z-50"
-                  size="large"
-                  color="#0000ff"
-                />
-              </View>
-            )}
-            {parks && (
-              <View className="w-full h-full">
-                <List
-                  data={parks}
-                  renderItem={({ item }) => <ParkItem item={item} />}
-                />
-              </View>
-            )}
-          </BottomSheetModal>
-        </View>
-      </BottomSheetModalProvider>
     </View>
   );
 };

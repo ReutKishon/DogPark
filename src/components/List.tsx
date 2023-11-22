@@ -9,6 +9,7 @@ export default function List({ data, renderItem }) {
       )}
       data={data}
       renderItem={renderItem}
+      
     ></FlatList>
   );
 }

@@ -44,6 +44,7 @@ import {
 import firebase from "firebase/compat";
 import { useStore } from "./src/store";
 import { getUserLocation } from "./src/api/parkDataOperations";
+import { COLORS } from "./src/constants";
 
 
 function App() {
@@ -87,7 +88,7 @@ function App() {
           let iconName;
 
           iconName = routerToIcon[route.name];
-          if (focused) {
+          if (!focused) {
             iconName = iconName + '-outline';
           }
 
@@ -112,7 +113,7 @@ function App() {
 
 
   return (
-      <NavigationContainer>
+      <NavigationContainer theme={{colors:{background: "white"}}}>
         <Stack.Navigator initialRouteName="Welcome" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Welcome" component={Welcome} />
           <Stack.Screen name="Register" component={Register} />
