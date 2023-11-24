@@ -88,21 +88,21 @@ function App() {
       <Tab.Navigator
         initialRouteName="Home"
         tabBar={(props) => (
-          <BlurView
-            style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: 80,
-              zIndex: 9999,
-              paddingBottom: 20,
-            }}
-            blurType="light"
-            blurAmount={100}
-          >
+          // <BlurView
+          //   style={{
+          //     position: "absolute",
+          //     bottom: 0,
+          //     left: 0,
+          //     right: 0,
+          //     height: 80,
+          //     zIndex: 9999,
+          //     paddingBottom: 20,
+          //   }}
+          //   blurType="light"
+          //   blurAmount={100}
+          // >
             <BottomTabBar style={{}} {...props} />
-          </BlurView>
+          // </BlurView>
         )}
         screenOptions={({ route }) => ({
           headerShown: false,
@@ -114,7 +114,7 @@ function App() {
               iconName = iconName + "-outline";
             }
 
-            console.log(size);
+            //console.log(size);
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={20} color={color} />;
           },

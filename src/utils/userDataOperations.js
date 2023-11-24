@@ -20,28 +20,25 @@ export const getUserData = async (userId) => {
   }
 };
 
-export const AddDogToUser = async (userData, setUserData, dogData) => {
-  console.log(userData);
+export const AddDogToUser = async (userId, userDogs, dogData) => {
+  console.log(userId);
   try {
     const docRef = await addDoc(collection(firestore, "dogs"), dogData);
     if (docRef && docRef.id) {
-      if (docRef) {
-        const newDogRef = docRef;
+      const newDogRef = docRef;
 
-        await updateDoc(doc(firestore, "users", userData.id), {
-          dogs: arrayUnion(newDogRef),
-        });
+      await updateDoc(doc(firestore, "users", userId), {
+        dogs: arrayUnion(newDogRef),
+      });
 
-        //console.log("newDogRef:" + newDogRef.id);
-        const updatedUserData = { ...userData };
-        updatedUserData.dogs.push(newDogRef);
-        setUserData(updatedUserData);
-      }
+      // const updatedUserDogs =
+      //   userDogs === undefined ? [newDogRef] : { ...userDogs, newDogRef };
+      // console.log("updatedUserDogs: " + updatedUserDogs);
     } else {
       console.error("Invalid docRef or missing ID.");
     }
   } catch (error) {
-    console.error(error);
+    console.error(error + "hi");
   }
 };
 

@@ -5,27 +5,47 @@ import { auth } from "../../../firebase";
 import { Button } from "../../components";
 import { getUser } from "../../api";
 import { useStore } from "../../store";
+import { getUserDogs } from "../../utils/userDataOperations";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("elad.636@gmail.com");
   const [password, setPassword] = useState("Elad9352221");
   const [errorMessage, setErrorMessage] = useState("");
-  const setUser = useStore((state) => state.setUser)
+  const setUser = useStore((state) => state.setUser);
+  const setDogs = useStore((state) => state.setDogs);
 
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        console.log("user is signed in");
-        user.id = user.uid;
-        user = await getUser(user.id);
-        setUser(user)
-        console.log("user found and set in context", user);
-        navigation.navigate("DrawerNavigation", { screen: "Home" });
+      try {
+        if (user) {
+          console.log("user is signed in");
+          user.id = user.uid;
+          user = await getUser(user.id);
+          setUser(user);
+        
+          await fetchUserDogs(user.id);
+      
+          console.log("user found and set in context", user);
+          navigation.navigate("DrawerNavigation", { screen: "Home" });
+        }
+      } catch {
+        console.error("Error in onAuthStateChanged:", error);
       }
     });
   }, []);
 
-
+  const fetchUserDogs = async (userId) => {
+    console.log("hi: ");
+    try {
+      const dogs = await getUserDogs(userId);
+      console.log("dogs: ", dogs);
+      if (dogs) {
+        setDogs(dogs);
+      }
+    } catch (error) {
+      console.error("Error fetching user dogs:", error);
+    }
+  };
 
   const handleSignIn = async () => {
     const { user } = await auth
@@ -40,7 +60,8 @@ const SignIn = ({ navigation }) => {
         }
       });
   };
-  const imageUrl = 'https://media1.giphy.com/media/k6sC1yPY1fhbKzXdY4/giphy.gif?cid=ecf05e47gtkcg6y1tqza7sfmcmrcwos2vge6avgzgn2vmf04&ep=v1_stickers_search&rid=giphy.gif&ct=s';
+  const imageUrl =
+    "https://media1.giphy.com/media/k6sC1yPY1fhbKzXdY4/giphy.gif?cid=ecf05e47gtkcg6y1tqza7sfmcmrcwos2vge6avgzgn2vmf04&ep=v1_stickers_search&rid=giphy.gif&ct=s";
 
   return (
     <View className="flex flex-col items-center mt-24">
@@ -64,10 +85,7 @@ const SignIn = ({ navigation }) => {
           <Text style={styles.errorText}>{errorMessage}</Text>
         ) : null}
         <View>
-          <Button
-            buttonText="Sign in"
-            onPress={handleSignIn}
-          />
+          <Button buttonText="Sign in" onPress={handleSignIn} />
         </View>
       </View>
     </View>

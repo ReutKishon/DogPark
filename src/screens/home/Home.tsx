@@ -30,11 +30,12 @@ import { useSharedValue } from "react-native-reanimated";
 import List from "../../components/List";
 import MainView from "./MainView";
 import { MenuView } from "@react-native-menu/menu";
-import { Avatar } from 'tamagui'
+
 
 const HeaderItems = (props) => {
   return (
     <View className="w-full">
+      {/*       
       <MenuView
         title="Menu Title"
         onPressAction={({ nativeEvent }) => {
@@ -102,7 +103,7 @@ const HeaderItems = (props) => {
         shouldOpenOnLongPress={false}
       >
         <Button title="elad" />
-      </MenuView>
+      </MenuView> */}
     </View>
   );
 };
@@ -121,7 +122,7 @@ const Home = ({ navigation }) => {
     (async () => {
       const location = await getUserLocation();
       if (location) {
-        console.log("Location:", location);
+        //console.log("Location:", location);
         setLocation(location);
         mapRef.current.animateToRegion(
           {
@@ -150,9 +151,6 @@ const Home = ({ navigation }) => {
         style={{ zIndex: 9999 }}
       >
         <View className="mt-10 w-full py-4">
-          <Avatar circular size="$6">
-            <Avatar.Image src="http://placekitten.com/200/300" />
-          </Avatar>
           <Text
             className="text-3xl text-left font-bold"
             // style={{ fontFamily: "Poppins_700Bold" }}

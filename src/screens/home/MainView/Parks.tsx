@@ -6,7 +6,7 @@ import { getNearestDogParks } from "../../../api/parkDataOperations";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 const ParkItem = ({ item }) => {
-  console.log("park", item);
+  //console.log("park", item);
   return (
     <View className="w-full flex justify-center p-10 gap-2">
       <View className="flex flex-row">

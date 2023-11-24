@@ -29,6 +29,20 @@ const auth = firebase.auth();
 
 const firestore = firebase.firestore();
 
+/*
+const collectionRef = db.collection('parks');
+const unsubscribe = collectionRef.onSnapshot((snapshot) => {
+  const updatedData = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+  setData(updatedData);
+});
+
+// Clean up the listener when the component unmounts
+return () => unsubscribe();
+}, []); // Only run this effect once on mount
+*/
 export { auth, firestore };
   
   

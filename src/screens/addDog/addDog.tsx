@@ -4,11 +4,15 @@ import styles from "./addDog.style";
 import { auth, firestore } from "../../../firebase";
 import { Keyboard } from "react-native";
 import { AddDogToUser } from "../../utils/userDataOperations";
+import { useStore } from "../../store";
 
 const AddDog = ({ navigation }) => {
   const [dogName, setDogName] = useState("");
   const [dogGender, setDogGender] = useState("");
   const [dogAge, setDogAge] = useState("");
+  const user = useStore((state) => state.user);
+  const dogs = useStore((state) => state.dogs);
+  const setDogs = useStore((state) => state.setDogs);
 
   const handleAddDog = async () => {
     if (dogName == "" || dogGender == "" || dogAge == "") {
@@ -19,9 +23,10 @@ const AddDog = ({ navigation }) => {
       name: dogName,
       gender: dogGender,
       age: dogAge,
-      owner: userData.id,
+      owner: user.id,
     };
-    await AddDogToUser(userData, setUserData, dogData);
+    await AddDogToUser(user.id, dogs, dogData);
+
     Keyboard.dismiss();
     navigation.navigate("Home");
   };
