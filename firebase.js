@@ -1,7 +1,10 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
-import { initializeAuth, getReactNativePersistence } from "firebase/auth/react-native"
+import {
+  initializeAuth,
+  getReactNativePersistence,
+} from "firebase/auth/react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const firebaseConfig = {
   apiKey: "AIzaSyC0uwBYSX6PD3eTkyhzf1Fq4heW0Ayz5Og",
@@ -12,7 +15,6 @@ const firebaseConfig = {
   messagingSenderId: "174381801786",
   appId: "1:174381801786:web:05c86075f9ba5667b8b003",
   measurementId: "G-QR4KSSBNSQ",
-
 };
 
 if (!firebase.apps.length) {
@@ -20,7 +22,6 @@ if (!firebase.apps.length) {
   initializeAuth(firebase.apps[0], {
     persistence: getReactNativePersistence(AsyncStorage),
   });
-
 } else {
   firebase.app(); // if already initialized, use that one
 }
@@ -29,21 +30,4 @@ const auth = firebase.auth();
 
 const firestore = firebase.firestore();
 
-/*
-const collectionRef = db.collection('parks');
-const unsubscribe = collectionRef.onSnapshot((snapshot) => {
-  const updatedData = snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-  setData(updatedData);
-});
-
-// Clean up the listener when the component unmounts
-return () => unsubscribe();
-}, []); // Only run this effect once on mount
-*/
 export { auth, firestore };
-  
-  
-  

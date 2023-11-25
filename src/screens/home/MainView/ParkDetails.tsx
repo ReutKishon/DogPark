@@ -6,7 +6,8 @@ import { Button } from "../../../components";
 import { Button2 } from "../../../components/common/button/Button";
 import { Avatar } from "tamagui";
 import { useStore } from "../../../store";
-
+import { firestore } from "../../../../firebase";
+import { doc, onSnapshot } from "firebase/firestore";
 const DogItem = ({ dog }) => (
   <View className="w-full h-40 flex justify-center p-5 gap-2">
     <Text className="font-bold text-xl">{dog.name}</Text>
@@ -42,6 +43,7 @@ const DogsIconsList = ({ dogs, handleIconPress, selectedDogs }) => (
 
 export default function ParkDetails({ navigation, route }) {
   const { park } = route.params;
+  console.log("park:" + park.place_id);
   const [dogsInThePark, setDogsInThePark] = useState([]);
   const dogs = useStore((state) => state.dogs);
   const [selectedDogs, setSelectedDogs] = useState([]);
@@ -54,7 +56,10 @@ export default function ParkDetails({ navigation, route }) {
   };
 
   useEffect(() => {
-    fetchDogsInPark();
+    onSnapshot(doc(firestore, "parks", park.place_id), (doc) => {
+      console.log("data: ", doc.data());
+      fetchDogsInPark();
+    });
   }, []);
 
   const handleIconPress = (index) => {
