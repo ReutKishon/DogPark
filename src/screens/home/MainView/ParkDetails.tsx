@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { Text, View, FlatList, Pressable } from "react-native";
-import { GetDogsInPark, AddDogsToPark } from "../../../api/parkDataOperations";
+import {
+  GetDogsInPark,
+  AddDogsToPark,
+  RemoveDogsFromPark,
+} from "../../../api/parkDataOperations";
 import List from "../../../components/List";
 import { Button } from "../../../components";
 import { Button2 } from "../../../components/common/button/Button";
@@ -43,10 +47,11 @@ const DogsIconsList = ({ dogs, handleIconPress, selectedDogs }) => (
 
 export default function ParkDetails({ navigation, route }) {
   const { park } = route.params;
-  console.log("park:" + park.place_id);
+  //console.log("park:" + park.place_id);
   const [dogsInThePark, setDogsInThePark] = useState([]);
   const dogs = useStore((state) => state.dogs);
   const [selectedDogs, setSelectedDogs] = useState([]);
+  const [isInThePark, setIsInThePark] = useState(false);
 
   const fetchDogsInPark = async () => {
     const dogs = await GetDogsInPark(park.place_id);
@@ -74,7 +79,12 @@ export default function ParkDetails({ navigation, route }) {
 
   const handleJoinPress = async () => {
     const dogsKeys = selectedDogs.map((dogIndex) => dogs[dogIndex].key);
-    await AddDogsToPark(park.place_id, dogsKeys);
+    setIsInThePark(!isInThePark);
+    if (isInThePark) {
+      await RemoveDogsFromPark(park.place_id, dogsKeys);
+    } else {
+      await AddDogsToPark(park.place_id, dogsKeys);
+    }
     await fetchDogsInPark();
   };
 
@@ -89,7 +99,11 @@ export default function ParkDetails({ navigation, route }) {
       </View>
       <Text className="font-bold text-xl">{park.name}</Text>
       <View>
-        <Button2 size="small" text={"Join"} onPress={handleJoinPress} />
+        <Button2
+          size="small"
+          text={isInThePark ? "Exit" : "Join"}
+          onPress={handleJoinPress}
+        />
       </View>
       <List
         data={dogsInThePark}
