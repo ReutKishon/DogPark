@@ -146,33 +146,7 @@ const Home = ({ navigation }) => {
 
   return (
     <View className="flex items-center justify-start h-full w-full relative">
-      <View
-        className="py-4  px-4 w-full absolute top-0 bg-white"
-        style={{ zIndex: 9999 }}
-      >
-        <View className="mt-10 w-full py-4">
-          <Text
-            className="text-3xl text-left font-bold"
-            // style={{ fontFamily: "Poppins_700Bold" }}
-          >
-            Hello {user.name}
-          </Text>
-        </View>
-
-        <Pressable
-          onPress={() => {
-            {
-              console.log("sign out");
-              auth.signOut();
-              navigation.navigate("SignIn");
-            }
-          }}
-        >
-          <Text>Sign out</Text>
-        </Pressable>
-
-        <HeaderItems />
-      </View>
+     
       <MapView.Animated
         className="w-full h-full"
         ref={mapRef}

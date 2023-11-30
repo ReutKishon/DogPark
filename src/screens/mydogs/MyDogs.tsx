@@ -5,6 +5,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useStore } from "../../store";
 import List from "../../components/List";
 import { getUserDogs } from "../../utils/userDataOperations";
+import { useDogs } from "../../api/queries";
 
 const DogItem = ({ dog }) => (
   <View className="w-full h-40 flex justify-center p-5 gap-2">
@@ -16,24 +17,25 @@ const DogItem = ({ dog }) => (
 
 const MyDogs = ({ navigation }) => {
   const user = useStore((state) => state.user);
-  const dogs = useStore((state) => state.dogs);
-  const setDogs = useStore((state) => state.setDogs);
+  const {data:dogs} = useDogs()
+  
+  // const setDogs = useStore((state) => state.setDogs);
 
-  useEffect(() => {
-    const fetchUserDogs = async () => {
-      const dogs = await getUserDogs(user.id);
-      if (dogs) {
-        console.log("dogs", dogs);
-        setDogs(dogs);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchUserDogs = async () => {
+  //     const dogs = await getUserDogs(user.id);
+  //     if (dogs) {
+  //       console.log("dogs", dogs);
+  //       setDogs(dogs);
+  //     }
+  //   };
 
-    fetchUserDogs();
-  }, [user]);
+  //   fetchUserDogs();
+  // }, [user]);
 
-  const handleDogPress = (dog) => {
-    navigation.navigate("DogDetails", { dog });
-  };
+  // const handleDogPress = (dog) => {
+  //   navigation.navigate("DogDetails", { dog });
+  // };
   if (!dogs) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }

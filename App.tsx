@@ -47,6 +47,8 @@ import firebase from "firebase/compat";
 import { useStore } from "./src/store";
 import { getUserLocation } from "./src/api/parkDataOperations";
 import { COLORS } from "./src/constants";
+import { QueryClient, QueryClientProvider } from "react-query";
+const queryClient = new QueryClient();
 
 function App() {
   const [fontsLoaded] = useFonts({
@@ -101,7 +103,7 @@ function App() {
           //   blurType="light"
           //   blurAmount={100}
           // >
-            <BottomTabBar style={{}} {...props} />
+          <BottomTabBar style={{}} {...props} />
           // </BlurView>
         )}
         screenOptions={({ route }) => ({
@@ -128,26 +130,28 @@ function App() {
   };
 
   return (
-    <TamaguiProvider config={tamaguiConfig}>
-      <NavigationContainer theme={{ colors: { background: "white" } }}>
-        <Stack.Navigator
-          initialRouteName="Welcome"
-          screenOptions={{ headerShown: false }}
-        >
-          <Stack.Screen name="Welcome" component={Welcome} />
-          <Stack.Screen name="Register" component={Register} />
-          <Stack.Screen name="SignIn" component={SignIn} />
-          <Stack.Screen name="DogDetails" component={DogDetails} />
-          <Stack.Screen name="Parks" component={Parks} />
-          <Stack.Screen name="ParkDetails" component={ParkDetails} />
-          <Stack.Screen
-            name="DrawerNavigation"
-            options={{ headerShown: false, gestureEnabled: false }}
-            component={DrawerNavigation}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </TamaguiProvider>
+    <QueryClientProvider client={queryClient}>
+      <TamaguiProvider config={tamaguiConfig}>
+        <NavigationContainer theme={{ colors: { background: "white" } }}>
+          <Stack.Navigator
+            initialRouteName="Welcome"
+            screenOptions={{ headerShown: false }}
+          >
+            <Stack.Screen name="Welcome" component={Welcome} />
+            <Stack.Screen name="Register" component={Register} />
+            <Stack.Screen name="SignIn" component={SignIn} />
+            <Stack.Screen name="DogDetails" component={DogDetails} />
+            <Stack.Screen name="Parks" component={Parks} />
+            <Stack.Screen name="ParkDetails" component={ParkDetails} />
+            <Stack.Screen
+              name="DrawerNavigation"
+              options={{ headerShown: false, gestureEnabled: false }}
+              component={DrawerNavigation}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </TamaguiProvider>
+    </QueryClientProvider>
   );
 }
 

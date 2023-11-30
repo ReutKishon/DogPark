@@ -12,6 +12,7 @@ import { Avatar } from "tamagui";
 import { useStore } from "../../../store";
 import { firestore } from "../../../../firebase";
 import { doc, onSnapshot } from "firebase/firestore";
+import { useDogs } from "../../../api/queries";
 const DogItem = ({ dog }) => (
   <View className="w-full h-40 flex justify-center p-5 gap-2">
     <Text className="font-bold text-xl">{dog.name}</Text>
@@ -49,7 +50,7 @@ export default function ParkDetails({ navigation, route }) {
   const { park } = route.params;
   //console.log("park:" + park.place_id);
   const [dogsInThePark, setDogsInThePark] = useState([]);
-  const dogs = useStore((state) => state.dogs);
+  const {data:dogs} = useDogs()
   const [selectedDogs, setSelectedDogs] = useState([]);
   const [isInThePark, setIsInThePark] = useState(false);
 
@@ -64,6 +65,7 @@ export default function ParkDetails({ navigation, route }) {
     onSnapshot(doc(firestore, "parks", park.place_id), (doc) => {
       console.log("data: ", doc.data());
       fetchDogsInPark();
+      
     });
   }, []);
 

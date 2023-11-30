@@ -4,6 +4,7 @@ import List from "../../../components/List";
 import { useStore } from "../../../store";
 import { getNearestDogParks } from "../../../api/parkDataOperations";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useParks } from "../../../api/queries";
 
 const ParkItem = ({ item }) => {
   //console.log("park", item);
@@ -21,27 +22,10 @@ const ParkItem = ({ item }) => {
 };
 
 export default function Parks({ navigation }) {
-  const user = useStore((state) => state.user);
-  const parks = useStore((state) => state.parks);
-  const setParks = useStore((state) => state.setParks);
-  const location = useStore((state) => state.location);
+  const {data: parks, isLoading, isIdle} = useParks()  
 
-  useEffect(() => {
-    if (!location) {
-      return;
-    }
-    const fetchNearestParks = async () => {
-      const nearestParks = await getNearestDogParks(location.coords);
-      if (nearestParks) {
-        setParks(nearestParks);
-      }
-    };
-    fetchNearestParks();
-  }, [location]);
-
-  return (
-    parks && (
-      <View className="w-full h-full">
+  return  <View className="w-full h-full">
+    
         <List
           data={parks}
           renderItem={({ item, index }) => (
@@ -56,6 +40,4 @@ export default function Parks({ navigation }) {
           )}
         />
       </View>
-    )
-  );
 }
