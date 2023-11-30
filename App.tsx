@@ -3,7 +3,7 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { BlurView } from "@react-native-community/blur";
-import { PaperProvider } from 'react-native-paper';
+import { PaperProvider } from "react-native-paper";
 
 import {
   Welcome,
@@ -48,6 +48,8 @@ import { useStore } from "./src/store";
 import { getUserLocation } from "./src/api/parkDataOperations";
 import { COLORS } from "./src/constants";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 const queryClient = new QueryClient();
 
 function App() {
@@ -77,8 +79,8 @@ function App() {
   }
 
   const routerToIcon = {
-    Home: "home",
-    MyDogs: "ios-list",
+    Home: "paw",
+    MyDogs: "cog",
     AddDog: "add-circle",
   };
 
@@ -89,21 +91,68 @@ function App() {
     return (
       <Tab.Navigator
         initialRouteName="Home"
-        tabBar={(props) => (
-          // <BlurView
-          //   style={{
-          //     position: "absolute",
-          //     bottom: 0,
-          //     left: 0,
-          //     right: 0,
-          //     height: 80,
-          //     zIndex: 9999,
-          //     paddingBottom: 20,
-          //   }}
-          //   blurType="light"
-          //   blurAmount={100}
-          // >
-          <BottomTabBar style={{}} {...props} />
+        tabBar={({ state, descriptors, navigation }) => (
+          <View className="w-full h-12 flex justify-center items-center">
+            <View
+              className="flex flex-row justify-evenly w-1/2 mb-16 mx-12 h-16"
+              style={{ borderRadius: 60, backgroundColor: "#93E1D8" }}
+            >
+              {state.routes.map((route, index) => {
+                const { options } = descriptors[route.key];
+                const label =
+                  options.tabBarLabel !== undefined
+                    ? options.tabBarLabel
+                    : options.title !== undefined
+                    ? options.title
+                    : route.name;
+
+                const isFocused = state.index === index;
+
+                const onPress = () => {
+                  const event = navigation.emit({
+                    type: "tabPress",
+                    target: route.key,
+                    canPreventDefault: true,
+                  });
+
+                  if (!isFocused && !event.defaultPrevented) {
+                    navigation.navigate(route.name);
+                  }
+                };
+
+                const onLongPress = () => {
+                  navigation.emit({
+                    type: "tabLongPress",
+                    target: route.key,
+                  });
+                };
+
+                let iconName = routerToIcon[route.name];
+                if (!isFocused) {
+                  iconName = iconName + "-outline";
+                }
+
+                return (
+                  <View
+                    className="flex justify-center items-center"
+                    key={index}
+                  >
+                    <TouchableOpacity
+                      onPress={onPress}
+                      onLongPress={onLongPress}
+                    >
+                      <Ionicons
+                        name={iconName}
+                        size={30}
+                        color={isFocused ? "black" : COLORS.secondary}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
+            </View>
+          </View>
+          // <BottomTabBar style={{}} {...props} />
           // </BlurView>
         )}
         screenOptions={({ route }) => ({
@@ -124,7 +173,7 @@ function App() {
       >
         <Tab.Screen name="Home" component={Home} />
         <Tab.Screen name="MyDogs" component={MyDogs} />
-        <Tab.Screen name="AddDog" component={AddDog} />
+        {/* <Tab.Screen name="AddDog" component={AddDog} /> */}
       </Tab.Navigator>
     );
   };

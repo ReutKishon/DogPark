@@ -23,23 +23,26 @@ const ParkItem = ({ item }) => {
 };
 
 export default function Parks({ navigation }) {
-  const {data: parks, isLoading, isIdle} = useParks()  
+  const { data: parks, isLoading, isIdle } = useParks();
 
-  return  <View className="w-full h-full">
-            <Button mode="text">Elad</Button>
-
-        <List
-          data={parks}
-          renderItem={({ item, index }) => (
-            <TouchableOpacity
-              onPress={() => {
-                console.log("item", item);
-                navigation.navigate("ParkDetails", { park: item });
-              }}
-            >
-              <ParkItem item={item} />
-            </TouchableOpacity>
-          )}
-        />
+  return (
+    <View className="w-full h-full">
+      <View className="mx-4">
+        <Text className="text-2xl font-bold2">Parks Around</Text>
       </View>
+      <List
+        data={parks}
+        renderItem={({ item, index }) => (
+          <TouchableOpacity
+            onPress={() => {
+              console.log("item", item);
+              navigation.navigate("ParkDetails", { park: item });
+            }}
+          >
+            <ParkItem item={item} />
+          </TouchableOpacity>
+        )}
+      />
+    </View>
+  );
 }
