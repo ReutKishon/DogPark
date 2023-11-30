@@ -13,7 +13,6 @@ import {
   FlatList,
   Pressable,
   Platform,
-  Button,
 } from "react-native";
 import MapView from "react-native-maps";
 import BottomSheet, {
@@ -30,7 +29,7 @@ import { useSharedValue } from "react-native-reanimated";
 import List from "../../components/List";
 import MainView from "./MainView";
 import { MenuView } from "@react-native-menu/menu";
-
+import { Button } from "react-native-paper";
 
 const HeaderItems = (props) => {
   return (
@@ -146,7 +145,6 @@ const Home = ({ navigation }) => {
 
   return (
     <View className="flex items-center justify-start h-full w-full relative">
-     
       <MapView.Animated
         className="w-full h-full"
         ref={mapRef}

@@ -3,8 +3,8 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { BlurView } from "@react-native-community/blur";
-import { TamaguiProvider } from "tamagui";
-import tamaguiConfig from "./tamagui.config";
+import { PaperProvider } from 'react-native-paper';
+
 import {
   Welcome,
   Register,
@@ -131,7 +131,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TamaguiProvider config={tamaguiConfig}>
+      <PaperProvider>
         <NavigationContainer theme={{ colors: { background: "white" } }}>
           <Stack.Navigator
             initialRouteName="Welcome"
@@ -150,7 +150,7 @@ function App() {
             />
           </Stack.Navigator>
         </NavigationContainer>
-      </TamaguiProvider>
+      </PaperProvider>
     </QueryClientProvider>
   );
 }

@@ -8,11 +8,11 @@ import {
 import List from "../../../components/List";
 import { Button } from "../../../components";
 import { Button2 } from "../../../components/common/button/Button";
-import { Avatar } from "tamagui";
 import { useStore } from "../../../store";
 import { firestore } from "../../../../firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useDogs } from "../../../api/queries";
+import { Avatar } from "react-native-paper";
 const DogItem = ({ dog }) => (
   <View className="w-full h-40 flex justify-center p-5 gap-2">
     <Text className="font-bold text-xl">{dog.name}</Text>
@@ -28,9 +28,7 @@ const DogsIconsList = ({ dogs, handleIconPress, selectedDogs }) => (
     renderItem={({ item, index }) => (
       <Pressable onPress={() => handleIconPress(index)}>
         <View style={{ opacity: selectedDogs.includes(index) ? 1 : 0.5 }}>
-          <Avatar circular size="$6">
-            <Avatar.Image src="http://placekitten.com/200/300" />
-          </Avatar>
+          <Avatar.Image size={64} source={{ uri: "http://placekitten.com/200/300" }} />
         </View>
       </Pressable>
     )}

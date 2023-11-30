@@ -5,6 +5,7 @@ import { useStore } from "../../../store";
 import { getNearestDogParks } from "../../../api/parkDataOperations";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useParks } from "../../../api/queries";
+import { Button } from "react-native-paper";
 
 const ParkItem = ({ item }) => {
   //console.log("park", item);
@@ -25,7 +26,8 @@ export default function Parks({ navigation }) {
   const {data: parks, isLoading, isIdle} = useParks()  
 
   return  <View className="w-full h-full">
-    
+            <Button mode="text">Elad</Button>
+
         <List
           data={parks}
           renderItem={({ item, index }) => (
