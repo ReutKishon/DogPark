@@ -5,7 +5,7 @@ import { useStore } from "../../../store";
 import { getNearestDogParks } from "../../../api/parkDataOperations";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useParks } from "../../../api/queries";
-import { Button } from "react-native-paper";
+import { Avatar, Button } from "react-native-paper";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -30,7 +30,7 @@ const ParkItem = ({ item }) => {
 
 export default function Parks({ navigation, route }) {
   // get popModal from params navigation
-  const {popModal} = route.params
+  const { toggleModal } = route.params;
 
   const { data: parks, isLoading, isIdle } = useParks();
 
@@ -38,13 +38,18 @@ export default function Parks({ navigation, route }) {
     <View className="w-full h-full px-4">
       <View className="flex flex-row items-center justify-between">
         <Text className="text-2xl font-bold2">Parks Around</Text>
-        <Button
-          mode="outline"
-          icon="paw"
-          onPress={() => popModal("myDogs")}
-        >
-          My Dogs
-        </Button>
+        <View className="flex flex-row">
+          <Button mode="outline" icon="paw" onPress={() => toggleModal("myDogs", true)}>
+            My Dogs
+          </Button>
+          <TouchableOpacity onPress={() => toggleModal("profile", true)}>
+            <Avatar.Image
+              size={40}
+              source={{ uri: "http://placekitten.com/200/300" }}
+            />
+          </TouchableOpacity>
+          
+        </View>
       </View>
       <View className="px-2">
         <List

@@ -6,11 +6,11 @@ import ParkDetails from "./ParkDetails";
 
 const Stack = createStackNavigator();
 
-export default function MainView({popModal}) {
+export default function MainView({toggleModal}) {
   //   Simple navigation between parks and dogs with no header
   return (
     <Stack.Navigator className="h-full" screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Parks" component={Parks} initialParams={{popModal}} />
+      <Stack.Screen name="Parks" component={Parks} initialParams={{toggleModal}} />
       <Stack.Screen name="ParkDetails" component={ParkDetails} />
     </Stack.Navigator>
   );

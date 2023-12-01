@@ -29,10 +29,11 @@ import MainView from "./MainView";
 import { MenuView } from "@react-native-menu/menu";
 import { Button } from "react-native-paper";
 import MyDogs from "../mydogs/MyDogs";
+import Profile from "../profile";
 
-export const MyDogsSheet = React.forwardRef((props, ref) => {
+export const HomeTemportatyModal = React.forwardRef((props, ref) => {
   // variables
-  const snapPoints = useMemo(() => ["30%", "60%"], []);
+  const snapPoints = useMemo(() => [ "60%"], []);
 
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
@@ -42,11 +43,11 @@ export const MyDogsSheet = React.forwardRef((props, ref) => {
   return (
     <BottomSheetModal
       ref={ref}
-      index={1}
+      index={0}
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
     >
-      <MyDogs />
+      {props.children}
     </BottomSheetModal>
   );
 });
@@ -56,6 +57,7 @@ const Home = ({ navigation }) => {
   const bottomSheetRef = useRef(null);
   const myDogsSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["30%", "60%"], []);
+  const [modalViewComponent, setModalViewComponent] = useState(<MyDogs />);
 
   const mapRef = useRef(null);
   const setLocation = useStore((state) => state.setLocation);
@@ -81,10 +83,21 @@ const Home = ({ navigation }) => {
     })();
   }, []);
 
-  const popModal = (key: string) => {
-    console.log("key", key);
+  const toggleModal = (key: string, show: boolean) => {
     if (key == "myDogs") {
+      setModalViewComponent(
+        <MyDogs toggleModal={toggleModal} navigation={navigation} />
+      );
+    }
+    if (key == "profile") {
+      console.log("key", key);
+      setModalViewComponent(<Profile navigation={navigation} toggleModal={toggleModal} />);
+    }
+
+    if (show) {
       myDogsSheetRef.current.present();
+    } else {
+      myDogsSheetRef.current.dismiss();
     }
   };
 
@@ -102,9 +115,9 @@ const Home = ({ navigation }) => {
       />
       <BottomSheetModalProvider>
         <BottomSheet ref={bottomSheetRef} index={1} snapPoints={snapPoints}>
-          <MainView popModal={popModal} />
+          <MainView toggleModal={toggleModal} />
         </BottomSheet>
-        <MyDogsSheet ref={myDogsSheetRef} />
+        <HomeTemportatyModal ref={myDogsSheetRef}>{modalViewComponent}</HomeTemportatyModal>
       </BottomSheetModalProvider>
     </View>
   );

@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Image } from "react-native";
 import styles from "./signIn.style";
 import { auth } from "../../../firebase";
-import { Button } from "../../components";
 import { getUser } from "../../api";
 import { useStore } from "../../store";
 import { getUserDogs } from "../../utils/userDataOperations";
+import { Button } from "react-native-paper";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("elad.636@gmail.com");
@@ -85,7 +85,8 @@ const SignIn = ({ navigation }) => {
           <Text style={styles.errorText}>{errorMessage}</Text>
         ) : null}
         <View>
-          <Button buttonText="Sign in" onPress={handleSignIn} />
+          <Button mode="contained" onPress={handleSignIn}
+          >Sign In</Button>
         </View>
       </View>
     </View>

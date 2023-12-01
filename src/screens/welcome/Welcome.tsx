@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-// import styles from "./welcome.style";
-import { Button } from "../../components";
+import { View } from "react-native";
 import { auth } from "../../../firebase";
 import { useStore } from "../../store";
 import { getUser } from "../../api";
 import { getUserDogs } from "../../utils/userDataOperations";
+import { Button } from "react-native-paper";
 
 const Welcome = ({ navigation }) => {
   const setUser = useStore((state) => state.setUser);
@@ -41,22 +40,23 @@ const Welcome = ({ navigation }) => {
     <View className="flex flex-col justify-center items-center h-full gap-2 w-full overflow-hidden">
       <View className="">
         <Button
-          buttonText="Register"
+          mode="contained"
           onPress={() => {
             navigation.navigate("Register");
           }}
-          buttonSize={{ width: 300, height: 50 }}
-        />
+        >
+          Register
+        </Button>
       </View>
-
       <View>
         <Button
-          buttonText="Sign in"
+          mode="outlined"
           onPress={() => {
             navigation.navigate("SignIn");
           }}
-          buttonSize={{ width: 300, height: 50 }}
-        />
+        >
+          Sign In
+        </Button>
       </View>
     </View>
   );

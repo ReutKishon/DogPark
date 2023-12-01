@@ -6,6 +6,7 @@ import { useStore } from "../../store";
 import List from "../../components/List";
 import { getUserDogs } from "../../utils/userDataOperations";
 import { useDogs } from "../../api/queries";
+import { Button, IconButton } from "react-native-paper";
 
 const DogItem = ({ dog }) => (
   <View className="w-full h-40 flex justify-center p-5 gap-2">
@@ -15,32 +16,19 @@ const DogItem = ({ dog }) => (
   </View>
 );
 
-const MyDogs = ({ navigation }) => {
+const MyDogs = ({ navigation, toggleModal }) => {
   const user = useStore((state) => state.user);
-  const {data:dogs} = useDogs()
-  
-  // const setDogs = useStore((state) => state.setDogs);
+  const { data: dogs } = useDogs();
 
-  // useEffect(() => {
-  //   const fetchUserDogs = async () => {
-  //     const dogs = await getUserDogs(user.id);
-  //     if (dogs) {
-  //       console.log("dogs", dogs);
-  //       setDogs(dogs);
-  //     }
-  //   };
-
-  //   fetchUserDogs();
-  // }, [user]);
-
-  // const handleDogPress = (dog) => {
-  //   navigation.navigate("DogDetails", { dog });
-  // };
   if (!dogs) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
   return (
-    <View className="flex w-full px-4 gap-2 pt-10">
+    <View className="flex w-full px-4 gap-2">
+      <View className="flex flex-row justify-between">
+        <Text className="text-2xl font-bold2">My Dogs</Text>
+        <IconButton icon={"close"} size={18} mode="contained" onPress={() => toggleModal("myDogs", false)} />
+      </View>
       <List data={dogs} renderItem={({ item }) => <DogItem dog={item} />} />
     </View>
   );

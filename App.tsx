@@ -167,7 +167,6 @@ function App() {
         })}
       >
         <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Profile" component={Profile} />
         {/* <Tab.Screen name="AddDog" component={AddDog} /> */}
       </Tab.Navigator>
     );
@@ -187,7 +186,7 @@ function App() {
             <Stack.Screen
               name="DrawerNavigation"
               options={{ headerShown: false, gestureEnabled: false }}
-              component={DrawerNavigation}
+              component={Home}
             />
           </Stack.Navigator>
         </NavigationContainer>

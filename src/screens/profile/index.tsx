@@ -2,20 +2,27 @@ import { Text, View } from "react-native";
 import { useStore } from "../../store";
 import SettingSection from "../../components/Settings/SettingSection";
 import List from "../../components/List";
-import { Divider, Switch, ToggleButton } from "react-native-paper";
+import { Button, Divider, IconButton, Switch, ToggleButton } from "react-native-paper";
+import { auth } from "../../../firebase";
 
-export default function Profile() {
+export default function Profile({ navigation, toggleModal}) {
   const user = useStore((state) => state.user);
   return (
-    <View className="w-full mt-20">
+    <View className="w-full">
       <View className="flex gap-4 ">
-        <View className="px-4 w-full">
+        <View className="px-4  flex flex-row justify-between items-center">
           <Text className="text-3xl font-bold2">
             Hey <Text style={{ color: "#861657" }}>{user.name}</Text>!
           </Text>
+          <IconButton
+            icon={"close"}
+            size={18}
+            mode="contained"
+            onPress={() => toggleModal("profile", false)}
+          />
         </View>
 
-        <View className="flex items-center px-4">
+        <View className="flex items-center px-4 gap-4">
           <SettingSection title="Account">
             <View className="flex gap-4">
               <View className="flex flex-row items-center justify-between">
@@ -29,6 +36,17 @@ export default function Profile() {
               </View>
             </View>
           </SettingSection>
+          <Button
+            onPress={() => {
+              {
+                console.log("sign out");
+                auth.signOut();
+                navigation.navigate("SignIn");
+              }
+            }}
+          >
+            Sign out
+          </Button>
         </View>
       </View>
     </View>
