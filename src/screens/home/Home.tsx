@@ -5,6 +5,7 @@ import React, {
   useMemo,
   useRef,
   useCallback,
+  forwardRef,
 } from "react";
 import {
   View,
@@ -21,96 +22,39 @@ import BottomSheet, {
 } from "@gorhom/bottom-sheet";
 import { auth } from "../../../firebase";
 import { useStore } from "../../store";
-import {
-  getNearestDogParks,
-  getUserLocation,
-} from "../../api/parkDataOperations";
+import { getUserLocation } from "../../api/parkDataOperations";
 import { useSharedValue } from "react-native-reanimated";
 import List from "../../components/List";
 import MainView from "./MainView";
 import { MenuView } from "@react-native-menu/menu";
 import { Button } from "react-native-paper";
+import MyDogs from "../mydogs/MyDogs";
 
-const HeaderItems = (props) => {
+export const MyDogsSheet = React.forwardRef((props, ref) => {
+  // variables
+  const snapPoints = useMemo(() => ["30%", "60%"], []);
+
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index);
+  }, []);
+
+  // renders
   return (
-    <View className="w-full">
-      {/*       
-      <MenuView
-        title="Menu Title"
-        onPressAction={({ nativeEvent }) => {
-          console.warn(JSON.stringify(nativeEvent));
-        }}
-        actions={[
-          {
-            id: "add",
-            titleColor: "#2367A2",
-            image: Platform.select({
-              ios: "plus",
-              android: "ic_menu_add",
-            }),
-            imageColor: "#2367A2",
-            subactions: [
-              {
-                id: "nested1",
-                title: "Nested action",
-                titleColor: "rgba(250,180,100,0.5)",
-                subtitle: "State is mixed",
-                image: Platform.select({
-                  ios: "heart.fill",
-                  android: "ic_menu_today",
-                }),
-                imageColor: "rgba(100,200,250,0.3)",
-                state: "mixed",
-              },
-              {
-                id: "nestedDestructive",
-                title: "Destructive Action",
-                attributes: {
-                  destructive: true,
-                },
-                image: Platform.select({
-                  ios: "trash",
-                  android: "ic_menu_delete",
-                }),
-              },
-            ],
-          },
-          {
-            id: "share",
-            title: "Share Action",
-            titleColor: "#46F289",
-            subtitle: "Share action on SNS",
-            image: Platform.select({
-              ios: "square.and.arrow.up",
-              android: "ic_menu_share",
-            }),
-            imageColor: "#46F289",
-            state: "on",
-          },
-          {
-            id: "destructive",
-            title: "Destructive Action",
-            attributes: {
-              destructive: true,
-            },
-            image: Platform.select({
-              ios: "trash",
-              android: "ic_menu_delete",
-            }),
-          },
-        ]}
-        shouldOpenOnLongPress={false}
-      >
-        <Button title="elad" />
-      </MenuView> */}
-    </View>
+    <BottomSheetModal
+      ref={ref}
+      index={1}
+      snapPoints={snapPoints}
+      onChange={handleSheetChanges}
+    >
+      <MyDogs />
+    </BottomSheetModal>
   );
-};
+});
 
 const Home = ({ navigation }) => {
   const user = useStore((state) => state.user);
   const bottomSheetRef = useRef(null);
-  const bottomSheetModalPark = useRef(null);
+  const myDogsSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["30%", "60%"], []);
 
   const mapRef = useRef(null);
@@ -137,11 +81,12 @@ const Home = ({ navigation }) => {
     })();
   }, []);
 
-  useEffect(() => {
-    if (bottomSheetModalPark.current) {
-      bottomSheetModalPark.current.present();
+  const popModal = (key: string) => {
+    console.log("key", key);
+    if (key == "myDogs") {
+      myDogsSheetRef.current.present();
     }
-  }, [bottomSheetModalPark]);
+  };
 
   return (
     <View className="flex items-center justify-start h-full w-full relative">
@@ -155,10 +100,12 @@ const Home = ({ navigation }) => {
         showsUserLocation
         zoomEnabled
       />
-
-      <BottomSheet ref={bottomSheetRef} index={1} snapPoints={snapPoints}>
-        <MainView />
-      </BottomSheet>
+      <BottomSheetModalProvider>
+        <BottomSheet ref={bottomSheetRef} index={1} snapPoints={snapPoints}>
+          <MainView popModal={popModal} />
+        </BottomSheet>
+        <MyDogsSheet ref={myDogsSheetRef} />
+      </BottomSheetModalProvider>
     </View>
   );
 };

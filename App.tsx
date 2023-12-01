@@ -2,19 +2,12 @@ import React, { useEffect } from "react";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { BlurView } from "@react-native-community/blur";
 import { PaperProvider } from "react-native-paper";
 
 import {
   Welcome,
   Register,
   SignIn,
-  DogDetails,
-  Home,
-  Parks,
-  ParkDetails,
-  AddDog,
-  MyDogs,
 } from "./src/screens";
 import {
   BottomTabBar,
@@ -51,6 +44,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Profile from "./src/screens/profile";
+import Home from "./src/screens/home/Home";
 const queryClient = new QueryClient();
 
 function App() {
@@ -80,7 +74,7 @@ function App() {
   }
 
   const routerToIcon = {
-    Home: "paw",
+    Home: "map",
     Profile: "cog",
     AddDog: "add-circle",
   };
@@ -190,9 +184,6 @@ function App() {
             <Stack.Screen name="Welcome" component={Welcome} />
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="SignIn" component={SignIn} />
-            <Stack.Screen name="DogDetails" component={DogDetails} />
-            <Stack.Screen name="Parks" component={Parks} />
-            <Stack.Screen name="ParkDetails" component={ParkDetails} />
             <Stack.Screen
               name="DrawerNavigation"
               options={{ headerShown: false, gestureEnabled: false }}
