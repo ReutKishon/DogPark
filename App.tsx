@@ -50,6 +50,7 @@ import { COLORS } from "./src/constants";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Profile from "./src/screens/profile";
 const queryClient = new QueryClient();
 
 function App() {
@@ -80,7 +81,7 @@ function App() {
 
   const routerToIcon = {
     Home: "paw",
-    MyDogs: "cog",
+    Profile: "cog",
     AddDog: "add-circle",
   };
 
@@ -172,7 +173,7 @@ function App() {
         })}
       >
         <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="MyDogs" component={MyDogs} />
+        <Tab.Screen name="Profile" component={Profile} />
         {/* <Tab.Screen name="AddDog" component={AddDog} /> */}
       </Tab.Navigator>
     );

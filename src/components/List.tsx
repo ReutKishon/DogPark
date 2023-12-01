@@ -5,7 +5,7 @@ export default function List({ data, renderItem }) {
   return (
     <FlatList
       ItemSeparatorComponent={() => (
-        <View style={{ height: 1 }} className="bg-gray-200 mx-10"></View>
+        <View style={{ height: 1 }} className="bg-gray-200"></View>
       )}
       data={data}
       renderItem={renderItem}
