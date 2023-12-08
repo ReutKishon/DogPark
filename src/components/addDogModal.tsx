@@ -16,10 +16,9 @@ import { AddDogToUser } from "../utils/userDataOperations";
 import { useStore } from "../store";
 import { IconButton } from "react-native-paper";
 
-
 const GENDER = ["Male", "Female"];
 
-const AddDogModal = ({ modalVisible, toggleAddDogModal }) => {
+const AddDogView = ({ onClose }) => {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
@@ -65,7 +64,7 @@ const AddDogModal = ({ modalVisible, toggleAddDogModal }) => {
         };
 
         await AddDogToUser(user.id, dogData);
-        toggleAddDogModal();
+        onClose();
       }
     } catch (error) {
       console.log(error);
@@ -73,52 +72,50 @@ const AddDogModal = ({ modalVisible, toggleAddDogModal }) => {
   };
 
   return (
-    <Modal animationType={"slide"} transparent={false} visible={modalVisible}>
-      <View className="flex-1 p-20 items-center">
+    <View className="flex items-center pt-2 px-8 gap-4">
+      <View className="w-full flex-row justify-end items-center">
         <IconButton
           icon={"close"}
           size={18}
           mode="contained"
-          onPress={toggleAddDogModal}
-          style={{ position: "absolute", right: 20, top: 40 }}
+          onPress={() => onClose()}
         />
-        <Text className="text-2xl font-bold2 mb-10">New dog</Text>
-        <View className="gap-5 mb-20">
-          <TextInput
-            style={styles.input}
-            placeholder="Name"
-            value={name}
-            onChangeText={setName}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Age"
-            value={age}
-            onChangeText={setAge}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Gender"
-            value={gender}
-            onChangeText={setGender}
-          />
-        </View>
-        <TouchableOpacity style={styles.button} onPress={pickImage}>
-          <Text style={styles.buttonText}>Choose Image</Text>
-        </TouchableOpacity>
-
-        {imageUrl ? (
-          <View style={styles.imageContainer}>
-            <Image source={{ uri: imageUrl }} style={styles.image} />
-          </View>
-        ) : (
-          <Text style={styles.errorText}>{error}</Text>
-        )}
-        <Button mode="contained" onPress={onAddDogSubmit}>
-          Add
-        </Button>
       </View>
-    </Modal>
+      <View className="gap-5">
+        <TextInput
+          style={styles.input}
+          placeholder="Name"
+          value={name}
+          onChangeText={setName}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Age"
+          value={age}
+          onChangeText={setAge}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Gender"
+          value={gender}
+          onChangeText={setGender}
+        />
+      </View>
+      <TouchableOpacity style={styles.button} onPress={pickImage}>
+        <Text style={styles.buttonText}>Choose Image</Text>
+      </TouchableOpacity>
+
+      {imageUrl ? (
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: imageUrl }} style={styles.image} />
+        </View>
+      ) : (
+        <Text style={styles.errorText}>{error}</Text>
+      )}
+      <Button mode="contained" onPress={onAddDogSubmit}>
+        Add
+      </Button>
+    </View>
   );
 };
 const styles = StyleSheet.create({
@@ -176,4 +173,4 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
 });
-export default AddDogModal;
+export default AddDogView;

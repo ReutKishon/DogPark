@@ -30,10 +30,12 @@ import { MenuView } from "@react-native-menu/menu";
 import { Button } from "react-native-paper";
 import MyDogs from "../mydogs/MyDogs";
 import Profile from "../profile";
+import AddDogView from "../../components/addDogModal";
+import AddDog from "../addDog/addDog";
 
 export const HomeTemportatyModal = React.forwardRef((props, ref) => {
   // variables
-  const snapPoints = useMemo(() => [ "60%"], []);
+  const snapPoints = useMemo(() => ["60%"], []);
 
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
@@ -55,7 +57,7 @@ export const HomeTemportatyModal = React.forwardRef((props, ref) => {
 const Home = ({ navigation }) => {
   const user = useStore((state) => state.user);
   const bottomSheetRef = useRef(null);
-  const myDogsSheetRef = useRef(null);
+  const temporaryModalSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["30%", "60%"], []);
   const [modalViewComponent, setModalViewComponent] = useState(<MyDogs />);
 
@@ -84,6 +86,7 @@ const Home = ({ navigation }) => {
   }, []);
 
   const toggleModal = (key: string, show: boolean) => {
+    console.log("toggleModal", key, show);
     if (key == "myDogs") {
       setModalViewComponent(
         <MyDogs toggleModal={toggleModal} navigation={navigation} />
@@ -91,13 +94,22 @@ const Home = ({ navigation }) => {
     }
     if (key == "profile") {
       console.log("key", key);
-      setModalViewComponent(<Profile navigation={navigation} toggleModal={toggleModal} />);
+      setModalViewComponent(
+        <Profile navigation={navigation} toggleModal={toggleModal} />
+      );
+    }
+
+    if (key == "addDog") {
+      console.log("key", key);
+      setModalViewComponent(
+        <AddDogView navigation={navigation} toggleModal={toggleModal} />
+      );
     }
 
     if (show) {
-      myDogsSheetRef.current.present();
+      temporaryModalSheetRef.current.present();
     } else {
-      myDogsSheetRef.current.dismiss();
+      temporaryModalSheetRef.current.dismiss();
     }
   };
 
@@ -117,7 +129,9 @@ const Home = ({ navigation }) => {
         <BottomSheet ref={bottomSheetRef} index={1} snapPoints={snapPoints}>
           <MainView toggleModal={toggleModal} />
         </BottomSheet>
-        <HomeTemportatyModal ref={myDogsSheetRef}>{modalViewComponent}</HomeTemportatyModal>
+        <HomeTemportatyModal ref={temporaryModalSheetRef}>
+          {modalViewComponent}
+        </HomeTemportatyModal>
       </BottomSheetModalProvider>
     </View>
   );
