@@ -41,7 +41,7 @@ export default function Profile({ navigation, toggleModal}) {
               {
                 console.log("sign out");
                 auth.signOut();
-                navigation.navigate("SignIn");
+                navigation.navigate("Login");
               }
             }}
           >

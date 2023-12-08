@@ -5,12 +5,31 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "react-query";
-import { AddDogToUser, getNearestDogParks, getUserDogs, getUserLocation } from "./api";
+import {
+  AddDogToUser,
+  getNearestDogParks,
+  getUserDogs,
+  getUserLocation,
+} from "./api";
 import { useStore } from "../store";
+import { auth } from "../../firebase";
 
 export const useDogs = () => {
   const user = useStore((state) => state.user);
   return useQuery("dogs", () => getUserDogs(user.id));
+};
+
+export const useSignIn = () => {
+  return useMutation(
+    ({ email, password }) => {
+      return auth.signInWithEmailAndPassword(email, password);
+    },
+    {
+      onSuccess: () => {
+        console.log("Signed in");
+      },
+    }
+  );
 };
 
 // new dog mutation

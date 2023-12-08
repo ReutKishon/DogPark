@@ -5,8 +5,12 @@ import List from "../../../components/List";
 import { firestore } from "../../../../firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useDogs } from "../../../api/queries";
-import { Avatar } from "react-native-paper";
-import { AddDogsToPark, GetDogsInPark, RemoveDogsFromPark } from "../../../api/api";
+import { Avatar, Button } from "react-native-paper";
+import {
+  AddDogsToPark,
+  GetDogsInPark,
+  RemoveDogsFromPark,
+} from "../../../api/api";
 const DogItem = ({ dog }) => (
   <View className="w-full h-40 flex justify-center p-5 gap-2">
     <Text className="font-bold text-xl">{dog.name}</Text>
@@ -95,11 +99,9 @@ export default function ParkDetails({ navigation, route }) {
       </View>
       <Text className="font-bold text-xl">{park.name}</Text>
       <View>
-        <Button2
-          size="small"
-          text={isInThePark ? "Exit" : "Join"}
+        <Button
           onPress={handleJoinPress}
-        />
+        >{isInThePark ? "Exit" : "Join"}</Button>
       </View>
       <List
         data={dogsInThePark}
