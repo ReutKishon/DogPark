@@ -1,11 +1,7 @@
 import { ActivityIndicator, Text, View } from "react-native";
-import React, {
-  useCallback,
-  useMemo,
-  useRef,
-} from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import List from "../../components/List";
-import { Button, IconButton } from "react-native-paper";
+import { Avatar, Button, IconButton } from "react-native-paper";
 import AddDogView from "../../components/AddDog";
 import {
   BottomSheetModal,
@@ -14,10 +10,15 @@ import {
 import { useDogs } from "../../api/queries";
 
 const DogItem = ({ dog }) => (
-  <View className="w-full h-40 flex justify-center p-5 gap-2">
-    <Text className="font-bold text-xl">{dog.name}</Text>
-    <Text>{dog.gender}</Text>
-    <Text>{dog.age} years old</Text>
+  <View className="w-full h-40 flex justify-center">
+    <View className="flex-row gap-4">
+      <Avatar.Image size={50} source={{ uri: dog.imageUrl }} />
+      <View className="flex-col">
+        <Text className="font-bold text-xl">{dog.name}</Text>
+        <Text>{dog.gender}</Text>
+        <Text>{dog.age} years old</Text>
+      </View>
+    </View>
   </View>
 );
 
@@ -76,7 +77,9 @@ function MyDogs({ navigation, toggleModal }) {
         </View>
       </View>
 
-      <List data={dogs} renderItem={({ item }) => <DogItem dog={item} />} />
+      <View style={{height:"90%"}}>
+        <List data={dogs} renderItem={({ item }) => <DogItem dog={item} />} />
+      </View>
       <BottomSheetModalProvider>
         <FullModal ref={modalRef}>
           <AddDogView onClose={() => toggleAddDog(false)} />

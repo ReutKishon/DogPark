@@ -24,9 +24,6 @@ const AddDogView = ({ onClose }) => {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [imageUrl, setImageUrl] = useState(null);
-  const [error, setError] = useState(null);
-  const user = useStore((state) => state.user);
-
   const addDogMutation = useAddDog();
 
   const pickImage = async () => {
@@ -45,19 +42,14 @@ const AddDogView = ({ onClose }) => {
 
         if (!result.canceled) {
           setImageUrl(result.assets[0].uri);
-
-          setError(null);
         }
       }
-    } catch (error) {
-      setError(error.message);
-    }
+    } catch (error) {}
   };
 
   const onAddDogSubmit = async () => {
     try {
       if (!name || !age || !gender) {
-        setError("Please fill in all fields");
       } else {
         const dogData = {
           name,
@@ -79,7 +71,12 @@ const AddDogView = ({ onClose }) => {
     <View className="flex items-center pt-2 px-4 gap-2">
       <View className="w-full flex-row justify-between items-center">
         <Button onPress={() => onClose()}>Cancel</Button>
-        <Button icon={"plus"} mode="contained" onPress={onAddDogSubmit}>
+        <Button
+          icon={"plus"}
+          mode="contained"
+          onPress={onAddDogSubmit}
+          loading={addDogMutation.isLoading}
+        >
           Add dog
         </Button>
       </View>
