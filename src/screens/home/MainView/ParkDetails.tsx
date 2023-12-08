@@ -1,18 +1,12 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, FlatList, Pressable } from "react-native";
-import {
-  GetDogsInPark,
-  AddDogsToPark,
-  RemoveDogsFromPark,
-} from "../../../api/parkDataOperations";
+
 import List from "../../../components/List";
-import { Button } from "../../../components";
-import { Button2 } from "../../../components/common/button/Button";
-import { useStore } from "../../../store";
 import { firestore } from "../../../../firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useDogs } from "../../../api/queries";
 import { Avatar } from "react-native-paper";
+import { AddDogsToPark, GetDogsInPark, RemoveDogsFromPark } from "../../../api/api";
 const DogItem = ({ dog }) => (
   <View className="w-full h-40 flex justify-center p-5 gap-2">
     <Text className="font-bold text-xl">{dog.name}</Text>
@@ -28,7 +22,10 @@ const DogsIconsList = ({ dogs, handleIconPress, selectedDogs }) => (
     renderItem={({ item, index }) => (
       <Pressable onPress={() => handleIconPress(index)}>
         <View style={{ opacity: selectedDogs.includes(index) ? 1 : 0.5 }}>
-          <Avatar.Image size={64} source={{ uri: "http://placekitten.com/200/300" }} />
+          <Avatar.Image
+            size={64}
+            source={{ uri: "http://placekitten.com/200/300" }}
+          />
         </View>
       </Pressable>
     )}
@@ -48,7 +45,7 @@ export default function ParkDetails({ navigation, route }) {
   const { park } = route.params;
   //console.log("park:" + park.place_id);
   const [dogsInThePark, setDogsInThePark] = useState([]);
-  const {data:dogs} = useDogs()
+  const { data: dogs } = useDogs();
   const [selectedDogs, setSelectedDogs] = useState([]);
   const [isInThePark, setIsInThePark] = useState(false);
 
@@ -63,7 +60,6 @@ export default function ParkDetails({ navigation, route }) {
     onSnapshot(doc(firestore, "parks", park.place_id), (doc) => {
       console.log("data: ", doc.data());
       fetchDogsInPark();
-      
     });
   }, []);
 

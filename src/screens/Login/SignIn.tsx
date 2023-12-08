@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, Image } from "react-native";
 import styles from "./signIn.style";
 import { auth } from "../../../firebase";
-import { getUser } from "../../api";
 import { useStore } from "../../store";
-import { getUserDogs } from "../../utils/userDataOperations";
+import { getUser, getUserDogs } from "../../api/api";
 import { Button } from "react-native-paper";
 
 const SignIn = ({ navigation }) => {
@@ -12,7 +11,6 @@ const SignIn = ({ navigation }) => {
   const [password, setPassword] = useState("Elad9352221");
   const [errorMessage, setErrorMessage] = useState("");
   const setUser = useStore((state) => state.setUser);
-  const setDogs = useStore((state) => state.setDogs);
 
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
@@ -22,9 +20,9 @@ const SignIn = ({ navigation }) => {
           user.id = user.uid;
           user = await getUser(user.id);
           setUser(user);
-        
+
           await fetchUserDogs(user.id);
-      
+
           console.log("user found and set in context", user);
           navigation.navigate("DrawerNavigation", { screen: "Home" });
         }
@@ -85,8 +83,9 @@ const SignIn = ({ navigation }) => {
           <Text style={styles.errorText}>{errorMessage}</Text>
         ) : null}
         <View>
-          <Button mode="contained" onPress={handleSignIn}
-          >Sign In</Button>
+          <Button mode="contained" onPress={handleSignIn}>
+            Sign In
+          </Button>
         </View>
       </View>
     </View>

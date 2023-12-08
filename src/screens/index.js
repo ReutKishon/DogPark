@@ -1,4 +1,4 @@
-export { default as Register } from "./register/Register";
-export { default as SignIn } from "./signIn/signIn";
-export { default as Welcome } from "./welcome/Welcome";
-export { default as MyDogs } from "./mydogs/MyDogs.tsx";
+export { default as Register } from "./Login/Register";
+export { default as SignIn } from "./Login/SignIn";
+export { default as Welcome } from "./Login/Welcome";
+export { default as MyDogs } from "./Dogs/MyDogs/MyDogs";

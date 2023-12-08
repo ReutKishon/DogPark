@@ -2,8 +2,7 @@ import React, { useEffect } from "react";
 import { View } from "react-native";
 import { auth } from "../../../firebase";
 import { useStore } from "../../store";
-import { getUser } from "../../api";
-import { getUserDogs } from "../../utils/userDataOperations";
+import { getUser, getUserDogs } from "../../api/api";
 import { Button } from "react-native-paper";
 
 const Welcome = ({ navigation }) => {

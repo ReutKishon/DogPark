@@ -22,16 +22,15 @@ import BottomSheet, {
 } from "@gorhom/bottom-sheet";
 import { auth } from "../../../firebase";
 import { useStore } from "../../store";
-import { getUserLocation } from "../../api/parkDataOperations";
 import { useSharedValue } from "react-native-reanimated";
 import List from "../../components/List";
-import MainView from "./MainView";
 import { MenuView } from "@react-native-menu/menu";
 import { Button } from "react-native-paper";
-import MyDogs from "../mydogs/MyDogs";
-import Profile from "../profile";
-import AddDogView from "../../components/AddDog";
-import AddDog from "../addDog/addDog";
+import MyDogs from "../Dogs/MyDogs/MyDogs";
+import Profile from "../Profile";
+import AddDogView from "../Dogs/AddDog";
+import { getUserLocation } from "../../api/api";
+import MainView from "./MainView";
 
 export const HomeTemportatyModal = React.forwardRef((props, ref) => {
   // variables
@@ -69,7 +68,6 @@ const Home = ({ navigation }) => {
     (async () => {
       const location = await getUserLocation();
       if (location) {
-        //console.log("Location:", location);
         setLocation(location);
         mapRef.current.animateToRegion(
           {

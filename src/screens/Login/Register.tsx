@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import styles from "./register.style";
 import { auth, firestore } from "../../../firebase";
 import { Keyboard } from "react-native";
-import { Button } from "../../components";
+import { Button } from "react-native-paper";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -35,7 +35,7 @@ const Register = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>New Account</Text>
-     sig
+      sig
       <TextInput
         style={styles.input}
         placeholder="Password"
@@ -47,10 +47,8 @@ const Register = () => {
         <Text style={styles.errorText}>{errorMessage}</Text>
       ) : null}
       <Button
-        buttonText="Register"
         onPress={handleRegister}
-        buttonSize={{ width: 350, height: 50 }}
-      />
+      >Register</Button>
     </View>
   );
 };

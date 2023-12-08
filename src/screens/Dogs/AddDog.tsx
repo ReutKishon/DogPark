@@ -11,11 +11,11 @@ import {
 } from "react-native";
 import { Avatar, Button } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
-import { COLORS } from "../constants";
-import { AddDogToUser } from "../utils/userDataOperations";
-import { useStore } from "../store";
+import { COLORS } from "../../constants";
+import { AddDogToUser } from "../../api/api";
+import { useStore } from "../../store";
 import { IconButton } from "react-native-paper";
-import { useAddDog } from "../api/queries";
+import { useAddDog } from "../../api/queries";
 
 const GENDER = ["Male", "Female"];
 

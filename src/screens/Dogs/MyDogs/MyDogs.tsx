@@ -1,13 +1,13 @@
 import { ActivityIndicator, Text, View } from "react-native";
 import React, { useCallback, useMemo, useRef } from "react";
-import List from "../../components/List";
+import List from "../../../components/List";
 import { Avatar, Button, IconButton } from "react-native-paper";
-import AddDogView from "../../components/AddDog";
+import AddDogView from "../AddDog";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
-import { useDogs } from "../../api/queries";
+import { useDogs } from "../../../api/queries";
 
 const DogItem = ({ dog }) => (
   <View className="w-full h-40 flex justify-center">
@@ -77,7 +77,7 @@ function MyDogs({ navigation, toggleModal }) {
         </View>
       </View>
 
-      <View style={{height:"90%"}}>
+      <View style={{ height: "90%" }}>
         <List data={dogs} renderItem={({ item }) => <DogItem dog={item} />} />
       </View>
       <BottomSheetModalProvider>
