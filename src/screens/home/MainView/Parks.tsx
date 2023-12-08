@@ -39,7 +39,11 @@ export default function Parks({ navigation, route }) {
       <View className="flex flex-row items-center justify-between">
         <Text className="text-2xl font-bold2">Parks Around</Text>
         <View className="flex flex-row">
-          <Button mode="outline" icon="paw" onPress={() => toggleModal("myDogs", true)}>
+          <Button
+            mode="outline"
+            icon="paw"
+            onPress={() => toggleModal("myDogs", true)}
+          >
             My Dogs
           </Button>
           <TouchableOpacity onPress={() => toggleModal("profile", true)}>
@@ -48,7 +52,6 @@ export default function Parks({ navigation, route }) {
               source={{ uri: "http://placekitten.com/200/300" }}
             />
           </TouchableOpacity>
-          
         </View>
       </View>
       <View className="px-2">

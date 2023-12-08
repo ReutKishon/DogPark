@@ -35,18 +35,7 @@ const Register = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>New Account</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Name"
-        value={name}
-        onChangeText={setName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
+     sig
       <TextInput
         style={styles.input}
         placeholder="Password"

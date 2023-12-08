@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 import { COLORS } from "../../constants";
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -21,6 +22,7 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 20,
     borderRadius: 15,
+    borderColor: "black",
   },
   registerButton: {
     width: "100%",
