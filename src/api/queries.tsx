@@ -21,7 +21,7 @@ export const useDogs = () => {
 
 export const useSignIn = () => {
   return useMutation(
-    ({ email, password }) => {
+    ({ email, password }: { email: string; password: string }) => {
       return auth.signInWithEmailAndPassword(email, password);
     },
     {
