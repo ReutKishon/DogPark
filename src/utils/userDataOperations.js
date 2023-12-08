@@ -21,7 +21,7 @@ export const getUserData = async (userId) => {
 };
 
 export const AddDogToUser = async (userId, dogData) => {
-  console.log(userId);
+  console.log("adding dog to user");
   try {
     const docRef = await addDoc(collection(firestore, "dogs"), dogData);
     if (docRef && docRef.id) {
@@ -64,7 +64,7 @@ export const getUserDogs = async (userId) => {
   }
 };
 
-const getUserDogById = (userId, dogId) => {};
+const getUserDogById = (userId, dogId) => { };
 
 export const updateUserDog = (userId, dogId, updatedDetails) => {
   const userDog = doc(firestore, "users", userId, "dogs", dogId);

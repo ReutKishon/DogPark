@@ -30,7 +30,7 @@ import { MenuView } from "@react-native-menu/menu";
 import { Button } from "react-native-paper";
 import MyDogs from "../mydogs/MyDogs";
 import Profile from "../profile";
-import AddDogView from "../../components/addDogModal";
+import AddDogView from "../../components/AddDog";
 import AddDog from "../addDog/addDog";
 
 export const HomeTemportatyModal = React.forwardRef((props, ref) => {

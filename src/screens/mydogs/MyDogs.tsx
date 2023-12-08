@@ -1,26 +1,17 @@
 import { ActivityIndicator, Text, View } from "react-native";
-import styles from "./mydogs.style";
-import { DogsList } from "../../components";
 import React, {
-  useState,
-  useEffect,
-  useContext,
   useCallback,
   useMemo,
   useRef,
 } from "react";
-import { useStore } from "../../store";
 import List from "../../components/List";
-import { getUserDogs } from "../../utils/userDataOperations";
-import { useDogs } from "../../api/queries";
 import { Button, IconButton } from "react-native-paper";
-import AddDogView from "../../components/addDogModal";
-import { firestore } from "../../../firebase";
-import { doc, onSnapshot } from "firebase/firestore";
+import AddDogView from "../../components/AddDog";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
+import { useDogs } from "../../api/queries";
 
 const DogItem = ({ dog }) => (
   <View className="w-full h-40 flex justify-center p-5 gap-2">
@@ -53,11 +44,7 @@ export const FullModal = React.forwardRef((props, ref) => {
 });
 
 function MyDogs({ navigation, toggleModal }) {
-  const user = useStore((state) => state.user);
-  const { error, data: userDogs } = useDogs();
-  const [dogs, setDogs] = useState(userDogs);
-  // console.log("userDogs" + JSON.stringify(dogs))
-
+  const { data: dogs } = useDogs();
   const modalRef = useRef(null);
 
   const toggleAddDog = (show: boolean) => {
@@ -67,24 +54,6 @@ function MyDogs({ navigation, toggleModal }) {
       modalRef.current.dismiss();
     }
   };
-
-  const fetchUserDogs = async () => {
-    try {
-      const { error, data: userDogs } = useDogs();
-
-      if (!error && userDogs) {
-        setDogs(userDogs);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    onSnapshot(doc(firestore, "users", user.id), (doc) => {
-      setDogs(userDogs);
-    });
-  }, [userDogs]);
 
   if (!dogs) {
     return <ActivityIndicator size="large" color="#0000ff" />;
