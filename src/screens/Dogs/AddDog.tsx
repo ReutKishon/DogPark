@@ -21,8 +21,8 @@ const GENDER = ["Male", "Female"];
 
 const AddDogView = ({ onClose }) => {
   const [name, setName] = useState("");
-  const [age, setAge] = useState("");
-  const [gender, setGender] = useState("");
+  const [age, setAge] = useState<number>();
+  const [gender, setGender] = useState<DogGender>();
   const [imageUrl, setImageUrl] = useState(null);
   const addDogMutation = useAddDog();
 
@@ -51,7 +51,7 @@ const AddDogView = ({ onClose }) => {
     try {
       if (!name || !age || !gender) {
       } else {
-        const dogData = {
+        const dogData: Dog = {
           name,
           age,
           gender,
@@ -59,7 +59,6 @@ const AddDogView = ({ onClose }) => {
         };
 
         await addDogMutation.mutateAsync(dogData);
-        console.log("onAddDogSubmit");
         onClose();
       }
     } catch (error) {

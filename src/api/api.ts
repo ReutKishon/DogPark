@@ -101,8 +101,7 @@ export const updateUserDog = (userId, dogId, updatedDetails) => {
 };
 
 const API_KEY = "AIzaSyCnAEFDXfQTt0A4UYn5srE0jOGGrGfjEhk";
-
-export const getUserLocation = async () => {
+export const getUserLocation = async (): Promise<Location.LocationObject> => {
   try {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {

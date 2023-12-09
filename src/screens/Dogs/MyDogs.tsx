@@ -1,14 +1,14 @@
 import { ActivityIndicator, Text, View } from "react-native";
 import React, { useCallback, useMemo, useRef } from "react";
-import List from "../../../components/List";
+import List from "../../components/List";
 import { Avatar, Button, IconButton } from "react-native-paper";
-import AddDogView from "../AddDog";
+import AddDogView from "./AddDog";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
-import { useDogs } from "../../../api/queries";
-import { FullModal } from "../../../components/FullModal";
+import { useDogs } from "../../api/queries";
+import { FullModal } from "../../components/FullModal";
 
 const DogItem = ({ dog }) => (
   <View className="w-full h-40 flex justify-center">

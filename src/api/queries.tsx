@@ -19,6 +19,8 @@ export const useDogs = () => {
   return useQuery("dogs", () => getUserDogs(user.id));
 };
 
+// TODO: Add types
+
 export const useSignIn = () => {
   return useMutation(
     ({ email, password }: { email: string; password: string }) => {
@@ -37,7 +39,7 @@ export const useAddDog = () => {
   const user = useStore((state) => state.user);
   const queryClient = useQueryClient();
   return useMutation(
-    (dogData) => {
+    (dogData: Dog) => {
       return AddDogToUser(user.id, dogData);
     },
     {

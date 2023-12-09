@@ -1,6 +1,5 @@
 import React from "react";
 import Parks from "./Parks";
-import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import ParkDetails from "./ParkDetails";
 

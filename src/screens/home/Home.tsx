@@ -26,7 +26,7 @@ import { useSharedValue } from "react-native-reanimated";
 import List from "../../components/List";
 import { MenuView } from "@react-native-menu/menu";
 import { Button } from "react-native-paper";
-import MyDogs from "../Dogs/MyDogs/MyDogs";
+import MyDogs from "../Dogs/MyDogs";
 import Profile from "../Profile";
 import AddDogView from "../Dogs/AddDog";
 import { getUserLocation } from "../../api/api";
@@ -55,11 +55,10 @@ export const HomeTemportatyModal = React.forwardRef((props, ref) => {
 });
 
 const Home = ({ navigation }) => {
-  const user = useStore((state) => state.user);
   const bottomSheetRef = useRef(null);
   const temporaryModalSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["30%", "60%"], []);
-  const [modalViewComponent, setModalViewComponent] = useState(<MyDogs />);
+  const [modalViewComponent, setModalViewComponent] = useState();
 
   const mapRef = useRef(null);
   const setLocation = useStore((state) => state.setLocation);
@@ -92,14 +91,17 @@ const Home = ({ navigation }) => {
   // toggleModal is not really necessary, it can just be placed direcly in the Parks component
 
   const toggleModal = (key: string, show: boolean) => {
-
     if (modalKeyToComponent[key]) {
       setModalViewComponent(
-        React.cloneElement(modalKeyToComponent[key], { onClose: () => temporaryModalSheetRef.current.dismiss() })
+        React.cloneElement(modalKeyToComponent[key], {
+          onClose: () => temporaryModalSheetRef.current.dismiss(),
+        })
       );
     }
 
-    return show ? temporaryModalSheetRef.current.present() : temporaryModalSheetRef.current.dismiss();
+    return show
+      ? temporaryModalSheetRef.current.present()
+      : temporaryModalSheetRef.current.dismiss();
   };
 
   return (
