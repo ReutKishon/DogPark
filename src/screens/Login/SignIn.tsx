@@ -10,7 +10,6 @@ import { useSignIn } from "../../api/queries";
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("elad.636@gmail.com");
   const [password, setPassword] = useState("Elad9352221");
-  const [errorMessage, setErrorMessage] = useState("");
   const signInMutation = useSignIn();
 
   const imageUrl =
@@ -34,9 +33,6 @@ const SignIn = ({ navigation }) => {
           secureTextEntry={true}
           onChangeText={setPassword}
         />
-        {errorMessage ? (
-          <Text style={styles.errorText}>{errorMessage}</Text>
-        ) : null}
         <View>
           <Button
             loading={signInMutation.isLoading}

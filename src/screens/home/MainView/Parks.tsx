@@ -40,7 +40,6 @@ export default function Parks({ navigation, route }) {
         <Text className="text-2xl font-bold2">Parks Around</Text>
         <View className="flex flex-row">
           <Button
-            mode="outline"
             icon="paw"
             onPress={() => toggleModal("myDogs", true)}
           >

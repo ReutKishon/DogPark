@@ -31,6 +31,7 @@ import Profile from "../Profile";
 import AddDogView from "../Dogs/AddDog";
 import { getUserLocation } from "../../api/api";
 import MainView from "./MainView";
+import { FullModal } from "../../components/FullModal";
 
 export const HomeTemportatyModal = React.forwardRef((props, ref) => {
   // variables
@@ -126,10 +127,10 @@ const Home = ({ navigation }) => {
       <BottomSheetModalProvider>
         <BottomSheet ref={bottomSheetRef} index={1} snapPoints={snapPoints}>
           <MainView toggleModal={toggleModal} />
+          <FullModal maxHeight="60%" ref={temporaryModalSheetRef}>
+            {modalViewComponent}
+          </FullModal>
         </BottomSheet>
-        <HomeTemportatyModal ref={temporaryModalSheetRef}>
-          {modalViewComponent}
-        </HomeTemportatyModal>
       </BottomSheetModalProvider>
     </View>
   );

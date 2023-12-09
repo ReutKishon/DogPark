@@ -8,6 +8,7 @@ import {
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { useDogs } from "../../../api/queries";
+import { FullModal } from "../../../components/FullModal";
 
 const DogItem = ({ dog }) => (
   <View className="w-full h-40 flex justify-center">
@@ -21,28 +22,6 @@ const DogItem = ({ dog }) => (
     </View>
   </View>
 );
-
-export const FullModal = React.forwardRef((props, ref) => {
-  // variables
-  const snapPoints = useMemo(() => ["100%"], []);
-
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
-
-  // renders
-  return (
-    <BottomSheetModal
-      handleStyle={{ display: "none" }}
-      ref={ref}
-      index={0}
-      snapPoints={snapPoints}
-      onChange={handleSheetChanges}
-    >
-      {props.children}
-    </BottomSheetModal>
-  );
-});
 
 function MyDogs({ navigation, toggleModal }) {
   const { data: dogs } = useDogs();
