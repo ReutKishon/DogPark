@@ -23,7 +23,7 @@ const DogItem = ({ dog }) => (
   </View>
 );
 
-function MyDogs({ navigation, toggleModal }) {
+function MyDogs({ navigation, onClose }) {
   const { data: dogs } = useDogs();
   const modalRef = useRef(null);
 
@@ -51,7 +51,7 @@ function MyDogs({ navigation, toggleModal }) {
             icon={"close"}
             size={18}
             mode="contained"
-            onPress={() => toggleModal("myDogs", false)}
+            onPress={() => onClose()}
           />
         </View>
       </View>

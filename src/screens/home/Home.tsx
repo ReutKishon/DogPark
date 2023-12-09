@@ -84,32 +84,22 @@ const Home = ({ navigation }) => {
     })();
   }, []);
 
+  const modalKeyToComponent = {
+    myDogs: <MyDogs navigation={navigation} />,
+    profile: <Profile navigation={navigation} />,
+  };
+
+  // toggleModal is not really necessary, it can just be placed direcly in the Parks component
+
   const toggleModal = (key: string, show: boolean) => {
-    console.log("toggleModal", key, show);
-    if (key == "myDogs") {
+
+    if (modalKeyToComponent[key]) {
       setModalViewComponent(
-        <MyDogs toggleModal={toggleModal} navigation={navigation} />
-      );
-    }
-    if (key == "profile") {
-      console.log("key", key);
-      setModalViewComponent(
-        <Profile navigation={navigation} toggleModal={toggleModal} />
+        React.cloneElement(modalKeyToComponent[key], { onClose: () => temporaryModalSheetRef.current.dismiss() })
       );
     }
 
-    if (key == "addDog") {
-      console.log("key", key);
-      setModalViewComponent(
-        <AddDogView navigation={navigation} toggleModal={toggleModal} />
-      );
-    }
-
-    if (show) {
-      temporaryModalSheetRef.current.present();
-    } else {
-      temporaryModalSheetRef.current.dismiss();
-    }
+    return show ? temporaryModalSheetRef.current.present() : temporaryModalSheetRef.current.dismiss();
   };
 
   return (

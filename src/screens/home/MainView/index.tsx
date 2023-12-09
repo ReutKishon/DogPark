@@ -7,7 +7,6 @@ import ParkDetails from "./ParkDetails";
 const Stack = createStackNavigator();
 
 export default function MainView({ toggleModal }) {
-  //   Simple navigation between parks and dogs with no header
   return (
     <Stack.Navigator className="h-full" screenOptions={{ headerShown: false }}>
       <Stack.Screen

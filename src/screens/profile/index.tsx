@@ -2,10 +2,10 @@ import { Text, View } from "react-native";
 import { useStore } from "../../store";
 import SettingSection from "../../components/Settings/SettingSection";
 import List from "../../components/List";
-import { Button, Divider, IconButton, Switch, ToggleButton } from "react-native-paper";
+import { Button, Divider, IconButton, Switch } from "react-native-paper";
 import { auth } from "../../../firebase";
 
-export default function Profile({ navigation, toggleModal}) {
+export default function Profile({ navigation, onClose }) {
   const user = useStore((state) => state.user);
   return (
     <View className="w-full">
@@ -18,7 +18,7 @@ export default function Profile({ navigation, toggleModal}) {
             icon={"close"}
             size={18}
             mode="contained"
-            onPress={() => toggleModal("profile", false)}
+            onPress={() => onClose()}
           />
         </View>
 
