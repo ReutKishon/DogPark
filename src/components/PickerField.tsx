@@ -9,31 +9,31 @@ export default function PickerField({
   setSelectedValue,
 }) {
   return (
-    <View className="flex-row justify-between items-center">
-      <Text style={{ marginLeft: 13 }}>{title}</Text>
+    <View className="flex justify-between items-start">
       <View
+        className="flex-row justify-start px-4"
         style={{
           alignItems: "center",
           borderColor: "black",
           borderWidth: 2,
           borderRadius: 100,
-          backgroundColor: "white",
-          overflow: "hidden",
-          marginTop: 20,
           width: 300,
           height: 60,
-          right: 15,
         }}
       >
+      <Text >{title}</Text>
+
         <Picker
+          style={{ height: "100%", width: 100}}
           selectedValue={selectedValue}
           onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-          numberOfLines={2}
+          numberOfLines={1}
           itemStyle={{
-            height: 70,
-            width: 350,
-            fontSize: 16,
+            height: "100%",
+            width: 200,
+            fontSize: 20,
           }}
+          
           mode="dialog"
         >
           {items.map((item, index: number) => (

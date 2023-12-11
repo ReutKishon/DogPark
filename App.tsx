@@ -28,7 +28,7 @@ import {
 } from "@expo-google-fonts/poppins";
 
 import { QueryClient, QueryClientProvider } from "react-query";
-import Home from "./src/screens/home/Home";
+import Home from "./src/screens/Home/Home";
 import Login from "./src/screens/Login/Login";
 const queryClient = new QueryClient();
 

@@ -58,7 +58,7 @@ const AddDogView = ({ onClose }) => {
   };
 
   return (
-    <View className=" items-center px-4 gap-2">
+    <View className="flex items-center justify- px-4 gap-1">
       <View className="w-full flex-row justify-between items-center">
         <Button onPress={() => onClose()}>Cancel</Button>
         <Button
@@ -84,27 +84,31 @@ const AddDogView = ({ onClose }) => {
         ></Avatar.Image>
       </TouchableOpacity>
 
-      <View className="gap-5 w-full">
-        <View className="flex-row justify-between items-center">
-          <Text>Name</Text>
+      <View className="flex items-center gap-2">
+        <View>
           <TextInput
-            style={[styles.input, { right: 15 }]}
+            placeholder="Name"
+            style={[styles.input]}
             value={dogName}
             onChangeText={setDogName}
           />
         </View>
-        <PickerField
-          title="Age"
-          selectedValue={age}
-          setSelectedValue={setAge}
-          items={AGE}
-        />
-        <PickerField
-          title="Gender"
-          selectedValue={gender}
-          setSelectedValue={setGender}
-          items={GENDER}
-        />
+        <View>
+          <PickerField
+            title="Age"
+            selectedValue={age}
+            setSelectedValue={setAge}
+            items={AGE}
+          />
+        </View>
+        <View>
+          <PickerField
+            title="Gender"
+            selectedValue={gender}
+            setSelectedValue={setGender}
+            items={GENDER}
+          />
+        </View>
       </View>
     </View>
   );
