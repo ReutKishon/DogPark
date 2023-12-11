@@ -7,9 +7,11 @@ import {
 } from "react-query";
 import {
   AddDogToUser,
+  UploadImageToStorage,
   getNearestDogParks,
   getUserDogs,
   getUserLocation,
+  pickImage,
 } from "./api";
 import { useStore } from "../store";
 import { auth } from "../../firebase";
@@ -63,5 +65,36 @@ export const useParks = () => {
       return getNearestDogParks(location.coords);
     },
     { enabled: !!location }
+  );
+};
+
+export const useUploadImage = () => {
+  const user = useStore((state) => state.user);
+  const userId = user.id;
+  const lastIndexDog = user.dogs.length;
+  const id = userId + lastIndexDog;
+  return useMutation(
+    (imageUrl: Blob) => {
+      return UploadImageToStorage(id, imageUrl);
+    },
+    {
+      onSuccess: () => {
+        //queryClient.invalidateQueries("dogs");
+      },
+    }
+  );
+};
+
+export const usePickImage = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    () => {
+      return pickImage();
+    },
+    {
+      onSuccess: () => {
+        //queryClient.invalidateQueries("dogs");
+      },
+    }
   );
 };

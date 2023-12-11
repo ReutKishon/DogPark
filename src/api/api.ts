@@ -1,5 +1,5 @@
 // userDataOperations.js
-import { firestore } from "../../firebase";
+import { firestore ,storage} from "../../firebase";
 import {
   collection,
   addDoc,
@@ -13,7 +13,8 @@ import {
 } from "firebase/firestore";
 import * as Location from "expo-location";
 import axios from "axios";
-
+import * as ImagePicker from "expo-image-picker";
+//import storage from "@react-native-firebase/storage";
 export const getUser = async (id: string) => {
   try {
     const doc = await firestore.collection("users").doc(id).get();
@@ -40,7 +41,7 @@ export const getUserData = async (userId) => {
   }
 };
 
-export const AddDogToUser = async (userId, dogData) => {
+export const AddDogToUser = async (userId: string, dogData: Dog) => {
   console.log("adding dog to user");
   try {
     const docRef = await addDoc(collection(firestore, "dogs"), dogData);
@@ -272,5 +273,34 @@ export const GetDogsInPark = async (parkId) => {
   } catch (error) {
     console.error("Error fetching park data:", error);
     return null;
+  }
+};
+
+export const UploadImageToStorage = async (id: string, imagePath: Blob) => {
+
+  try {
+    const path = "images/" + id;
+    await storage.ref(path).put(imagePath);
+
+    const url = await storage.ref(path).getDownloadURL();
+    
+    return url;
+  } catch (error) {
+    console.error("Error uploading image:", error);
+  }
+};
+
+export const pickImage = async () => {
+  try {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (status === "granted") {
+      const result = await ImagePicker.launchImageLibraryAsync();
+      if (!result.canceled) {
+        return result.assets[0].uri;
+      }
+    }
+  } catch (error) {
+    console.error("error: " + error);
   }
 };

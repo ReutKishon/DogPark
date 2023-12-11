@@ -10,52 +10,46 @@ import {
   Alert,
 } from "react-native";
 import { Avatar, Button } from "react-native-paper";
-import * as ImagePicker from "expo-image-picker";
+import DropDown from "react-native-paper-dropdown";
 import { COLORS } from "../../constants";
 import { AddDogToUser } from "../../api/api";
 import { useStore } from "../../store";
 import { IconButton } from "react-native-paper";
-import { useAddDog } from "../../api/queries";
-
-const GENDER = ["Male", "Female"];
-
+import { useAddDog, usePickImage, useUploadImage } from "../../api/queries";
+import { SelectList } from "react-native-dropdown-select-list";
+const GENDER = [
+  {
+    label: "Male",
+    value: "male",
+  },
+  {
+    label: "Female",
+    value: "female",
+  },
+];
 const AddDogView = ({ onClose }) => {
-  const [name, setName] = useState("");
+  const [dogName, setDogName] = useState<string>();
   const [age, setAge] = useState<number>();
   const [gender, setGender] = useState<DogGender>();
-  const [imageUrl, setImageUrl] = useState(null);
+  const [imageUrl, setImageUrl] = useState<string>();
+  const [showDropDown, setShowDropDown] = useState(false);
+  const pickImageMutation = usePickImage();
+  const uploadImageMutation = useUploadImage();
   const addDogMutation = useAddDog();
 
-  const pickImage = async () => {
-    try {
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-      if (status !== "granted") {
-        Alert.alert(
-          "Permission Denied",
-          `Sorry, we need camera  
-             roll permission to upload images.`
-        );
-      } else {
-        const result = await ImagePicker.launchImageLibraryAsync();
-
-        if (!result.canceled) {
-          setImageUrl(result.assets[0].uri);
-        }
-      }
-    } catch (error) {}
-  };
-
   const onAddDogSubmit = async () => {
+    const response = await fetch(pickImageMutation.data);
+    const imageUrl = await response.blob();
+    const uri = await uploadImageMutation.mutateAsync(imageUrl);
+
     try {
-      if (!name || !age || !gender) {
+      if (!dogName || !age || !gender) {
       } else {
         const dogData: Dog = {
-          name,
+          name: dogName,
           age,
           gender,
-          imageUrl,
+          imageUrl: uri,
         };
 
         await addDogMutation.mutateAsync(dogData);
@@ -80,7 +74,12 @@ const AddDogView = ({ onClose }) => {
         </Button>
       </View>
 
-      <TouchableOpacity onPress={pickImage}>
+      <TouchableOpacity
+        onPress={async () => {
+          const uri = await pickImageMutation.mutateAsync();
+          setImageUrl(uri);
+        }}
+      >
         <Avatar.Image
           style={{ backgroundColor: "grey" }}
           size={120}
@@ -90,19 +89,23 @@ const AddDogView = ({ onClose }) => {
 
       <View className="gap-5 w-full  ">
         <TextInput
-          style={styles.input}
           placeholder="Name"
-          value={name}
-          onChangeText={setName}
+          value={dogName}
+          onChangeText={setDogName}
         />
+
+        {/* <DropDown
+          mode={"outlined"}
+          visible={showDropDown}
+          value={gender}
+          setValue={setGender}
+          list={GENDER}
+          showDropDown={() => setShowDropDown(true)}
+          onDismiss={() => setShowDropDown(false)}
+          placeholder="gender"
+        /> */}
+        <TextInput placeholder="Age" value={age} onChangeText={setAge} />
         <TextInput
-          style={styles.input}
-          placeholder="Age"
-          value={age}
-          onChangeText={setAge}
-        />
-        <TextInput
-          style={styles.input}
           placeholder="Gender"
           value={gender}
           onChangeText={setGender}
