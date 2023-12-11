@@ -27,11 +27,11 @@ import List from "../../components/List";
 import { MenuView } from "@react-native-menu/menu";
 import { Button } from "react-native-paper";
 import MyDogs from "../Dogs/MyDogs";
-import Profile from "../Profile";
 import AddDogView from "../Dogs/AddDog";
 import { getUserLocation } from "../../api/api";
 import MainView from "./MainView";
 import { FullModal } from "../../components/FullModal";
+import Profile from "../profile";
 
 export const HomeTemportatyModal = React.forwardRef((props, ref) => {
   // variables

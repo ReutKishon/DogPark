@@ -17,19 +17,16 @@ import { useStore } from "../../store";
 import { IconButton } from "react-native-paper";
 import { useAddDog, usePickImage, useUploadImage } from "../../api/queries";
 import { SelectList } from "react-native-dropdown-select-list";
-const GENDER = [
-  {
-    label: "Male",
-    value: "male",
-  },
-  {
-    label: "Female",
-    value: "female",
-  },
-];
+import { Picker } from "@react-native-picker/picker";
+import styles from "../Login/signIn.style";
+import PickerField from "../../components/PickerField";
+
+const GENDER = ["male", "female"];
+const AGE = [1, 2, 3, 4, 5, 6, 7, 8];
+
 const AddDogView = ({ onClose }) => {
   const [dogName, setDogName] = useState<string>();
-  const [age, setAge] = useState<number>();
+  const [age, setAge] = useState<number>(1);
   const [gender, setGender] = useState<DogGender>();
   const [imageUrl, setImageUrl] = useState<string>();
   const [showDropDown, setShowDropDown] = useState(false);
@@ -61,7 +58,7 @@ const AddDogView = ({ onClose }) => {
   };
 
   return (
-    <View className="flex items-center px-4 gap-2">
+    <View className=" items-center px-4 gap-2">
       <View className="w-full flex-row justify-between items-center">
         <Button onPress={() => onClose()}>Cancel</Button>
         <Button
@@ -87,52 +84,30 @@ const AddDogView = ({ onClose }) => {
         ></Avatar.Image>
       </TouchableOpacity>
 
-      <View className="gap-5 w-full  ">
-        <TextInput
-          placeholder="Name"
-          value={dogName}
-          onChangeText={setDogName}
+      <View className="gap-5 w-full">
+        <View className="flex-row justify-between items-center">
+          <Text>Name</Text>
+          <TextInput
+            style={[styles.input, { right: 15 }]}
+            value={dogName}
+            onChangeText={setDogName}
+          />
+        </View>
+        <PickerField
+          title="Age"
+          selectedValue={age}
+          setSelectedValue={setAge}
+          items={AGE}
         />
-
-        {/* <DropDown
-          mode={"outlined"}
-          visible={showDropDown}
-          value={gender}
-          setValue={setGender}
-          list={GENDER}
-          showDropDown={() => setShowDropDown(true)}
-          onDismiss={() => setShowDropDown(false)}
-          placeholder="gender"
-        /> */}
-        <TextInput placeholder="Age" value={age} onChangeText={setAge} />
-        <TextInput
-          placeholder="Gender"
-          value={gender}
-          onChangeText={setGender}
+        <PickerField
+          title="Gender"
+          selectedValue={gender}
+          setSelectedValue={setGender}
+          items={GENDER}
         />
       </View>
     </View>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-  },
-  header: {
-    fontSize: 20,
-    marginBottom: 16,
-  },
-  buttonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  errorText: {
-    color: "red",
-    marginTop: 16,
-  },
-});
+
 export default AddDogView;
