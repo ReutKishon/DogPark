@@ -11,13 +11,7 @@ import {
   GetDogsInPark,
   RemoveDogsFromPark,
 } from "../../../api/api";
-const DogItem = ({ dog }) => (
-  <View className="w-full h-40 flex justify-center p-5 gap-2">
-    <Text className="font-bold text-xl">{dog.name}</Text>
-    <Text>{dog.gender}</Text>
-    <Text>{dog.age} years old</Text>
-  </View>
-);
+import { DogItem } from "../../Dogs/MyDogs";
 
 const DogsIconsList = ({ dogs, handleIconPress, selectedDogs }) => (
   <FlatList
@@ -28,7 +22,7 @@ const DogsIconsList = ({ dogs, handleIconPress, selectedDogs }) => (
         <View style={{ opacity: selectedDogs.includes(index) ? 1 : 0.5 }}>
           <Avatar.Image
             size={64}
-            source={{ uri: "http://placekitten.com/200/300" }}
+            source={{ uri: item.imageUrl }}
           />
         </View>
       </Pressable>
@@ -99,9 +93,9 @@ export default function ParkDetails({ navigation, route }) {
       </View>
       <Text className="font-bold text-xl">{park.name}</Text>
       <View>
-        <Button
-          onPress={handleJoinPress}
-        >{isInThePark ? "Exit" : "Join"}</Button>
+        <Button onPress={handleJoinPress}>
+          {isInThePark ? "Exit" : "Join"}
+        </Button>
       </View>
       <List
         data={dogsInThePark}

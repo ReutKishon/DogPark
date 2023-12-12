@@ -10,7 +10,7 @@ import {
 import { useDogs } from "../../api/queries";
 import { FullModal } from "../../components/FullModal";
 
-const DogItem = ({ dog }) => (
+export const DogItem = ({ dog }) => (
   <View className="w-full h-40 flex justify-center">
     <View className="flex-row gap-4">
       <Avatar.Image size={50} source={{ uri: dog.imageUrl }} />
