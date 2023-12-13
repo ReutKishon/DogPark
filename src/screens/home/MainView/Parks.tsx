@@ -1,20 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { Text, TouchableWithoutFeedback, View } from "react-native";
+import React from "react";
+import { Text, View } from "react-native";
 import List from "../../../components/List";
-import { useStore } from "../../../store";
-import { getNearestDogParks } from "../../../api/parkDataOperations";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useParks } from "../../../api/queries";
 import { Avatar, Button } from "react-native-paper";
-import {
-  BottomSheetModal,
-  BottomSheetModalProvider,
-} from "@gorhom/bottom-sheet";
-import styles from "../home.style";
-// import Ionicons from "react-native-vector-icons/Ionicons";
 
 const ParkItem = ({ item }) => {
-  //console.log("park", item);
   return (
     <View className="w-full flex justify-center py-10 gap-2">
       <View className="flex flex-row">
@@ -33,16 +24,14 @@ export default function Parks({ navigation, route }) {
   const { toggleModal } = route.params;
 
   const { data: parks, isLoading, isIdle } = useParks();
+  //const { data: user } = useUser();
 
   return (
     <View className="w-full h-full px-4">
       <View className="flex flex-row items-center justify-between">
         <Text className="text-2xl font-bold2">Parks Around</Text>
         <View className="flex flex-row">
-          <Button
-            icon="paw"
-            onPress={() => toggleModal("myDogs", true)}
-          >
+          <Button icon="paw" onPress={() => toggleModal("myDogs", true)}>
             My Dogs
           </Button>
           <TouchableOpacity onPress={() => toggleModal("profile", true)}>

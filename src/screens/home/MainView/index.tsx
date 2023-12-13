@@ -2,6 +2,7 @@ import React from "react";
 import Parks from "./Parks";
 import { createStackNavigator } from "@react-navigation/stack";
 import ParkDetails from "./ParkDetails";
+import DogProfile from "../../Dogs/DogProfile";
 
 const Stack = createStackNavigator();
 
@@ -16,6 +17,7 @@ export default function MainView({ toggleModal }) {
         }}
       />
       <Stack.Screen name="ParkDetails" component={ParkDetails} />
+      <Stack.Screen name="DogProfile" component={DogProfile} />
     </Stack.Navigator>
   );
 }

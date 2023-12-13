@@ -5,16 +5,20 @@ enum DogGender {
 }
 
 interface Dog {
+  id: string;
   name: string;
   age: number;
   gender: DogGender;
-  imageUrl: string;
+  imageUri: string;
+  owner: string;
 }
 
 interface User {
+  id: string;
   name: string;
   email: string;
   dogs: Dog[];
+  imageUri: string;
 }
 
 interface Park {}

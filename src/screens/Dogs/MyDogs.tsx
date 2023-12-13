@@ -9,19 +9,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import { useDogs } from "../../api/queries";
 import { FullModal } from "../../components/FullModal";
-
-export const DogItem = ({ dog }) => (
-  <View className="w-full h-40 flex justify-center">
-    <View className="flex-row gap-4">
-      <Avatar.Image size={50} source={{ uri: dog.imageUrl }} />
-      <View className="flex-col">
-        <Text className="font-bold text-xl">{dog.name}</Text>
-        <Text>{dog.gender}</Text>
-        <Text>{dog.age} years old</Text>
-      </View>
-    </View>
-  </View>
-);
+import DogCard from "../../components/DogCard";
 
 function MyDogs({ navigation, onClose }) {
   const { data: dogs } = useDogs();
@@ -34,6 +22,8 @@ function MyDogs({ navigation, onClose }) {
       modalRef.current.dismiss();
     }
   };
+
+  const editDogDetails = () => {};
 
   if (!dogs) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -57,7 +47,10 @@ function MyDogs({ navigation, onClose }) {
       </View>
 
       <View style={{ height: "90%" }}>
-        <List data={dogs} renderItem={({ item }) => <DogItem dog={item} />} />
+        <List
+          data={dogs}
+          renderItem={({ item }) => <DogCard dog={item} onpress={() => {}} />}
+        />
       </View>
       <BottomSheetModalProvider>
         <FullModal ref={modalRef}>

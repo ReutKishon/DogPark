@@ -11,7 +11,7 @@ import {
   GetDogsInPark,
   RemoveDogsFromPark,
 } from "../../../api/api";
-import { DogItem } from "../../Dogs/MyDogs";
+import DogCard from "../../../components/DogCard";
 
 const DogsIconsList = ({ dogs, handleIconPress, selectedDogs }) => (
   <FlatList
@@ -20,10 +20,7 @@ const DogsIconsList = ({ dogs, handleIconPress, selectedDogs }) => (
     renderItem={({ item, index }) => (
       <Pressable onPress={() => handleIconPress(index)}>
         <View style={{ opacity: selectedDogs.includes(index) ? 1 : 0.5 }}>
-          <Avatar.Image
-            size={64}
-            source={{ uri: item.imageUrl }}
-          />
+          <Avatar.Image size={64} source={{ uri: item.imageUrl }} />
         </View>
       </Pressable>
     )}
@@ -42,7 +39,7 @@ const DogsIconsList = ({ dogs, handleIconPress, selectedDogs }) => (
 export default function ParkDetails({ navigation, route }) {
   const { park } = route.params;
   //console.log("park:" + park.place_id);
-  const [dogsInThePark, setDogsInThePark] = useState([]);
+  const [dogsInThePark, setDogsInThePark] = useState<Array<Dog>>(null);
   const { data: dogs } = useDogs();
   const [selectedDogs, setSelectedDogs] = useState([]);
   const [isInThePark, setIsInThePark] = useState(false);
@@ -99,7 +96,15 @@ export default function ParkDetails({ navigation, route }) {
       </View>
       <List
         data={dogsInThePark}
-        renderItem={({ item, index }) => <DogItem dog={item} />}
+        renderItem={({ item, index }) => (
+          <DogCard
+            dog={item}
+            onpress={() => {
+              console.log(typeof item);
+              navigation.navigate("DogProfile", { dog: item });
+            }}
+          />
+        )}
       />
     </View>
   );

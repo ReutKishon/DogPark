@@ -1,5 +1,6 @@
 // userDataOperations.js
-import { firestore ,storage} from "../../firebase";
+import { firestore, storage } from "../../firebase";
+
 import {
   collection,
   addDoc,
@@ -11,17 +12,24 @@ import {
   getDoc,
   setDoc,
 } from "firebase/firestore";
+
 import * as Location from "expo-location";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 //import storage from "@react-native-firebase/storage";
-export const getUser = async (id: string) => {
+export const getUser = async (id: string): Promise<User> => {
   try {
     const doc = await firestore.collection("users").doc(id).get();
 
     if (doc.exists) {
-      const user = doc.data();
-      user["id"] = id;
+      const userData = doc.data();
+      const user: User = {
+        id,
+        name: userData.name,
+        email: userData.email || "",
+        dogs: userData.dogs || [],
+        imageUri: userData.imageUri || "",
+      };
       return user;
     } else {
       console.log("No such document!");
@@ -29,7 +37,7 @@ export const getUser = async (id: string) => {
   } catch (error) {}
 };
 
-export const getUserData = async (userId) => {
+export const getUserData = async (userId: string) => {
   try {
     console.log("fetching userId:" + userId);
     const userDoc = await firestore.collection("users").doc(userId).get();
@@ -244,7 +252,7 @@ export const RemoveDogsFromPark = async (parkId, dogKeys) => {
   }
 };
 
-export const GetDogsInPark = async (parkId) => {
+export const GetDogsInPark = async (parkId): Promise<Array<Dog>> => {
   try {
     const parkDoc = await firestore.collection("parks").doc(parkId).get();
     const parkData = parkDoc.data();
@@ -258,7 +266,16 @@ export const GetDogsInPark = async (parkId) => {
 
             docData.key = dogRef.id;
             docData.isSelected = 0;
-            return docData;
+            const dog: Dog = {
+              id: docData.key,
+              name: docData.name,
+              age: docData.age,
+              gender: docData.gender,
+              imageUri: docData.imageUrl||"",
+              owner: docData.owner||"",
+
+            };
+            return dog;
           }
           return null;
         } catch (error) {
@@ -277,13 +294,12 @@ export const GetDogsInPark = async (parkId) => {
 };
 
 export const UploadImageToStorage = async (id: string, imagePath: Blob) => {
-
   try {
     const path = "images/" + id;
     await storage.ref(path).put(imagePath);
 
     const url = await storage.ref(path).getDownloadURL();
-    
+
     return url;
   } catch (error) {
     console.error("Error uploading image:", error);
@@ -302,5 +318,37 @@ export const pickImage = async () => {
     }
   } catch (error) {
     console.error("error: " + error);
+  }
+};
+
+export const writeFollowingDocument = async (
+  currentUserId: string,
+  userIdToFollow: string
+): Promise<void> => {
+  try {
+    const followingDocRef = firestore
+      .collection("following")
+      .doc(currentUserId);
+    await followingDocRef.update({
+      following: arrayUnion(userIdToFollow),
+    });
+  } catch (error) {
+    console.error("Error writing to following collection:", error);
+  }
+};
+
+export const writeFollowersDocument = async (
+  currentUserId: string,
+  userIdToFollow: string
+): Promise<void> => {
+  try {
+    const followingDocRef = firestore
+      .collection("followers")
+      .doc(userIdToFollow);
+    await followingDocRef.update({
+      followers: arrayUnion(currentUserId),
+    });
+  } catch (error) {
+    console.error("Error writing to followers collection:", error);
   }
 };

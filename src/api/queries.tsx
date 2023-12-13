@@ -12,6 +12,8 @@ import {
   getUserDogs,
   getUserLocation,
   pickImage,
+  writeFollowersDocument,
+  writeFollowingDocument,
 } from "./api";
 import { useStore } from "../store";
 import { auth } from "../../firebase";
@@ -20,6 +22,13 @@ export const useDogs = () => {
   const user = useStore((state) => state.user);
   return useQuery("dogs", () => getUserDogs(user.id));
 };
+
+
+export const useUser = () => {
+  const user = useStore((state) => state.user);
+  return useQuery("dogs", () => getUserDogs(user.id));
+};
+
 
 // TODO: Add types
 
@@ -68,6 +77,10 @@ export const useParks = () => {
   );
 };
 
+
+
+
+
 export const useUploadImage = () => {
   const user = useStore((state) => state.user);
   const userId = user.id;
@@ -94,6 +107,22 @@ export const usePickImage = () => {
     {
       onSuccess: () => {
         //queryClient.invalidateQueries("dogs");
+      },
+    }
+  );
+};
+
+export const useFollow = () => {
+  const user = useStore((state) => state.user);
+  const queryClient = useQueryClient();
+  return useMutation(
+    (userIdToFollow: string) => {
+      return writeFollowersDocument(user.id, userIdToFollow);
+    },
+    {
+      onSuccess: () => {
+        // queryClient.invalidateQueries("followers");
+        // queryClient.invalidateQueries("following")
       },
     }
   );
