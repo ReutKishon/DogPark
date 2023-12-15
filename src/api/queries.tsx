@@ -17,6 +17,7 @@ import {
 } from "./api";
 import { useStore } from "../store";
 import { auth } from "../../firebase";
+import { Dog } from "./types";
 
 export const useDogs = () => {
   const user = useStore((state) => state.user);

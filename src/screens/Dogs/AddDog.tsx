@@ -4,7 +4,7 @@ import { Avatar, Button } from "react-native-paper";
 import { useAddDog, usePickImage, useUploadImage } from "../../api/queries";
 import styles from "../Login/signIn.style";
 import PickerField from "../../components/PickerField";
-import { Dog, DogGender } from "../../api/types";
+import { CreationData, Dog, DogGender } from "../../api/types";
 import { useStore } from "../../store";
 
 const GENDER = ["male", "female"];
@@ -39,7 +39,7 @@ const AddDogView = ({ onClose }) => {
       if (!dogName || !age || !gender) {
         console.log("error", dogName, age, gender);
       } else {
-        const dogData: Dog = {
+        const dogData: CreationData<Dog> = {
           name: dogName,
           age,
           gender,

@@ -77,16 +77,10 @@ export const getUserDogs = async (userId) => {
   return userDogsData;
 };
 
-const getUserDogById = (userId, dogId) => {};
-
-export const updateUserDog = (userId, dogId, updatedDetails) => {
+export const updateUserDog = (userId, dogId, dogData) => {
   const userDog = doc(firestore, "users", userId, "dogs", dogId);
-  console.log(userDog);
   if (userDog) {
-    userDog.name = updatedDetails.name;
-    userDog.age = updatedDetails.age;
-    userDog.gender = updatedDetails.gender;
-
+    updateDoc(userDog, dogData);
     return userDog;
   } else {
     throw new Error("User dog not found");
@@ -223,14 +217,6 @@ export const RemoveDogsFromPark = async (parkId, dogKeys) => {
     await updateDoc(parkDocRef, {
       currentDogs: arrayRemove(...dogRefs),
     });
-    const updatedParkDoc = await getDoc(parkDocRef);
-    const updatedParkData = updatedParkDoc.data();
-    if (
-      !updatedParkData.currentDogs ||
-      updatedParkData.currentDogs.length === 0
-    ) {
-      await deleteDoc(parkDocRef);
-    }
   } catch (error) {
     console.error("Error removing dogs from park:", error);
   }
@@ -245,22 +231,7 @@ export const GetDogsInPark = async (parkId): Promise<Array<Dog>> => {
       const dogDataPromises = dogRefs.map(async (dogRef) => {
         try {
           const doc = await dogRef.get();
-          if (doc && doc.data()) {
-            let docData = doc.data();
-
-            docData.key = dogRef.id;
-            docData.isSelected = 0;
-            const dog: Dog = {
-              id: docData.key,
-              name: docData.name,
-              age: docData.age,
-              gender: docData.gender,
-              imageUri: docData.imageUrl || "",
-              owner: docData.owner || "",
-            };
-            return dog;
-          }
-          return null;
+          return doc.data();
         } catch (error) {
           console.error("Error fetching dog data:", error);
           return null;

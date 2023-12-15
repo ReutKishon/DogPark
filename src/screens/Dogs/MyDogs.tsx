@@ -9,7 +9,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import { useDogs } from "../../api/queries";
 import { FullModal } from "../../components/FullModal";
-import DogCard from "../../components/DogCard";
+import DogCard from "./DogCard";
 
 function MyDogs({ navigation, onClose }) {
   const { data: dogs } = useDogs();

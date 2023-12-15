@@ -21,4 +21,7 @@ export interface User {
   imageUrl: string;
 }
 
-export interface Park {}
+export interface Park { }
+
+// generic interface for Creation model the omits the id field
+export type CreationData<T> = Omit<T, "id">;

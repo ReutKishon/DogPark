@@ -6,13 +6,13 @@ import List from "../../../components/List";
 import { firestore } from "../../../../firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useDogs } from "../../../api/queries";
-import { Avatar, Button } from "react-native-paper";
+import { ActivityIndicator, Avatar, Button } from "react-native-paper";
 import {
   JoinDogsToPark,
   GetDogsInPark,
   RemoveDogsFromPark,
 } from "../../../api/api";
-import DogCard from "../../../components/DogCard";
+import DogCard from "../../Dogs/DogCard";
 import { Dog } from "../../../api/types";
 import { useStore } from "../../../store";
 
@@ -32,7 +32,7 @@ const SelectableAvatarList = ({
           <Avatar.Image
             size={40}
             source={{
-              uri: item.imageUrl || "https://picsum.photos/700",
+              uri: item.imageUrl || "https://picsum.photos/400/400",
             }}
           />
         </Pressable>
@@ -54,9 +54,10 @@ export default function ParkDetails({ navigation, route }) {
     });
   }, []);
 
-
   const selectedDogAvatars = useMemo(() => {
-    if (!dogsCurrentlyInPark) {
+    console.log("dogsCurrentlyInPark", dogsCurrentlyInPark);
+    console.log("dogs", dogs);
+    if (!dogsCurrentlyInPark || !dogs) {
       return [];
     }
     const dogsInParkIds = dogsCurrentlyInPark.map((dog) => dog.id);
@@ -70,13 +71,13 @@ export default function ParkDetails({ navigation, route }) {
     return selectedDogs;
   }, [dogsCurrentlyInPark, dogs]);
 
- 
+  if (!dogs) {
+    return <ActivityIndicator />;
+  }
+
   return (
     <View className="flex w-full px-4 gap-2">
       <Text className="font-bold text-xl">{park.name}</Text>
-      {/* <Text>{"My dogs: " + JSON.stringify(dogs)}</Text>
-      <Text>{"Selected: " + JSON.stringify(selectedDogs)}</Text>
-      <Text>{"Dogs in park" + JSON.stringify(liveParkDogs)}</Text> */}
       <View className="py-1 my-3">
         <SelectableAvatarList
           items={dogs}
@@ -90,7 +91,6 @@ export default function ParkDetails({ navigation, route }) {
             else {
               await JoinDogsToPark(park.place_id, [dog.id]);
             }
-            
           }}
           selectedAvatars={selectedDogAvatars}
         />
