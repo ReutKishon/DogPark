@@ -16,36 +16,22 @@ import {
 import * as Location from "expo-location";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
-//import storage from "@react-native-firebase/storage";
+import { User } from "./types";
+
 export const getUser = async (id: string): Promise<User> => {
   try {
     const doc = await firestore.collection("users").doc(id).get();
 
     if (doc.exists) {
-      const userData = doc.data();
-      const user: User = {
-        id,
-        name: userData.name,
-        email: userData.email || "",
-        dogs: userData.dogs || [],
-        imageUri: userData.imageUri || "",
-      };
-      return user;
+      return {
+        ...doc.data(),
+        dogs: [],
+      } as User;
     } else {
       console.log("No such document!");
     }
-  } catch (error) {}
-};
-
-export const getUserData = async (userId: string) => {
-  try {
-    console.log("fetching userId:" + userId);
-    const userDoc = await firestore.collection("users").doc(userId).get();
-    const userData = userDoc.data();
-    return userData;
   } catch (error) {
-    console.error("Error fetching user's data:", error);
-    return null;
+    console.error("Error fetching user:", error);
   }
 };
 
@@ -68,29 +54,31 @@ export const AddDogToUser = async (userId: string, dogData: Dog) => {
 };
 
 export const getUserDogs = async (userId) => {
-  const userData = await getUserData(userId);
-  if (userData) {
-    const dogRefs = userData.dogs;
-    if (!dogRefs) return null;
-    const dogDataPromises = dogRefs.map(async (dogRef) => {
-      try {
-        const doc = await dogRef.get();
-        if (doc && doc.data()) {
-          let docData = doc.data();
-
-          docData.key = dogRef.id;
-          docData.isSelected = 0;
-          return docData;
-        }
-        return null;
-      } catch (error) {
-        console.error("Error fetching dog data:", error);
-        return null;
-      }
-    });
-    const userDogsData = (await Promise.all(dogDataPromises)).filter(Boolean);
-    return userDogsData;
+  console.log("getting user dogs", userId);
+  const userDoc = await firestore.collection("users").doc(userId).get();
+  if (!userDoc || !userDoc.exists) {
+    return null;
   }
+  console.log("getting user dogs");
+
+  const dogRefs = userDoc.data().dogs;
+  console.log("dogRefs: " + dogRefs);
+  if (!dogRefs) return null;
+  const dogDataPromises = dogRefs.map(async (dogRef) => {
+    try {
+      const doc = await dogRef.get();
+      if (doc && doc.data()) {
+        let docData = doc.data();
+        return docData;
+      }
+      return null;
+    } catch (error) {
+      console.error("Error fetching dog data:", error);
+      return null;
+    }
+  });
+  const userDogsData = (await Promise.all(dogDataPromises)).filter(Boolean);
+  return userDogsData;
 };
 
 const getUserDogById = (userId, dogId) => {};
@@ -211,8 +199,8 @@ export const GetDistanceAndAddress = async (destinations, name) => {
 
 // if park contains already dogs so add the dogs to that park document
 // else add a new park document and add the dogs to that park document
-export const AddDogsToPark = async (parkId, dogKeys) => {
-  const dogRefs = dogKeys.map((dogKey) => doc(firestore, "dogs", dogKey));
+export const JoinDogsToPark = async (parkId, userId, dogIds) => {
+  const dogRefs = dogIds.map((dogId) => doc(firestore, "dogs", dogId));
 
   try {
     const parkDocRef = doc(collection(firestore, "parks"), parkId);
@@ -271,9 +259,8 @@ export const GetDogsInPark = async (parkId): Promise<Array<Dog>> => {
               name: docData.name,
               age: docData.age,
               gender: docData.gender,
-              imageUri: docData.imageUrl||"",
-              owner: docData.owner||"",
-
+              imageUri: docData.imageUrl || "",
+              owner: docData.owner || "",
             };
             return dog;
           }

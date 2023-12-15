@@ -4,21 +4,20 @@ export enum DogGender {
   Female = "Female",
 }
 
-interface Dog {
-  id: string;
+export interface Dog {
   name: string;
   age: number;
   gender: DogGender;
-  imageUri: string;
-  owner: string;
+  imageUrl: string;
+  ownerId: string;
 }
 
-interface User {
+export interface User {
   id: string;
   name: string;
   email: string;
   dogs: Dog[];
-  imageUri: string;
+  imageUrl: string;
 }
 
-interface Park {}
+export interface Park {}

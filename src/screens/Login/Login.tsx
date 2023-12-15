@@ -15,6 +15,10 @@ export default function Login({ navigation }) {
       if (loggedInUser) {
         console.log("User is signed in");
         const user = await getUser(loggedInUser.uid);
+        if (user == undefined) {
+          console.log("User is undefined");
+          return;
+        }
         console.log("Myuser", user);
         setUser(user);
         navigation.navigate("DrawerNavigation", { screen: "Home" });

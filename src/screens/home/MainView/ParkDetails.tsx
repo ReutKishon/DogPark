@@ -7,11 +7,12 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { useDogs } from "../../../api/queries";
 import { Avatar, Button } from "react-native-paper";
 import {
-  AddDogsToPark,
+  JoinDogsToPark,
   GetDogsInPark,
   RemoveDogsFromPark,
 } from "../../../api/api";
 import DogCard from "../../../components/DogCard";
+import { Dog } from "../../../api/types";
 
 const DogsIconsList = ({ dogs, handleIconPress, selectedDogs }) => (
   <FlatList
@@ -38,11 +39,9 @@ const DogsIconsList = ({ dogs, handleIconPress, selectedDogs }) => (
 
 export default function ParkDetails({ navigation, route }) {
   const { park } = route.params;
-  //console.log("park:" + park.place_id);
   const [dogsInThePark, setDogsInThePark] = useState<Array<Dog>>(null);
   const { data: dogs } = useDogs();
   const [selectedDogs, setSelectedDogs] = useState([]);
-  const [isInThePark, setIsInThePark] = useState(false);
 
   const fetchDogsInPark = async () => {
     const dogs = await GetDogsInPark(park.place_id);
@@ -70,11 +69,10 @@ export default function ParkDetails({ navigation, route }) {
 
   const handleJoinPress = async () => {
     const dogsKeys = selectedDogs.map((dogIndex) => dogs[dogIndex].key);
-    setIsInThePark(!isInThePark);
     if (isInThePark) {
       await RemoveDogsFromPark(park.place_id, dogsKeys);
     } else {
-      await AddDogsToPark(park.place_id, dogsKeys);
+      await JoinDogsToPark(park.place_id, dogsKeys);
     }
     await fetchDogsInPark();
   };

@@ -1,5 +1,6 @@
 import { LocationObject } from "expo-location";
 import { create } from "zustand";
+import { User } from "./api/types";
 
 interface Store {
   location: LocationObject;

@@ -4,6 +4,7 @@ import styles from "./signIn.style";
 import { auth, firestore } from "../../../firebase";
 import { Keyboard } from "react-native";
 import { Button } from "react-native-paper";
+import { User } from "../../api/types";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -13,23 +14,28 @@ const Register = () => {
   // use form validation component
   // if (error.code === "auth/email-already-in-use") {
   const handleRegister = async () => {
-    const userData = { dogs: null, name, password };
-
     try {
       const userCredential = await auth.createUserWithEmailAndPassword(
         email,
         password
       );
-      const user = userCredential.user;
-      if (user) {
-        firestore.collection("users").doc(user.uid).set(userData);
+      const loggedUser = userCredential.user;
+      const user: User = {
+        dogs: [],
+        name,
+        email,
+        id: loggedUser.uid,
+        imageUrl: "",
+      };
+      if (loggedUser) {
+        firestore.collection("users").doc(loggedUser.uid).set(user);
       }
     } catch (error) {}
   };
 
   return (
     <View className="flex mt-24 px-10">
-      <Text >New Account</Text>
+      <Text>New Account</Text>
 
       <TextInput
         style={styles.input}

@@ -4,12 +4,14 @@ import { Avatar, Button } from "react-native-paper";
 import { useAddDog, usePickImage, useUploadImage } from "../../api/queries";
 import styles from "../Login/signIn.style";
 import PickerField from "../../components/PickerField";
-import { DogGender } from "../../api/types";
+import { Dog, DogGender } from "../../api/types";
+import { useStore } from "../../store";
 
 const GENDER = ["male", "female"];
 const AGE = [1, 2, 3, 4, 5, 6, 7, 8];
 
 const AddDogView = ({ onClose }) => {
+  const user = useStore((state) => state.user);
   const [dogName, setDogName] = useState<string>();
   const [age, setAge] = useState<number>(1);
   const [gender, setGender] = useState<DogGender>(DogGender.Male);
@@ -19,11 +21,20 @@ const AddDogView = ({ onClose }) => {
   const uploadImageMutation = useUploadImage();
   const addDogMutation = useAddDog();
 
-  const onAddDogSubmit = async () => {
+  const uploadPickedImage = async () => {
+    if (!pickImageMutation.data) {
+      return "";
+    }
     const response = await fetch(pickImageMutation.data);
-    const imageUrl = await response.blob();
-    const uri = await uploadImageMutation.mutateAsync(imageUrl);
+    const imageBlob = await response.blob();
+    console.log("imageBlob", imageBlob);
+    const uploadedImageUrl = await uploadImageMutation.mutateAsync(imageBlob);
+    console.log("uploadedImageUrl", uploadedImageUrl);
+    return uploadedImageUrl;
+  };
 
+  const onAddDogSubmit = async () => {
+    const uploadedImageUrl = await uploadPickedImage();
     try {
       if (!dogName || !age || !gender) {
         console.log("error", dogName, age, gender);
@@ -32,7 +43,8 @@ const AddDogView = ({ onClose }) => {
           name: dogName,
           age,
           gender,
-          imageUrl: uri,
+          imageUrl: uploadedImageUrl,
+          ownerId: user.id,
         };
 
         await addDogMutation.mutateAsync(dogData);

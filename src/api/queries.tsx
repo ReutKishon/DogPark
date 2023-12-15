@@ -93,14 +93,12 @@ export const useUploadImage = () => {
 };
 
 export const usePickImage = () => {
-  const queryClient = useQueryClient();
   return useMutation(
     () => {
       return pickImage();
     },
     {
       onSuccess: () => {
-        //queryClient.invalidateQueries("dogs");
       },
     }
   );
