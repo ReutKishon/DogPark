@@ -5,10 +5,10 @@ import { useDatabaseSnapshot } from "@react-query-firebase/database";
 import List from "../../../components/List";
 import { firestore } from "../../../../firebase";
 import { doc, onSnapshot } from "firebase/firestore";
-import { useDogs } from "../../../api/queries";
+import { useDogs } from "../../../state/queries";
 import { ActivityIndicator, Avatar, Button } from "react-native-paper";
 import {
-  JoinDogsToPark,
+  AddDogsToPark,
   GetDogsInPark,
   RemoveDogsFromPark,
 } from "../../../api/api";
@@ -89,7 +89,7 @@ export default function ParkDetails({ navigation, route }) {
             }
             // if dog not in park join
             else {
-              await JoinDogsToPark(park.place_id, [dog.id]);
+              await AddDogsToPark(park.place_id, [dog.id]);
             }
           }}
           selectedAvatars={selectedDogAvatars}

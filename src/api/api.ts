@@ -1,22 +1,16 @@
-// userDataOperations.js
-import { firestore, storage } from "../../firebase";
+import { firestore } from "../../firebase";
 
 import {
   collection,
-  addDoc,
   updateDoc,
   arrayUnion,
   doc,
   arrayRemove,
-  deleteDoc,
   getDoc,
   setDoc,
 } from "firebase/firestore";
 
-import * as Location from "expo-location";
-import axios from "axios";
-import * as ImagePicker from "expo-image-picker";
-import { Dog, User } from "./types";
+import { CreationData, Dog, User } from "./types";
 
 export const getUser = async (id: string): Promise<User> => {
   try {
@@ -35,12 +29,18 @@ export const getUser = async (id: string): Promise<User> => {
   }
 };
 
-export const AddDogToUser = async (userId: string, dogData: Dog) => {
+export const AddDogToUser = async (
+  userId: string,
+  dogData: CreationData<Dog>
+) => {
   console.log("Saving dog");
   try {
     const newDogRef = await firestore.collection("dogs").doc();
-    dogData.id = newDogRef.id;
-    await newDogRef.set(dogData);
+    const dog: Dog = {
+      ...dogData,
+      id: newDogRef.id,
+    };
+    await newDogRef.set(dog);
     await updateDoc(doc(firestore, "users", userId), {
       dogs: arrayUnion(newDogRef),
     });
@@ -87,109 +87,7 @@ export const updateUserDog = (userId, dogId, dogData) => {
   }
 };
 
-const API_KEY = "AIzaSyCnAEFDXfQTt0A4UYn5srE0jOGGrGfjEhk";
-export const getUserLocation = async (): Promise<Location.LocationObject> => {
-  try {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      console.log("Location permission not granted");
-      return;
-    }
-    let location = await Location.getCurrentPositionAsync({});
-    return location;
-  } catch (error) {
-    console.error("Error fetching location: ", error);
-    return error;
-  }
-};
-
-export const getNearestDogParks = async (location) => {
-  const { longitude, latitude } = location;
-  const response = await axios.get(
-    `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=1000&type=park&keyword=dog&key=${API_KEY}`
-  );
-  return response.data.results;
-};
-
-export const GetDistanceAndAddressByLocation = async (destinations, name) => {
-  try {
-    const location = await getUserLocation();
-    const origins = location[0] + "," + location[1];
-    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origins}&destinations=${destinations}&key=${API_KEY}`;
-
-    const response = await axios.get(url);
-    const data = response.data;
-    //console.log("data:" + JSON.stringify(data));
-    if (
-      data.rows &&
-      data.rows.length > 0 &&
-      data.rows[0].elements &&
-      data.rows[0].elements.length > 0
-    ) {
-      const distance = data.rows[0].elements[0].distance.text;
-      let address = data.destination_addresses[0];
-
-      if (address) {
-        const firstSubstring = address.split(",")[0];
-        if (firstSubstring == name) {
-          address = address.substring(firstSubstring.length + 1);
-        }
-      }
-
-      //const distanceMeters= data.rows[0].elements[0].distance.value;
-      //console.log(`Distance: ${distanceKm}`);
-      //console.log(`Distance in meters: ${distanceMeters}`);
-      return { distance, address };
-    } else {
-      console.error("Invalid data received from Google Maps API");
-    }
-  } catch (error) {
-    console.error("Error fetching data from Google Maps API", error);
-    throw error;
-  }
-};
-
-export const GetDistanceAndAddress = async (destinations, name) => {
-  try {
-    const location = await getUserLocation();
-    const origins = location[0] + "," + location[1];
-    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origins}&destinations=${destinations}&key=${API_KEY}`;
-
-    const response = await axios.get(url);
-    const data = response.data;
-    //console.log("data:" + JSON.stringify(data));
-    if (
-      data.rows &&
-      data.rows.length > 0 &&
-      data.rows[0].elements &&
-      data.rows[0].elements.length > 0
-    ) {
-      const distance = data.rows[0].elements[0].distance.text;
-      let address = data.destination_addresses[0];
-
-      if (address) {
-        const firstSubstring = address.split(",")[0];
-        if (firstSubstring == name) {
-          address = address.substring(firstSubstring.length + 1);
-        }
-      }
-
-      //const distanceMeters= data.rows[0].elements[0].distance.value;
-      //console.log(`Distance: ${distanceKm}`);
-      //console.log(`Distance in meters: ${distanceMeters}`);
-      return { distance, address };
-    } else {
-      console.error("Invalid data received from Google Maps API");
-    }
-  } catch (error) {
-    console.error("Error fetching data from Google Maps API", error);
-    throw error;
-  }
-};
-
-// if park contains already dogs so add the dogs to that park document
-// else add a new park document and add the dogs to that park document
-export const JoinDogsToPark = async (parkId, dogIds) => {
+export const AddDogsToPark = async (parkId, dogIds) => {
   const dogRefs = dogIds.map((dogId) => doc(firestore, "dogs", dogId));
 
   try {
@@ -244,34 +142,6 @@ export const GetDogsInPark = async (parkId): Promise<Array<Dog>> => {
   } catch (error) {
     console.error("Error fetching park data:", error);
     return null;
-  }
-};
-
-export const UploadImageToStorage = async (id: string, imagePath: Blob) => {
-  try {
-    const path = "images/" + id;
-    await storage.ref(path).put(imagePath);
-
-    const url = await storage.ref(path).getDownloadURL();
-
-    return url;
-  } catch (error) {
-    console.error("Error uploading image:", error);
-  }
-};
-
-export const pickImage = async () => {
-  try {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (status === "granted") {
-      const result = await ImagePicker.launchImageLibraryAsync();
-      if (!result.canceled) {
-        return result.assets[0].uri;
-      }
-    }
-  } catch (error) {
-    console.error("error: " + error);
   }
 };
 

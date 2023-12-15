@@ -7,7 +7,7 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
-import { useDogs } from "../../api/queries";
+import { useDogs } from "../../state/queries";
 import { FullModal } from "../../components/FullModal";
 import DogCard from "./DogCard";
 

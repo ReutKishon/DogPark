@@ -5,7 +5,7 @@ import { auth } from "../../../firebase";
 import { useStore } from "../../store";
 import { getUser, getUserDogs } from "../../api/api";
 import { Button } from "react-native-paper";
-import { useSignIn } from "../../api/queries";
+import { useSignIn } from "../../state/queries";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("elad.636@gmail.com");

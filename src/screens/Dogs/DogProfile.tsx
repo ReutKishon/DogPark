@@ -15,13 +15,13 @@ import { COLORS } from "../../constants";
 import { AddDogToUser } from "../../api/api";
 import { useStore } from "../../store";
 import { IconButton } from "react-native-paper";
-import { useAddDog, usePickImage, useUploadImage } from "../../api/queries";
+import { useAddDog, usePickImage, useUploadImage } from "../../state/queries";
 import { SelectList } from "react-native-dropdown-select-list";
 import { Picker } from "@react-native-picker/picker";
 import styles from "../Login/signIn.style";
 import PickerField from "../../components/PickerField";
 
-const DogProfile = ({navigation, route}) => {
+const DogProfile = ({ navigation, route }) => {
   const { dog } = route.params;
   const followUser = (userId: string) => {};
 

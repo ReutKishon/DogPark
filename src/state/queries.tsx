@@ -7,17 +7,15 @@ import {
 } from "react-query";
 import {
   AddDogToUser,
-  UploadImageToStorage,
-  getNearestDogParks,
   getUserDogs,
-  getUserLocation,
-  pickImage,
   writeFollowersDocument,
   writeFollowingDocument,
-} from "./api";
+} from "../api/api";
 import { useStore } from "../store";
 import { auth } from "../../firebase";
-import { Dog } from "./types";
+import { CreationData, Dog } from "../api/types";
+import { getNearestDogParks, getUserLocation } from "../api/location";
+import { pickImage, uploadImageToStorage } from "../api/utils";
 
 export const useDogs = () => {
   const user = useStore((state) => state.user);
@@ -28,8 +26,6 @@ export const useUser = () => {
   const user = useStore((state) => state.user);
   return useQuery("dogs", () => getUserDogs(user.id));
 };
-
-// TODO: Add types
 
 export const useSignIn = () => {
   return useMutation(
@@ -44,12 +40,11 @@ export const useSignIn = () => {
   );
 };
 
-// new dog mutation
 export const useAddDog = () => {
   const user = useStore((state) => state.user);
   const queryClient = useQueryClient();
   return useMutation(
-    (dogData: Dog) => {
+    (dogData: CreationData<Dog>) => {
       return AddDogToUser(user.id, dogData);
     },
     {
@@ -83,7 +78,7 @@ export const useUploadImage = () => {
   const id = userId + lastIndexDog;
   return useMutation(
     (imageUrl: Blob) => {
-      return UploadImageToStorage(id, imageUrl);
+      return uploadImageToStorage(id, imageUrl);
     },
     {
       onSuccess: () => {
@@ -99,8 +94,7 @@ export const usePickImage = () => {
       return pickImage();
     },
     {
-      onSuccess: () => {
-      },
+      onSuccess: () => {},
     }
   );
 };

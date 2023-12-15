@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity, TextInput } from "react-native";
 import { Avatar, Button } from "react-native-paper";
-import { useAddDog, usePickImage, useUploadImage } from "../../api/queries";
+import { useAddDog, usePickImage, useUploadImage } from "../../state/queries";
 import styles from "../Login/signIn.style";
 import PickerField from "../../components/PickerField";
 import { CreationData, Dog, DogGender } from "../../api/types";

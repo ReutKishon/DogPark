@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import List from "../../../components/List";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useParks } from "../../../api/queries";
+import { useParks } from "../../../state/queries";
 import { Avatar, Button } from "react-native-paper";
 
 const ParkItem = ({ item }) => {
