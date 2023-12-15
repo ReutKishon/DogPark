@@ -5,6 +5,7 @@ export enum DogGender {
 }
 
 export interface Dog {
+  id: string;
   name: string;
   age: number;
   gender: DogGender;

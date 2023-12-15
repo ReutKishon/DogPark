@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Text, View, FlatList, Pressable } from "react-native";
+import { useDatabaseSnapshot } from "@react-query-firebase/database";
 
 import List from "../../../components/List";
 import { firestore } from "../../../../firebase";
@@ -13,6 +14,7 @@ import {
 } from "../../../api/api";
 import DogCard from "../../../components/DogCard";
 import { Dog } from "../../../api/types";
+import { useStore } from "../../../store";
 
 const DogsIconsList = ({ dogs, handleIconPress, selectedDogs }) => (
   <FlatList
@@ -20,7 +22,7 @@ const DogsIconsList = ({ dogs, handleIconPress, selectedDogs }) => (
     horizontal={true}
     renderItem={({ item, index }) => (
       <Pressable onPress={() => handleIconPress(index)}>
-        <View style={{ opacity: selectedDogs.includes(index) ? 1 : 0.5 }}>
+        <View style={{ opacity: selectedDogs.includes(dog.id) ? 1 : 0.5 }}>
           <Avatar.Image size={64} source={{ uri: item.imageUrl }} />
         </View>
       </Pressable>
@@ -39,42 +41,61 @@ const DogsIconsList = ({ dogs, handleIconPress, selectedDogs }) => (
 
 export default function ParkDetails({ navigation, route }) {
   const { park } = route.params;
+
   const [dogsInThePark, setDogsInThePark] = useState<Array<Dog>>(null);
   const { data: dogs } = useDogs();
-  const [selectedDogs, setSelectedDogs] = useState([]);
+  const user = useStore((state) => state.user);
 
   const fetchDogsInPark = async () => {
     const dogs = await GetDogsInPark(park.place_id);
-    if (dogs != undefined) {
+    if (dogs) {
       setDogsInThePark(dogs);
     }
   };
 
   useEffect(() => {
+    console.log("dogs", dogs);
     onSnapshot(doc(firestore, "parks", park.place_id), (doc) => {
-      console.log("data: ", doc.data());
       fetchDogsInPark();
     });
   }, []);
 
-  const handleIconPress = (index) => {
+  const onDogToggle = (index) => {
+    const dogId = dogs[index].id;
     setSelectedDogs((prevSelectedDogs) => {
-      if (prevSelectedDogs.includes(index)) {
-        return prevSelectedDogs.filter((dogIndex) => dogIndex !== index);
+      if (prevSelectedDogs.includes(dogId)) {
+        return prevSelectedDogs.filter((dogKey) => dogKey !== dogId);
       } else {
-        return [...prevSelectedDogs, index];
+        return [...prevSelectedDogs, dogId];
       }
     });
   };
 
-  const handleJoinPress = async () => {
-    const dogsKeys = selectedDogs.map((dogIndex) => dogs[dogIndex].key);
-    if (isInThePark) {
-      await RemoveDogsFromPark(park.place_id, dogsKeys);
-    } else {
-      await JoinDogsToPark(park.place_id, dogsKeys);
+  const selectedDogs = useMemo(() => {
+    if (!dogsInThePark) {
+      return [];
     }
-    await fetchDogsInPark();
+
+    const dogIds = dogsInThePark.map((dog) => dog.id);
+    return dogIds;
+  }
+  , [dogsInThePark]);
+
+  const isJoined = useMemo(() => {
+    if (!dogsInThePark) {
+      return false;
+    }
+    const dogIds = dogsInThePark.map((dog) => dog.id);
+    const isJoined = dogIds.some((dogKey) => selectedDogs.includes(dogKey));
+    return isJoined;
+  }, [dogsInThePark, selectedDogs]);
+
+  const onJoin = async () => {
+    if (isJoined) {
+      await RemoveDogsFromPark(park.place_id, selectedDogs);
+    } else {
+      await JoinDogsToPark(park.place_id, user.id, selectedDogs);
+    }
   };
 
   return (
@@ -82,15 +103,13 @@ export default function ParkDetails({ navigation, route }) {
       <View className="py-1 my-3">
         <DogsIconsList
           dogs={dogs}
-          handleIconPress={handleIconPress}
+          handleIconPress={onDogToggle}
           selectedDogs={selectedDogs}
         />
       </View>
       <Text className="font-bold text-xl">{park.name}</Text>
       <View>
-        <Button onPress={handleJoinPress}>
-          {isInThePark ? "Exit" : "Join"}
-        </Button>
+        <Button onPress={onJoin}>{isJoined ? "Leave" : "Join"}</Button>
       </View>
       <List
         data={dogsInThePark}

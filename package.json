@@ -23,6 +23,8 @@
     "@react-navigation/drawer": "^6.6.4",
     "@react-navigation/native": "^6.1.8",
     "@react-navigation/stack": "^6.3.18",
+    "@react-query-firebase/database": "^1.0.0-dev.2",
+    "@react-query-firebase/firestore": "^1.0.0-dev.7",
     "@types/react": "~18.2.14",
     "axios": "^1.6.2",
     "eslint-plugin-react": "^7.33.2",

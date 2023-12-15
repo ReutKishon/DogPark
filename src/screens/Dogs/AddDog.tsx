@@ -56,7 +56,7 @@ const AddDogView = ({ onClose }) => {
   };
 
   return (
-    <View className="flex items-center justify- px-4 gap-1">
+    <View className="flex items-center px-4 gap-1">
       <View className="w-full flex-row justify-between items-center">
         <Button onPress={() => onClose()}>Cancel</Button>
         <Button
