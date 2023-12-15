@@ -23,12 +23,10 @@ export const useDogs = () => {
   return useQuery("dogs", () => getUserDogs(user.id));
 };
 
-
 export const useUser = () => {
   const user = useStore((state) => state.user);
   return useQuery("dogs", () => getUserDogs(user.id));
 };
-
 
 // TODO: Add types
 
@@ -76,10 +74,6 @@ export const useParks = () => {
     { enabled: !!location }
   );
 };
-
-
-
-
 
 export const useUploadImage = () => {
   const user = useStore((state) => state.user);

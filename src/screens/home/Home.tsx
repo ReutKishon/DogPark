@@ -31,7 +31,7 @@ import AddDogView from "../Dogs/AddDog";
 import { getUserLocation } from "../../api/api";
 import MainView from "./MainView";
 import { FullModal } from "../../components/FullModal";
-import Profile from "../profile";
+import Profile from "../Profile";
 
 export const HomeTemportatyModal = React.forwardRef((props, ref) => {
   // variables

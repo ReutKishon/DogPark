@@ -1,5 +1,5 @@
 // gender enum
-enum DogGender {
+export enum DogGender {
   Male = "Male",
   Female = "Female",
 }

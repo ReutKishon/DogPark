@@ -1,25 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Modal,
-  TextInput,
-  Alert,
-} from "react-native";
+import React, { useState } from "react";
+import { View, TouchableOpacity, TextInput } from "react-native";
 import { Avatar, Button } from "react-native-paper";
-import DropDown from "react-native-paper-dropdown";
-import { COLORS } from "../../constants";
-import { AddDogToUser } from "../../api/api";
-import { useStore } from "../../store";
-import { IconButton } from "react-native-paper";
 import { useAddDog, usePickImage, useUploadImage } from "../../api/queries";
-import { SelectList } from "react-native-dropdown-select-list";
-import { Picker } from "@react-native-picker/picker";
 import styles from "../Login/signIn.style";
 import PickerField from "../../components/PickerField";
+import { DogGender } from "../../api/types";
 
 const GENDER = ["male", "female"];
 const AGE = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -27,7 +12,7 @@ const AGE = [1, 2, 3, 4, 5, 6, 7, 8];
 const AddDogView = ({ onClose }) => {
   const [dogName, setDogName] = useState<string>();
   const [age, setAge] = useState<number>(1);
-  const [gender, setGender] = useState<DogGender>();
+  const [gender, setGender] = useState<DogGender>(DogGender.Male);
   const [imageUrl, setImageUrl] = useState<string>();
   const [showDropDown, setShowDropDown] = useState(false);
   const pickImageMutation = usePickImage();
@@ -41,6 +26,7 @@ const AddDogView = ({ onClose }) => {
 
     try {
       if (!dogName || !age || !gender) {
+        console.log("error", dogName, age, gender);
       } else {
         const dogData: Dog = {
           name: dogName,
@@ -65,7 +51,7 @@ const AddDogView = ({ onClose }) => {
           icon={"plus"}
           mode="contained"
           onPress={onAddDogSubmit}
-          loading={addDogMutation.isLoading}
+          loading={addDogMutation.isLoading || uploadImageMutation.isLoading}
         >
           Add dog
         </Button>
