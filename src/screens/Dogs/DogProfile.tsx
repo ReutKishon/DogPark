@@ -32,7 +32,7 @@ const DogProfile = ({ navigation, route }) => {
       <Avatar.Image
         style={{ backgroundColor: "grey" }}
         size={120}
-        source={{ uri: dog.owner.imageUri }}
+        source={{ uri: dog.imageUrl }}
       ></Avatar.Image>
 
       <View className="flex items-center gap-2"></View>
