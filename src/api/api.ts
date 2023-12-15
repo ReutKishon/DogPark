@@ -16,7 +16,7 @@ import {
 import * as Location from "expo-location";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
-import { User } from "./types";
+import { Dog, User } from "./types";
 
 export const getUser = async (id: string): Promise<User> => {
   try {
@@ -36,18 +36,14 @@ export const getUser = async (id: string): Promise<User> => {
 };
 
 export const AddDogToUser = async (userId: string, dogData: Dog) => {
-  console.log("adding dog to user");
+  console.log("Saving dog");
   try {
-    const docRef = await addDoc(collection(firestore, "dogs"), dogData);
-    if (docRef && docRef.id) {
-      const newDogRef = docRef;
-
-      await updateDoc(doc(firestore, "users", userId), {
-        dogs: arrayUnion(newDogRef),
-      });
-    } else {
-      console.error("Invalid docRef or missing ID.");
-    }
+    const newDogRef = await firestore.collection("dogs").doc();
+    dogData.id = newDogRef.id;
+    await newDogRef.set(dogData);
+    await updateDoc(doc(firestore, "users", userId), {
+      dogs: arrayUnion(newDogRef),
+    });
   } catch (error) {
     console.error(error + "hi");
   }
@@ -63,7 +59,7 @@ export const getUserDogs = async (userId) => {
 
   const dogRefs = userDoc.data().dogs;
   console.log("dogRefs: " + dogRefs);
-  if (!dogRefs) return null;
+  if (!dogRefs) return [];
   const dogDataPromises = dogRefs.map(async (dogRef) => {
     try {
       const doc = await dogRef.get();
@@ -199,7 +195,7 @@ export const GetDistanceAndAddress = async (destinations, name) => {
 
 // if park contains already dogs so add the dogs to that park document
 // else add a new park document and add the dogs to that park document
-export const JoinDogsToPark = async (parkId, userId, dogIds) => {
+export const JoinDogsToPark = async (parkId, dogIds) => {
   const dogRefs = dogIds.map((dogId) => doc(firestore, "dogs", dogId));
 
   try {

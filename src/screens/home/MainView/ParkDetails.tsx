@@ -16,104 +16,89 @@ import DogCard from "../../../components/DogCard";
 import { Dog } from "../../../api/types";
 import { useStore } from "../../../store";
 
-const DogsIconsList = ({ dogs, handleIconPress, selectedDogs }) => (
-  <FlatList
-    data={dogs}
-    horizontal={true}
-    renderItem={({ item, index }) => (
-      <Pressable onPress={() => handleIconPress(index)}>
-        <View style={{ opacity: selectedDogs.includes(dog.id) ? 1 : 0.5 }}>
-          <Avatar.Image size={64} source={{ uri: item.imageUrl }} />
-        </View>
-      </Pressable>
-    )}
-    ItemSeparatorComponent={() => {
-      return (
-        <View
-          style={{
-            width: 12,
-          }}
-        />
-      );
-    }}
-  ></FlatList>
-);
-
+const SelectableAvatarList = ({
+  items,
+  handleAvatarPress,
+  selectedAvatars,
+}) => {
+  return (
+    <View className="flex flex-row gap-1">
+      {items.map((item, index) => (
+        <Pressable
+          key={index}
+          onPress={() => handleAvatarPress(index)}
+          className={`${selectedAvatars.includes(index) ? "opacity-50" : ""}`}
+        >
+          <Avatar.Image
+            size={40}
+            source={{
+              uri: item.imageUrl || "https://picsum.photos/700",
+            }}
+          />
+        </Pressable>
+      ))}
+    </View>
+  );
+};
 export default function ParkDetails({ navigation, route }) {
   const { park } = route.params;
-
-  const [dogsInThePark, setDogsInThePark] = useState<Array<Dog>>(null);
   const { data: dogs } = useDogs();
-  const user = useStore((state) => state.user);
-
-  const fetchDogsInPark = async () => {
-    const dogs = await GetDogsInPark(park.place_id);
-    if (dogs) {
-      setDogsInThePark(dogs);
-    }
-  };
+  const [dogsCurrentlyInPark, setDogsCurrentlyInPark] = useState<Dog[]>([]);
 
   useEffect(() => {
-    console.log("dogs", dogs);
-    onSnapshot(doc(firestore, "parks", park.place_id), (doc) => {
-      fetchDogsInPark();
+    onSnapshot(doc(firestore, "parks", park.place_id), async (doc) => {
+      const dogs = await GetDogsInPark(park.place_id);
+      if (dogs) {
+        setDogsCurrentlyInPark(dogs);
+      }
     });
   }, []);
 
-  const onDogToggle = (index) => {
-    const dogId = dogs[index].id;
-    setSelectedDogs((prevSelectedDogs) => {
-      if (prevSelectedDogs.includes(dogId)) {
-        return prevSelectedDogs.filter((dogKey) => dogKey !== dogId);
-      } else {
-        return [...prevSelectedDogs, dogId];
-      }
-    });
-  };
 
-  const selectedDogs = useMemo(() => {
-    if (!dogsInThePark) {
+  const selectedDogAvatars = useMemo(() => {
+    if (!dogsCurrentlyInPark) {
       return [];
     }
+    const dogsInParkIds = dogsCurrentlyInPark.map((dog) => dog.id);
+    const selectedDogs = dogs
+      .map((dog, index) => {
+        if (dogsInParkIds.includes(dog.id)) {
+          return index;
+        }
+      })
+      .filter((item) => item !== undefined);
+    return selectedDogs;
+  }, [dogsCurrentlyInPark, dogs]);
 
-    const dogIds = dogsInThePark.map((dog) => dog.id);
-    return dogIds;
-  }
-  , [dogsInThePark]);
-
-  const isJoined = useMemo(() => {
-    if (!dogsInThePark) {
-      return false;
-    }
-    const dogIds = dogsInThePark.map((dog) => dog.id);
-    const isJoined = dogIds.some((dogKey) => selectedDogs.includes(dogKey));
-    return isJoined;
-  }, [dogsInThePark, selectedDogs]);
-
-  const onJoin = async () => {
-    if (isJoined) {
-      await RemoveDogsFromPark(park.place_id, selectedDogs);
-    } else {
-      await JoinDogsToPark(park.place_id, user.id, selectedDogs);
-    }
-  };
-
+ 
   return (
     <View className="flex w-full px-4 gap-2">
+      <Text className="font-bold text-xl">{park.name}</Text>
+      {/* <Text>{"My dogs: " + JSON.stringify(dogs)}</Text>
+      <Text>{"Selected: " + JSON.stringify(selectedDogs)}</Text>
+      <Text>{"Dogs in park" + JSON.stringify(liveParkDogs)}</Text> */}
       <View className="py-1 my-3">
-        <DogsIconsList
-          dogs={dogs}
-          handleIconPress={onDogToggle}
-          selectedDogs={selectedDogs}
+        <SelectableAvatarList
+          items={dogs}
+          handleAvatarPress={async (index) => {
+            const dog = dogs[index];
+            // if dog in park leave
+            if (selectedDogAvatars.includes(index)) {
+              await RemoveDogsFromPark(park.place_id, [dog.id]);
+            }
+            // if dog not in park join
+            else {
+              await JoinDogsToPark(park.place_id, [dog.id]);
+            }
+            
+          }}
+          selectedAvatars={selectedDogAvatars}
         />
       </View>
-      <Text className="font-bold text-xl">{park.name}</Text>
-      <View>
-        <Button onPress={onJoin}>{isJoined ? "Leave" : "Join"}</Button>
-      </View>
+
       <List
-        data={dogsInThePark}
-        renderItem={({ item, index }) => (
+        data={dogsCurrentlyInPark}
+        renderItem={({ item }) => (
           <DogCard
             dog={item}
             onpress={() => {
