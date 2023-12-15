@@ -15,7 +15,7 @@ import {
   Pressable,
   Platform,
 } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import BottomSheet, {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -25,13 +25,14 @@ import { useStore } from "../../store";
 import { useSharedValue } from "react-native-reanimated";
 import List from "../../components/List";
 import { MenuView } from "@react-native-menu/menu";
-import { Button } from "react-native-paper";
+import { Avatar, Button, Icon } from "react-native-paper";
 import MyDogs from "../Dogs/MyDogs";
 import AddDogView from "../Dogs/AddDog";
-import { getUserLocation } from "../../api/api";
 import MainView from "./MainView";
 import { FullModal } from "../../components/FullModal";
 import Profile from "../Profile";
+import { getUserLocation } from "../../api/location";
+import { useDogs } from "../../state/queries";
 
 export const HomeTemportatyModal = React.forwardRef((props, ref) => {
   // variables
@@ -104,6 +105,7 @@ const Home = ({ navigation }) => {
       : temporaryModalSheetRef.current.dismiss();
   };
 
+  const {data:dogs} = useDogs();
   return (
     <View className="flex items-center justify-start h-full w-full relative">
       <MapView.Animated
@@ -115,7 +117,25 @@ const Home = ({ navigation }) => {
         region={location?.coords}
         showsUserLocation
         zoomEnabled
-      />
+      >
+        {dogs?.map((dog, index) => (
+          <Marker
+            key={index}
+            coordinate={{
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+            }}
+          >
+            <Avatar.Image
+              size={40}
+              source={{
+                uri: dog.imageUrl || "https://picsum.photos/400/400",
+              }}
+            />
+          </Marker>
+        ))}
+          
+      </MapView.Animated>
       <BottomSheetModalProvider>
         <BottomSheet ref={bottomSheetRef} index={1} snapPoints={snapPoints}>
           <MainView toggleModal={toggleModal} />
