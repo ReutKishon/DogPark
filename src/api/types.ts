@@ -23,5 +23,4 @@ export interface User {
 
 export interface Park { }
 
-// generic interface for Creation model the omits the id field
 export type CreationData<T> = Omit<T, "id">;

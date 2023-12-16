@@ -33,9 +33,8 @@ export const AddDogToUser = async (
   userId: string,
   dogData: CreationData<Dog>
 ) => {
-  console.log("Saving dog");
   try {
-    const newDogRef = await firestore.collection("dogs").doc();
+    const newDogRef = firestore.collection("dogs").doc();
     const dog: Dog = {
       ...dogData,
       id: newDogRef.id,
@@ -53,7 +52,7 @@ export const getUserDogs = async (userId) => {
   console.log("getting user dogs", userId);
   const userDoc = await firestore.collection("users").doc(userId).get();
   if (!userDoc || !userDoc.exists) {
-    return null;
+    return [];
   }
   console.log("getting user dogs");
 
@@ -107,7 +106,7 @@ export const AddDogsToPark = async (parkId, dogIds) => {
   }
 };
 
-export const RemoveDogsFromPark = async (parkId, dogKeys) => {
+export const removeDogsFromPark = async (parkId, dogKeys) => {
   const dogRefs = dogKeys.map((dogKey) => doc(firestore, "dogs", dogKey));
   try {
     const parkDocRef = doc(collection(firestore, "parks"), parkId);
@@ -120,7 +119,7 @@ export const RemoveDogsFromPark = async (parkId, dogKeys) => {
   }
 };
 
-export const GetDogsInPark = async (parkId): Promise<Array<Dog>> => {
+export const getDogsInPark = async (parkId): Promise<Array<Dog>> => {
   try {
     const parkDoc = await firestore.collection("parks").doc(parkId).get();
     const parkData = parkDoc.data();

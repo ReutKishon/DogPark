@@ -9,8 +9,8 @@ import { useDogs } from "../../../state/queries";
 import { ActivityIndicator, Avatar, Button } from "react-native-paper";
 import {
   AddDogsToPark,
-  GetDogsInPark,
-  RemoveDogsFromPark,
+  getDogsInPark,
+  removeDogsFromPark,
 } from "../../../api/api";
 import DogCard from "../../Dogs/DogCard";
 import { Dog } from "../../../api/types";
@@ -47,7 +47,7 @@ export default function ParkDetails({ navigation, route }) {
 
   useEffect(() => {
     onSnapshot(doc(firestore, "parks", park.place_id), async (doc) => {
-      const dogs = await GetDogsInPark(park.place_id);
+      const dogs = await getDogsInPark(park.place_id);
       if (dogs) {
         setDogsCurrentlyInPark(dogs);
       }
@@ -85,7 +85,7 @@ export default function ParkDetails({ navigation, route }) {
             const dog = dogs[index];
             // if dog in park leave
             if (selectedDogAvatars.includes(index)) {
-              await RemoveDogsFromPark(park.place_id, [dog.id]);
+              await removeDogsFromPark(park.place_id, [dog.id]);
             }
             // if dog not in park join
             else {
@@ -102,7 +102,7 @@ export default function ParkDetails({ navigation, route }) {
           <DogCard
             dog={item}
             onpress={() => {
-              console.log(typeof item);
+              console.log("item: " + typeof item);
               navigation.navigate("DogProfile", { dog: item });
             }}
           />

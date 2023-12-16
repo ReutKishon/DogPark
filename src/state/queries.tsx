@@ -7,6 +7,7 @@ import {
 } from "react-query";
 import {
   AddDogToUser,
+  getUser,
   getUserDogs,
   writeFollowersDocument,
   writeFollowingDocument,
@@ -23,8 +24,16 @@ export const useDogs = () => {
 };
 
 export const useUser = () => {
-  const user = useStore((state) => state.user);
-  return useQuery("dogs", () => getUserDogs(user.id));
+  return useMutation(
+    (userId: string) => {
+      return getUser(userId);
+    },
+    {
+      onSuccess: () => {
+        console.log("getUser");
+      },
+    }
+  );
 };
 
 export const useSignIn = () => {

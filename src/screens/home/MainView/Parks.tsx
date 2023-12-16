@@ -24,7 +24,6 @@ export default function Parks({ navigation, route }) {
   const { toggleModal } = route.params;
 
   const { data: parks, isLoading, isIdle } = useParks();
-  //const { data: user } = useUser();
 
   return (
     <View className="w-full h-full px-4">
