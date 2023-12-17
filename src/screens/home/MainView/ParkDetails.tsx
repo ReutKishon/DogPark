@@ -13,8 +13,9 @@ import {
   removeDogsFromPark,
 } from "../../../api/api";
 import DogCard from "../../Dogs/DogCard";
-import { Dog } from "../../../api/types";
+import { Dog, Park,LocationCoords } from "../../../api/types";
 import { useStore } from "../../../store";
+import { LocationObject } from "expo-location";
 
 const SelectableAvatarList = ({
   items,
@@ -41,13 +42,22 @@ const SelectableAvatarList = ({
   );
 };
 export default function ParkDetails({ navigation, route }) {
-  const { park } = route.params;
+  const { park }: { park: Park } = route.params;
+  const setLocation = useStore((state) => state.setLocation);
+
   const { data: dogs } = useDogs();
   const [dogsCurrentlyInPark, setDogsCurrentlyInPark] = useState<Dog[]>([]);
 
   useEffect(() => {
-    onSnapshot(doc(firestore, "parks", park.place_id), async (doc) => {
-      const dogs = await getDogsInPark(park.place_id);
+    console.log("setDogsCurrentlyInPark1")
+    const parkLocation:LocationCoords = {
+      longitude: park?.locationCoords?.longitude,
+      latitude: park?.locationCoords?.latitude
+    }
+    console.log("setDogsCurrentlyInPark2")
+    setLocation(parkLocation);
+    onSnapshot(doc(firestore, "parks", park.placeId), async (doc) => {
+      const dogs = await getDogsInPark(park.placeId);
       if (dogs) {
         setDogsCurrentlyInPark(dogs);
       }
@@ -85,11 +95,11 @@ export default function ParkDetails({ navigation, route }) {
             const dog = dogs[index];
             // if dog in park leave
             if (selectedDogAvatars.includes(index)) {
-              await removeDogsFromPark(park.place_id, [dog.id]);
+              await removeDogsFromPark(park.placeId, [dog.id]);
             }
             // if dog not in park join
             else {
-              await AddDogsToPark(park.place_id, [dog.id]);
+              await AddDogsToPark(park.placeId, [dog.id]);
             }
           }}
           selectedAvatars={selectedDogAvatars}

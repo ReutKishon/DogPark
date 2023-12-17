@@ -1,33 +1,19 @@
 import React, {
   useState,
   useEffect,
-  useContext,
   useMemo,
   useRef,
   useCallback,
-  forwardRef,
 } from "react";
-import {
-  View,
-  Text,
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  Platform,
-} from "react-native";
+import { Animated, View, useAnimatedValue, Easing } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import BottomSheet, {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
-import { auth } from "../../../firebase";
 import { useStore } from "../../store";
-import { useSharedValue } from "react-native-reanimated";
-import List from "../../components/List";
-import { MenuView } from "@react-native-menu/menu";
-import { Avatar, Button, Icon } from "react-native-paper";
+import { Avatar } from "react-native-paper";
 import MyDogs from "../Dogs/MyDogs";
-import AddDogView from "../Dogs/AddDog";
 import MainView from "./MainView";
 import { FullModal } from "../../components/FullModal";
 import Profile from "../Profile";
@@ -64,16 +50,19 @@ const Home = ({ navigation }) => {
   const mapRef = useRef(null);
   const setLocation = useStore((state) => state.setLocation);
   const location = useStore((state) => state.location);
-
+  const latitudeDelta = useAnimatedValue(0.01);
+  const longitudeDelta = useAnimatedValue(0.01);
   useEffect(() => {
     (async () => {
       const location = await getUserLocation();
+      console.log("loc " + location);
       if (location) {
         setLocation(location);
+
         mapRef.current.animateToRegion(
           {
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
+            latitude: location.latitude,
+            longitude: location.longitude,
             latitudeDelta: 0.05,
             longitudeDelta: 0.05,
           },
@@ -89,7 +78,20 @@ const Home = ({ navigation }) => {
     profile: <Profile navigation={navigation} />,
   };
 
-  // toggleModal is not really necessary, it can just be placed direcly in the Parks component
+  const animateZoomIn = () => {
+    Animated.parallel([
+      Animated.timing(latitudeDelta, {
+        toValue: 0.005, // Desired zoom level
+        duration: 3000, // Animation duration
+        useNativeDriver: true,
+      }),
+      Animated.timing(longitudeDelta, {
+        toValue: 0.005,
+        duration: 3000,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
 
   const toggleModal = (key: string, show: boolean) => {
     if (modalKeyToComponent[key]) {
@@ -105,7 +107,7 @@ const Home = ({ navigation }) => {
       : temporaryModalSheetRef.current.dismiss();
   };
 
-  const {data:dogs} = useDogs();
+  const { data: dogs } = useDogs();
   return (
     <View className="flex items-center justify-start h-full w-full relative">
       <MapView.Animated
@@ -113,17 +115,18 @@ const Home = ({ navigation }) => {
         ref={mapRef}
         followsUserLocation
         style={{ transform: [{ translateY: -150 }] }}
-        initialRegion={location?.coords}
-        region={location?.coords}
+        initialRegion={{ ...location, latitudeDelta: 0, longitudeDelta: 0 }}
+        region={{ ...location, latitudeDelta: 0.002, longitudeDelta: 0.002 }}
         showsUserLocation
         zoomEnabled
+        onPress={() => animateZoomIn()}
       >
         {dogs?.map((dog, index) => (
           <Marker
             key={index}
             coordinate={{
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
+              latitude: location.latitude,
+              longitude: location.longitude,
             }}
           >
             <Avatar.Image
@@ -134,7 +137,6 @@ const Home = ({ navigation }) => {
             />
           </Marker>
         ))}
-          
       </MapView.Animated>
       <BottomSheetModalProvider>
         <BottomSheet ref={bottomSheetRef} index={1} snapPoints={snapPoints}>

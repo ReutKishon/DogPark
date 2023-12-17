@@ -74,7 +74,7 @@ export const useParks = () => {
     "parks",
     () => {
       console.log("fetcing parks", location);
-      return getNearestDogParks(location.coords);
+      return getNearestDogParks(location);
     },
     { enabled: !!location }
   );

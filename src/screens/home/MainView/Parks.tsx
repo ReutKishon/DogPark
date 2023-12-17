@@ -3,7 +3,8 @@ import { Text, View } from "react-native";
 import List from "../../../components/List";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useParks } from "../../../state/queries";
-import { Avatar, Button } from "react-native-paper";
+import { ActivityIndicator, Avatar, Button } from "react-native-paper";
+import { Park } from "../../../api/types";
 
 const ParkItem = ({ item }) => {
   return (
@@ -13,7 +14,7 @@ const ParkItem = ({ item }) => {
         <Text className="font-bold">{item.distance}</Text>
       </View>
       <Text className="font-regular" style={{ fontSize: 12 }}>
-        {item.vicinity}
+        {item.address}
       </Text>
     </View>
   );
@@ -24,7 +25,9 @@ export default function Parks({ navigation, route }) {
   const { toggleModal } = route.params;
 
   const { data: parks, isLoading, isIdle } = useParks();
-
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
   return (
     <View className="w-full h-full px-4">
       <View className="flex flex-row items-center justify-between">
@@ -44,7 +47,7 @@ export default function Parks({ navigation, route }) {
       <View className="px-2">
         <List
           data={parks}
-          renderItem={({ item, index }) => (
+          renderItem={({ item }: { item: Park }) => (
             <TouchableOpacity
               onPress={() => {
                 console.log("item", item);

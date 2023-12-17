@@ -1,3 +1,5 @@
+import { LocationObject } from "expo-location";
+
 // gender enum
 export enum DogGender {
   Male = "Male",
@@ -21,6 +23,16 @@ export interface User {
   imageUrl: string;
 }
 
-export interface Park { }
+export interface Park {
+  placeId: string;
+  name: string;
+  locationCoords: LocationCoords;
+  address: string;
+}
+
+export interface LocationCoords {
+  longitude: number;
+  latitude: number;
+}
 
 export type CreationData<T> = Omit<T, "id">;

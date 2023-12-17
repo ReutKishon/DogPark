@@ -1,15 +1,20 @@
 import axios from "axios";
 import * as Location from "expo-location";
+import { Park,LocationCoords } from "./types";
 
 const API_KEY = "AIzaSyCnAEFDXfQTt0A4UYn5srE0jOGGrGfjEhk";
-export const getUserLocation = async (): Promise<Location.LocationObject> => {
+export const getUserLocation = async (): Promise<LocationCoords> => {
   try {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
       console.log("Location permission not granted");
       return;
     }
-    let location = await Location.getCurrentPositionAsync({});
+    let locationData = await Location.getCurrentPositionAsync({});
+    const location: LocationCoords = {
+      latitude: locationData.coords.latitude,
+      longitude: locationData.coords.longitude,
+    };
     return location;
   } catch (error) {
     console.error("Error fetching location: ", error);
@@ -55,12 +60,24 @@ export const GetDistanceAndAddress = async (destinations, name) => {
   }
 };
 
-export const getNearestDogParks = async (location) => {
+export const getNearestDogParks = async (location: LocationCoords): Promise<Park[]> => {
   const { longitude, latitude } = location;
   const response = await axios.get(
     `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=1000&type=park&keyword=dog&key=${API_KEY}`
   );
-  return response.data.results;
+
+  const parks: Park[] = response.data.results.map((item: any) => {
+    return {
+      placeId: item.place_id,
+      name: item.name,
+      address: item.vicinity,
+      locationCoords: {
+        latitude: item.geometry.location.lat,
+        longitude: item.geometry.location.lng,
+      },
+    };
+  });
+  return parks;
 };
 
 export const GetDistanceAndAddressByLocation = async (destinations, name) => {

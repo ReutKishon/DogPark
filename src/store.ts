@@ -1,14 +1,14 @@
 import { LocationObject } from "expo-location";
 import { create } from "zustand";
-import { User } from "./api/types";
+import { Park, User,LocationCoords } from "./api/types";
 
 interface Store {
-  location: LocationObject;
+  location: LocationCoords;
   user: User;
-  parks: any;
+  parks: Park[];
   setUser: (user: User) => void;
-  setParks: (parks: any) => void;
-  setLocation: (location: any) => void;
+  setParks: (parks: Park[]) => void;
+  setLocation: (location: LocationCoords) => void;
 }
 
 export const useStore = create<Store>((set) => ({
