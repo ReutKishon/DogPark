@@ -12,6 +12,18 @@ const SignIn = ({ navigation }) => {
   const [password, setPassword] = useState("Elad9352221");
   const signInMutation = useSignIn();
 
+  const onPressSignIn = async () => {
+    try {
+      const result = await signInMutation.mutateAsync({ email, password });
+
+      if (result) {
+        navigation.navigate("Home");
+      }
+    } catch (error) {
+      console.error("Error signing in:", error);
+    }
+  };
+
   const imageUrl =
     "https://media1.giphy.com/media/k6sC1yPY1fhbKzXdY4/giphy.gif?cid=ecf05e47gtkcg6y1tqza7sfmcmrcwos2vge6avgzgn2vmf04&ep=v1_stickers_search&rid=giphy.gif&ct=s";
 
@@ -37,7 +49,7 @@ const SignIn = ({ navigation }) => {
           <Button
             loading={signInMutation.isLoading}
             mode="contained"
-            onPress={() => signInMutation.mutate({ email, password })}
+            onPress={onPressSignIn}
           >
             Sign In
           </Button>

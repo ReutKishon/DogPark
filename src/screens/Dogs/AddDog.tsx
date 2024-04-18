@@ -14,15 +14,25 @@ import { CreationData, Dog, DogGender } from "../../api/types";
 import { useStore } from "../../store";
 import { COLORS } from "../../constants";
 
-const AddDogView = ({ onClose }) => {
+const AddDogView = ({
+  onClose,
+  dogData,
+}: {
+  onClose: () => void;
+  dogData: Dog;
+}) => {
   const user = useStore((state) => state.user);
-  const [dogName, setDogName] = useState<string>();
+  const [dogName, setDogName] = useState<string>("");
   const [dogIsAdult, setDogIsAdult] = useState<boolean>(true);
-  const [age, setAge] = useState<string>();
+  const [age, setAge] = useState<string>("");
   const [gender, setGender] = useState<DogGender>(DogGender.Male);
   const [imageUrl, setImageUrl] = useState<string>(
     "https://icons.iconarchive.com/icons/iconarchive/dog-breed/256/Beagle-icon.png"
   );
+  const [nameBorderColor, setNameBorderColor] = useState<string>();
+  const [ageBorderColor, setAgeBorderColor] = useState<string>();
+  const buttonName = dogData ? "Update" : "Add";
+
   const pickImageMutation = usePickImage();
   const uploadImageMutation = useUploadImage();
   const addDogMutation = useAddDog();
@@ -30,6 +40,12 @@ const AddDogView = ({ onClose }) => {
 
   useEffect(() => {
     animate();
+    if (dogData) {
+      setDogName(dogData.name);
+      setAge(dogData.age.toString());
+      setGender(dogData.gender);
+      setImageUrl(dogData.imageUrl);
+    }
   }, []); // Run once when the component mounts
 
   const animate = () => {
@@ -64,8 +80,10 @@ const AddDogView = ({ onClose }) => {
   const onAddDogSubmit = async () => {
     const uploadedImageUrl = await uploadPickedImage();
     try {
-      if (!dogName || !age || !gender) {
+      if (!dogName || !age) {
         console.log("error", dogName, age, gender);
+        setNameBorderColor(dogName?.trim() ? "gray" : "red");
+        setAgeBorderColor(age.trim() ? "gray" : "red");
       } else {
         const dogData: CreationData<Dog> = {
           name: dogName,
@@ -98,31 +116,31 @@ const AddDogView = ({ onClose }) => {
           onPress={onAddDogSubmit}
           loading={addDogMutation.isLoading || uploadImageMutation.isLoading}
         >
-          Add dog
+          {buttonName}
         </Button>
       </View>
       <ScrollView className="flex-grow">
         <View className="items-center">
-          <TouchableOpacity
-            className="px-2 py-4"
-            onPress={async () => {
-              const uri = await pickImageMutation.mutateAsync();
-              setImageUrl(uri);
-            }}
-          >
-            <Animated.View style={{ transform: [{ rotate: spin }] }}>
+          <Animated.View style={{ transform: [{ rotate: spin }] }}>
+            <TouchableOpacity
+              className="px-2 py-4"
+              onPress={async () => {
+                const uri = await pickImageMutation.mutateAsync();
+                setImageUrl(uri);
+              }}
+            >
               <Avatar.Image
                 style={{ backgroundColor: COLORS.primary }}
                 size={120}
                 source={{ uri: imageUrl }}
               ></Avatar.Image>
-            </Animated.View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </Animated.View>
           <View className="flex items-center gap-2">
             <View className="mb-2">
               <Text className="font-medium mb-2 ml-1">Name</Text>
               <TextInput
-                style={[styles.input]}
+                style={[styles.input, { borderColor: nameBorderColor }]}
                 value={dogName}
                 onChangeText={setDogName}
               />
@@ -131,37 +149,30 @@ const AddDogView = ({ onClose }) => {
               <View className="flex-row justify-between items-center mr-10 ml-0 mt-4">
                 <TouchableOpacity
                   style={[
-                    dogIsAdult && { backgroundColor: "purple" },
                     styles.input,
+                    dogIsAdult && {
+                      backgroundColor: "#E6E6FA",
+                      borderColor: "purple",
+                    },
                     { width: 60, height: 32, marginRight: 6 },
                   ]}
                   onPress={() => setDogIsAdult(true)}
                 >
-                  <Text
-                    style={[
-                      dogIsAdult && { color: "white" },
-                      { textAlign: "center" },
-                    ]}
-                  >
-                    Adult
-                  </Text>
+                  <Text>Adult</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[
-                    !dogIsAdult && { backgroundColor: "purple" },
                     styles.input,
+                    ,
+                    !dogIsAdult && {
+                      backgroundColor: "#E6E6FA",
+                      borderColor: "purple",
+                    },
                     { width: 60, height: 32 },
                   ]}
                   onPress={() => setDogIsAdult(false)}
                 >
-                  <Text
-                    style={[
-                      !dogIsAdult && { color: "white" },
-                      { textAlign: "center" },
-                    ]}
-                  >
-                    Puppy
-                  </Text>
+                  <Text>Puppy</Text>
                 </TouchableOpacity>
               </View>
               <View>
@@ -170,19 +181,26 @@ const AddDogView = ({ onClose }) => {
                 </Text>
                 <TextInput
                   keyboardType="numeric"
-                  style={[styles.input, { width: 130, height: 40 }]}
+                  style={[
+                    styles.input,
+                    { width: 130, height: 40, borderColor: ageBorderColor },
+                  ]}
                   value={age}
                   onChangeText={setAge}
                 />
               </View>
             </View>
             <View>
-              <Text className="font-medium mb-2 ml-1">Sex</Text>
+              <Text className="font-medium mb-2 ml-1">Gender</Text>
               <View className="flex-row justify-between items-center">
                 <TouchableOpacity
                   style={[
-                    gender === "Male" && { backgroundColor: "purple" },
                     styles.input,
+                    ,
+                    gender === "Male" && {
+                      backgroundColor: "#E6E6FA",
+                      borderColor: "purple",
+                    },
                     { width: 130, height: 40, marginRight: 40 },
                   ]}
                   onPress={() => setGender(DogGender.Male)}
@@ -191,8 +209,12 @@ const AddDogView = ({ onClose }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[
-                    gender === "Female" && { backgroundColor: "purple" },
                     styles.input,
+                    ,
+                    gender === "Female" && {
+                      backgroundColor: "#E6E6FA",
+                      borderColor: "purple",
+                    },
                     { width: 130, height: 40 },
                   ]}
                   onPress={() => setGender(DogGender.Female)}

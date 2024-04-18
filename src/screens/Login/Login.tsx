@@ -10,6 +10,7 @@ import { useStore } from "../../store";
 export default function Login({ navigation }) {
   const Stack = createStackNavigator();
   const setUser = useStore((state) => state.setUser);
+  
   useEffect(() => {
     auth.onAuthStateChanged(async (loggedInUser) => {
       if (loggedInUser) {
@@ -21,10 +22,11 @@ export default function Login({ navigation }) {
         }
         console.log("Myuser", user);
         setUser(user);
-        navigation.navigate("DrawerNavigation", { screen: "Home" });
+        navigation.navigate("Home"); 
       }
     });
   }, []);
+
   return (
     <Stack.Navigator
       initialRouteName="Welcome"

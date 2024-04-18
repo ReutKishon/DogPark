@@ -2,7 +2,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import React, { useCallback, useMemo } from "react";
 import { View } from "react-native";
 
-export const FullModal = React.forwardRef((props, ref) => {
+export const TemporaryModal = React.forwardRef((props, ref) => {
   const maxHeight = props.maxHeight || "100%";
   // variables
   const snapPoints = useMemo(() => [maxHeight], []);

@@ -121,6 +121,7 @@ export const removeDogsFromPark = async (parkId, dogKeys) => {
 
 export const getDogsInPark = async (parkId): Promise<Array<Dog>> => {
   try {
+    console.log("parkId:",parkId)
     const parkDoc = await firestore.collection("parks").doc(parkId).get();
     const parkData = parkDoc.data();
     if (parkData) {

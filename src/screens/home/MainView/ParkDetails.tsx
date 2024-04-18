@@ -105,7 +105,8 @@ export default function ParkDetails({ navigation, route }) {
           selectedAvatars={selectedDogAvatars}
         />
       </View>
-
+  
+{/*   
       <List
         data={dogsCurrentlyInPark}
         renderItem={({ item }) => (
@@ -118,6 +119,7 @@ export default function ParkDetails({ navigation, route }) {
           />
         )}
       />
+       */}
     </View>
   );
 }

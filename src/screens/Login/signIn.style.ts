@@ -4,10 +4,13 @@ import { COLORS } from "../../constants";
 const styles = StyleSheet.create({
   input: {
     width: 300,
-    height: 60,
-    padding: 15,
-    borderWidth: 2,
-    borderRadius: 100,
+    height: 40,
+    padding: 5,
+    borderWidth: 1,
+    borderColor:'gray',
+    borderRadius: 10,
+    alignItems:"center",
+    justifyContent:"center"
   },
 
  

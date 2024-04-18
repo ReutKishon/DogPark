@@ -2,8 +2,9 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { PaperProvider } from "react-native-paper";
-
-import { Welcome, Register, SignIn } from "./src/screens";
+import { QueryClient, QueryClientProvider } from "react-query";
+import Home from "./src/screens/home/Home";
+import Login from "./src/screens/Login/Login";
 
 import {
   useFonts,
@@ -27,9 +28,7 @@ import {
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
 
-import { QueryClient, QueryClientProvider } from "react-query";
-import Home from "./src/screens/Home/Home";
-import Login from "./src/screens/Login/Login";
+
 const queryClient = new QueryClient();
 
 function App() {
@@ -64,16 +63,9 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <PaperProvider>
         <NavigationContainer theme={{ colors: { background: "white" } }}>
-          <Stack.Navigator
-            initialRouteName="Login"
-            screenOptions={{ headerShown: false }}
-          >
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen
-              name="DrawerNavigation"
-              options={{ headerShown: false, gestureEnabled: false }}
-              component={Home}
-            />
+            <Stack.Screen name="Home" component={Home} />
           </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>

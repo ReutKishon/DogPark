@@ -15,37 +15,19 @@ import { useStore } from "../../store";
 import { Avatar } from "react-native-paper";
 import MyDogs from "../Dogs/MyDogs";
 import MainView from "./MainView";
-import { FullModal } from "../../components/FullModal";
-import Profile from "../Profile";
+import { TemporaryModal } from "../../components/TemporaryModal";
+import Profile from "../profile";
 import { getUserLocation } from "../../api/location";
 import { useDogs } from "../../state/queries";
 
-export const HomeTemportatyModal = React.forwardRef((props, ref) => {
-  // variables
-  const snapPoints = useMemo(() => ["60%"], []);
 
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
-
-  // renders
-  return (
-    <BottomSheetModal
-      ref={ref}
-      index={0}
-      snapPoints={snapPoints}
-      onChange={handleSheetChanges}
-    >
-      {props.children}
-    </BottomSheetModal>
-  );
-});
 
 const Home = ({ navigation }) => {
   const bottomSheetRef = useRef(null);
   const temporaryModalSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["30%", "60%"], []);
-  const [modalViewComponent, setModalViewComponent] = useState();
+  const [modalViewComponent, setModalViewComponent] =
+    useState<React.ReactNode | null>(null);
 
   const mapRef = useRef(null);
   const setLocation = useStore((state) => state.setLocation);
@@ -73,11 +55,6 @@ const Home = ({ navigation }) => {
     })();
   }, []);
 
-  const modalKeyToComponent = {
-    myDogs: <MyDogs navigation={navigation} />,
-    profile: <Profile navigation={navigation} />,
-  };
-
   const animateZoomIn = () => {
     Animated.parallel([
       Animated.timing(latitudeDelta, {
@@ -93,15 +70,27 @@ const Home = ({ navigation }) => {
     ]).start();
   };
 
+
   const toggleModal = (key: string, show: boolean) => {
-    if (modalKeyToComponent[key]) {
+    if (key === "myDogs") {
       setModalViewComponent(
-        React.cloneElement(modalKeyToComponent[key], {
-          onClose: () => temporaryModalSheetRef.current.dismiss(),
-        })
+        <MyDogs
+          navigation={navigation}
+          onClose={() => {
+            temporaryModalSheetRef.current.dismiss();
+          }}
+        />
+      );
+    } else {
+      setModalViewComponent(
+        <Profile
+          navigation={navigation}
+          onClose={() => {
+            temporaryModalSheetRef.current.dismiss();
+          }}
+        />
       );
     }
-
     return show
       ? temporaryModalSheetRef.current.present()
       : temporaryModalSheetRef.current.dismiss();
@@ -141,9 +130,9 @@ const Home = ({ navigation }) => {
       <BottomSheetModalProvider>
         <BottomSheet ref={bottomSheetRef} index={1} snapPoints={snapPoints}>
           <MainView toggleModal={toggleModal} />
-          <FullModal maxHeight="60%" ref={temporaryModalSheetRef}>
+          <TemporaryModal maxHeight="60%" ref={temporaryModalSheetRef}>
             {modalViewComponent}
-          </FullModal>
+          </TemporaryModal>
         </BottomSheet>
       </BottomSheetModalProvider>
     </View>
