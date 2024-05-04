@@ -54,11 +54,11 @@ const DogProfile = ({ route }) => {
         ></Avatar.Image>
       </View>
       <View className="items-start gap-10 p-5 top-5">
-        <RowInfo info={dog.age + " years old"} />
+        <RowInfo
+          info={dog.age + " " + (dog.lifeStage ? "years old" : "months")}
+        />
         <RowInfo info={dog.gender} />
       </View>
-
-      <DogOwnerView ownerId={dog.ownerId} />
     </View>
   );
 };

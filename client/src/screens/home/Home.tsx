@@ -122,7 +122,7 @@ const Home = ({ navigation }) => {
               size={40}
               source={{
                 uri: dog.imageUrl || "https://picsum.photos/400/400",
-              }}
+              }} 
             />
           </Marker>
         ))}

@@ -13,7 +13,7 @@ import {
   removeDogsFromPark,
 } from "../../../api/api";
 import DogCard from "../../Dogs/DogCard";
-import { Dog, Park,LocationCoords } from "../../../api/types";
+import { Dog, Park, LocationCoords } from "../../../api/types";
 import { useStore } from "../../../store";
 import { LocationObject } from "expo-location";
 
@@ -49,13 +49,15 @@ export default function ParkDetails({ navigation, route }) {
   const [dogsCurrentlyInPark, setDogsCurrentlyInPark] = useState<Dog[]>([]);
 
   useEffect(() => {
-    console.log("setDogsCurrentlyInPark1")
-    const parkLocation:LocationCoords = {
+    console.log("setDogsCurrentlyInPark1");
+    const parkLocation: LocationCoords = {
       longitude: park?.locationCoords?.longitude,
-      latitude: park?.locationCoords?.latitude
-    }
-    console.log("setDogsCurrentlyInPark2")
+      latitude: park?.locationCoords?.latitude,
+    };
+    console.log("setDogsCurrentlyInPark2");
     setLocation(parkLocation);
+    console.log("setDogsCurrentlyInPark");
+
     onSnapshot(doc(firestore, "parks", park.placeId), async (doc) => {
       const dogs = await getDogsInPark(park.placeId);
       if (dogs) {
@@ -105,8 +107,7 @@ export default function ParkDetails({ navigation, route }) {
           selectedAvatars={selectedDogAvatars}
         />
       </View>
-  
-{/*   
+
       <List
         data={dogsCurrentlyInPark}
         renderItem={({ item }) => (
@@ -119,7 +120,6 @@ export default function ParkDetails({ navigation, route }) {
           />
         )}
       />
-       */}
     </View>
   );
 }

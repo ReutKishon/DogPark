@@ -24,10 +24,22 @@ export default function Parks({ navigation, route }) {
   // get popModal from params navigation
   const { toggleModal } = route.params;
 
-  const { data: parks, isLoading, isIdle } = useParks();
-  if (isLoading) {
-    return <ActivityIndicator />;
-  }
+  // const { data: parks, isLoading, isIdle } = useParks();
+  // if (isLoading) {
+  //   return <ActivityIndicator />;
+  // }
+
+  const park: Park = {
+    placeId: "1",
+    name: "Sharona Park",
+    address: "123 Main St",
+    locationCoords: {
+      latitude: 37.7749295,
+      longitude: -122.4194155,
+    },
+  };
+
+  const parks: Park[] = [park];
   return (
     <View className="w-full h-full px-4">
       <View className="flex flex-row items-center justify-between">
@@ -50,7 +62,7 @@ export default function Parks({ navigation, route }) {
           renderItem={({ item }: { item: Park }) => (
             <TouchableOpacity
               onPress={() => {
-                console.log("item", item);
+                console.log("item1", item);
                 navigation.navigate("ParkDetails", { park: item });
               }}
             >

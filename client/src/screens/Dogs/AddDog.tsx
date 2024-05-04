@@ -10,7 +10,7 @@ import {
 import { Avatar, Button } from "react-native-paper";
 import { useAddDog, usePickImage, useUploadImage } from "../../state/queries";
 import styles from "../Login/signIn.style";
-import { CreationData, Dog, DogGender } from "../../api/types";
+import { CreationData, Dog, DogGender, LifeStage } from "../../api/types";
 import { useStore } from "../../store";
 import { COLORS } from "../../constants";
 
@@ -25,6 +25,7 @@ const AddDogView = ({
   const [dogName, setDogName] = useState<string>("");
   const [dogIsAdult, setDogIsAdult] = useState<boolean>(true);
   const [age, setAge] = useState<string>("");
+  const [lifeStage, setLifeStage] = useState<LifeStage>(LifeStage.Adult);
   const [gender, setGender] = useState<DogGender>(DogGender.Male);
   const [imageUrl, setImageUrl] = useState<string>(
     "https://icons.iconarchive.com/icons/iconarchive/dog-breed/256/Beagle-icon.png"
@@ -43,8 +44,10 @@ const AddDogView = ({
     if (dogData) {
       setDogName(dogData.name);
       setAge(dogData.age.toString());
+      setLifeStage(dogData.lifeStage);
       setGender(dogData.gender);
       setImageUrl(dogData.imageUrl);
+      setLifeStage(dogData.lifeStage);
     }
   }, []); // Run once when the component mounts
 
@@ -89,6 +92,7 @@ const AddDogView = ({
           name: dogName,
           age: parseInt(age, 10),
           gender,
+          lifeStage,
           imageUrl: uploadedImageUrl,
           ownerId: user.id,
         };
@@ -150,13 +154,13 @@ const AddDogView = ({
                 <TouchableOpacity
                   style={[
                     styles.input,
-                    dogIsAdult && {
+                    lifeStage===LifeStage.Adult && {
                       backgroundColor: "#E6E6FA",
                       borderColor: "purple",
                     },
                     { width: 60, height: 32, marginRight: 6 },
                   ]}
-                  onPress={() => setDogIsAdult(true)}
+                  onPress={() => setLifeStage(LifeStage.Adult)}
                 >
                   <Text>Adult</Text>
                 </TouchableOpacity>
@@ -164,20 +168,20 @@ const AddDogView = ({
                   style={[
                     styles.input,
                     ,
-                    !dogIsAdult && {
+                    lifeStage===LifeStage.Puppy && {
                       backgroundColor: "#E6E6FA",
                       borderColor: "purple",
                     },
                     { width: 60, height: 32 },
                   ]}
-                  onPress={() => setDogIsAdult(false)}
+                  onPress={() => setLifeStage(LifeStage.Puppy)}
                 >
                   <Text>Puppy</Text>
                 </TouchableOpacity>
               </View>
               <View>
                 <Text className="font-medium mb-1 ml-8">
-                  {dogIsAdult ? "Age (Yr.)" : "Age (Mo.)"}
+                  {lifeStage==1 ? "Age (Yr.)" : "Age (Mo.)"}
                 </Text>
                 <TextInput
                   keyboardType="numeric"
