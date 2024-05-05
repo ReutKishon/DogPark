@@ -1,12 +1,15 @@
 import express from 'express';
-import connection from './db.js'; 
+import dogsRouter from './routes/dogs.js';
+import userRouter from './routes/user.js';
+import bodyParser from 'body-parser';
+
 const app = express();
 
-app.get('/', (req, res) => {
-    res.send('Hello, world!');
-});
+app.use(bodyParser.json());
 
-// Start the server
+app.use('/dogs',dogsRouter)
+app.use('/users',userRouter)
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

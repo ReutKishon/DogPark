@@ -5,6 +5,7 @@ import { auth, firestore } from "../../../firebase";
 import { Keyboard } from "react-native";
 import { Button } from "react-native-paper";
 import { User } from "../../api/types";
+import axios from "axios";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -28,7 +29,8 @@ const Register = () => {
         imageUrl: "",
       };
       if (loggedUser) {
-        firestore.collection("users").doc(loggedUser.uid).set(user);
+        //firestore.collection("users").doc(loggedUser.uid).set(user);
+        axios.post("http://localhost:3000/user/add", user);
       }
     } catch (error) {}
   };

@@ -11,6 +11,8 @@ import {
 } from "firebase/firestore";
 
 import { CreationData, Dog, User } from "./types";
+import axios, { Axios } from "axios";
+const PATH = "http://localhost:3000";
 
 export const getUser = async (id: string): Promise<User> => {
   try {
@@ -34,21 +36,24 @@ export const AddDogToUser = async (
   dogData: CreationData<Dog>
 ) => {
   try {
-    const newDogRef = firestore.collection("dogs").doc();
-    const dog: Dog = {
-      ...dogData,
-      id: newDogRef.id,
-    };
-    await newDogRef.set(dog);
-    await updateDoc(doc(firestore, "users", userId), {
-      dogs: arrayUnion(newDogRef),
-    });
+    // const newDogRef = firestore.collection("dogs").doc();
+    // const dog: Dog = {
+    //   ...dogData,
+    //   id: newDogRef.id,
+    // };
+    // await newDogRef.set(dog);
+    // await updateDoc(doc(firestore, "users", userId), {
+    //   dogs: arrayUnion(newDogRef),
+    // });
+    console.log("REEEEEEEEE" + dogData.name);
+    const response = await axios.post(PATH + "/dogs/add", { dogData, userId });
+    console.log(response.data);
   } catch (error) {
-    console.error(error + "hi");
+    console.error("error adding a dog " + error);
   }
 };
 
-export const getUserDogs = async (userId) => {
+export const getUserDogs = async (userId: string) => {
   console.log("getting user dogs", userId);
   const userDoc = await firestore.collection("users").doc(userId).get();
   if (!userDoc || !userDoc.exists) {
@@ -121,7 +126,7 @@ export const removeDogsFromPark = async (parkId, dogKeys) => {
 
 export const getDogsInPark = async (parkId): Promise<Array<Dog>> => {
   try {
-    console.log("parkId:",parkId)
+    console.log("parkId:", parkId);
     const parkDoc = await firestore.collection("parks").doc(parkId).get();
     const parkData = parkDoc.data();
     if (parkData) {
