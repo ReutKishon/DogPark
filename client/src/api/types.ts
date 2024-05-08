@@ -7,8 +7,8 @@ export enum DogGender {
 }
 
 export enum LifeStage {
-  Puppy = 0,
-  Adult = 1,
+  Puppy = "Puppy",
+  Adult = "Adult",
 }
 export interface Dog {
   id: string;

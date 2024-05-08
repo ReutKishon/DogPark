@@ -5,13 +5,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "react-query";
-import {
-  AddDogToUser,
-  getUser,
-  getUserDogs,
-  writeFollowersDocument,
-  writeFollowingDocument,
-} from "../api/api";
+import { addDogToUser, getUser, getUserDogs, updateUserDog } from "../api/api";
 import { useStore } from "../store";
 import { auth } from "../../firebase";
 import { CreationData, Dog } from "../api/types";
@@ -54,7 +48,7 @@ export const useAddDog = () => {
   const queryClient = useQueryClient();
   return useMutation(
     (dogData: CreationData<Dog>) => {
-      return AddDogToUser(user.id, dogData);
+      return addDogToUser(user.id, dogData);
     },
     {
       onSuccess: () => {
@@ -63,6 +57,23 @@ export const useAddDog = () => {
     }
   );
 };
+
+export const useUpdateDog = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (dogData: Dog) => {
+      return updateUserDog(dogData);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("dogs");
+      },
+    }
+  );
+};
+
+
+
 
 export const useLocation = () => {
   return useQuery("location", () => getUserLocation());
@@ -104,22 +115,6 @@ export const usePickImage = () => {
     },
     {
       onSuccess: () => {},
-    }
-  );
-};
-
-export const useFollow = () => {
-  const user = useStore((state) => state.user);
-  const queryClient = useQueryClient();
-  return useMutation(
-    (userIdToFollow: string) => {
-      return writeFollowersDocument(user.id, userIdToFollow);
-    },
-    {
-      onSuccess: () => {
-        // queryClient.invalidateQueries("followers");
-        // queryClient.invalidateQueries("following")
-      },
     }
   );
 };

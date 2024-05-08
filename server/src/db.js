@@ -31,18 +31,18 @@ function createTables() {
         user_id VARCHAR(100) NOT NULL,
         name VARCHAR(50) NOT NULL,
         age INT,
-        breed VARCHAR(50),
+        lifeStage ENUM('Adult', 'Puppy'),
         gender ENUM('Male', 'Female'),
         FOREIGN KEY (user_id) REFERENCES users(user_id)
     )`;
 
-    const createParksTable = `CREATE TABLE IF NOT EXISTS parks (
-        park_id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        location VARCHAR(255),
-        capacity INT,
-        description TEXT
-    )`;
+    // const createParksTable = `CREATE TABLE IF NOT EXISTS parks (
+    //     park_id INT AUTO_INCREMENT PRIMARY KEY,
+    //     name VARCHAR(100) NOT NULL,
+    //     location VARCHAR(255),
+    //     capacity INT,
+    //     description TEXT
+    // )`;
 
     connection.query(createUsersTable, (err) => {
         if (err) throw err;
@@ -54,10 +54,10 @@ function createTables() {
         console.log('Dogs table created successfully');
     });
 
-    connection.query(createParksTable, (err) => {
-        if (err) throw err;
-        console.log('Parks table created successfully');
-    });
+    // connection.query(createParksTable, (err) => {
+    //     if (err) throw err;
+    //     console.log('Parks table created successfully');
+    // });
 }
 
 export default connection;

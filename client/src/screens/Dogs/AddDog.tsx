@@ -8,7 +8,12 @@ import {
   Animated,
 } from "react-native";
 import { Avatar, Button } from "react-native-paper";
-import { useAddDog, usePickImage, useUploadImage } from "../../state/queries";
+import {
+  useAddDog,
+  useUpdateDog,
+  usePickImage,
+  useUploadImage,
+} from "../../state/queries";
 import styles from "../Login/signIn.style";
 import { CreationData, Dog, DogGender, LifeStage } from "../../api/types";
 import { useStore } from "../../store";
@@ -23,7 +28,6 @@ const AddDogView = ({
 }) => {
   const user = useStore((state) => state.user);
   const [dogName, setDogName] = useState<string>("");
-  const [dogIsAdult, setDogIsAdult] = useState<boolean>(true);
   const [age, setAge] = useState<string>("");
   const [lifeStage, setLifeStage] = useState<LifeStage>(LifeStage.Adult);
   const [gender, setGender] = useState<DogGender>(DogGender.Male);
@@ -37,17 +41,18 @@ const AddDogView = ({
   const pickImageMutation = usePickImage();
   const uploadImageMutation = useUploadImage();
   const addDogMutation = useAddDog();
+  const updateDogMutation = useUpdateDog();
+
   const animatedValue = new Animated.Value(0);
 
   useEffect(() => {
     animate();
     if (dogData) {
       setDogName(dogData.name);
-      setAge(dogData.age.toString());
+      setAge(dogData.age?.toString());
       setLifeStage(dogData.lifeStage);
       setGender(dogData.gender);
-      setImageUrl(dogData.imageUrl);
-      setLifeStage(dogData.lifeStage);
+      //setImageUrl(dogData.imageUrl);
     }
   }, []); // Run once when the component mounts
 
@@ -74,32 +79,32 @@ const AddDogView = ({
     }
     const response = await fetch(pickImageMutation.data);
     const imageBlob = await response.blob();
-    console.log("imageBlob", imageBlob);
     const uploadedImageUrl = await uploadImageMutation.mutateAsync(imageBlob);
     console.log("uploadedImageUrl", uploadedImageUrl);
     return uploadedImageUrl;
   };
 
-  const onAddDogSubmit = async () => {
+  const onSubmit = async () => {
     const uploadedImageUrl = await uploadPickedImage();
     try {
       if (!dogName || !age) {
         console.log("error", dogName, age, gender);
         setNameBorderColor(dogName?.trim() ? "gray" : "red");
         setAgeBorderColor(age.trim() ? "gray" : "red");
-      } else {
-        const dogData: CreationData<Dog> = {
-          name: dogName,
-          age: parseInt(age, 10),
-          gender,
-          lifeStage,
-          imageUrl: uploadedImageUrl,
-          ownerId: user.id,
-        };
-
-        await addDogMutation.mutateAsync(dogData);
-        onClose();
-      }
+        return;
+      } 
+      const dog = {
+        id: buttonName === "Add" ? undefined : dogData.id, // Only include id for update
+        name: dogName,
+        age: parseInt(age, 10),
+        gender,
+        lifeStage,
+        //imageUrl: uploadedImageUrl, // Uncomment if needed
+        ownerId: user.id,
+      };
+  
+      await (buttonName === "Add" ? addDogMutation : updateDogMutation).mutateAsync(dog);
+      onClose()
     } catch (error) {
       console.log(error);
     }
@@ -117,7 +122,7 @@ const AddDogView = ({
         <Button
           icon={"plus"}
           mode="contained"
-          onPress={onAddDogSubmit}
+          onPress={onSubmit}
           loading={addDogMutation.isLoading || uploadImageMutation.isLoading}
         >
           {buttonName}
@@ -154,7 +159,7 @@ const AddDogView = ({
                 <TouchableOpacity
                   style={[
                     styles.input,
-                    lifeStage===LifeStage.Adult && {
+                    lifeStage === LifeStage.Adult && {
                       backgroundColor: "#E6E6FA",
                       borderColor: "purple",
                     },
@@ -168,7 +173,7 @@ const AddDogView = ({
                   style={[
                     styles.input,
                     ,
-                    lifeStage===LifeStage.Puppy && {
+                    lifeStage === LifeStage.Puppy && {
                       backgroundColor: "#E6E6FA",
                       borderColor: "purple",
                     },
@@ -181,7 +186,7 @@ const AddDogView = ({
               </View>
               <View>
                 <Text className="font-medium mb-1 ml-8">
-                  {lifeStage==1 ? "Age (Yr.)" : "Age (Mo.)"}
+                  {lifeStage == "Adult" ? "Age (Yr.)" : "Age (Mo.)"}
                 </Text>
                 <TextInput
                   keyboardType="numeric"
@@ -201,7 +206,7 @@ const AddDogView = ({
                   style={[
                     styles.input,
                     ,
-                    gender === "Male" && {
+                    gender === DogGender.Male && {
                       backgroundColor: "#E6E6FA",
                       borderColor: "purple",
                     },
@@ -215,7 +220,7 @@ const AddDogView = ({
                   style={[
                     styles.input,
                     ,
-                    gender === "Female" && {
+                    gender === DogGender.Female && {
                       backgroundColor: "#E6E6FA",
                       borderColor: "purple",
                     },

@@ -2,15 +2,19 @@ import React, { useState, useEffect } from "react";
 import { View, Text } from "react-native";
 import { Avatar, Icon } from "react-native-paper";
 import { useUser } from "../../state/queries";
+import { Dog, LifeStage } from "../../api/types";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faVenus, faCakeCandles } from "@fortawesome/free-solid-svg-icons";
 
-const RowInfo = ({ info }) => {
+const DogDetailCard = ({ text, iconName }) => {
   return (
-    <View className="flex flex-row items-center justify-between space-x-2">
-      <Icon source="paw" size={20}></Icon>
-      <Text className="font-bold text-lg">{info}</Text>
+    <View className="w-100 flex-row items-center bg-purple-100 rounded-full py-2 px-4 my-4">
+      <FontAwesomeIcon icon={iconName} size={18} color="black" />
+      <Text className="ml-2 text-lg font-bold">{text}</Text>
     </View>
   );
 };
+
 function DogOwnerView({ ownerId }) {
   const [owner, setOwner] = useState(null);
   const useUserMutation = useUser();
@@ -41,7 +45,7 @@ function DogOwnerView({ ownerId }) {
 }
 
 const DogProfile = ({ route }) => {
-  const { dog } = route.params;
+  const dog: Dog = route.params.dog;
   const followUser = (userId: string) => {};
 
   return (
@@ -53,11 +57,16 @@ const DogProfile = ({ route }) => {
           source={{ uri: dog.imageUrl }}
         ></Avatar.Image>
       </View>
-      <View className="items-start gap-10 p-5 top-5">
-        <RowInfo
-          info={dog.age + " " + (dog.lifeStage ? "years old" : "months")}
+      <View className="flex flex-row justify-between px-20">
+        <DogDetailCard text={dog.gender} iconName={faVenus} />
+        <DogDetailCard
+          text={
+            dog.age +
+            " " +
+            (dog.lifeStage == LifeStage.Adult ? "years old" : "months")
+          }
+          iconName={faCakeCandles}
         />
-        <RowInfo info={dog.gender} />
       </View>
     </View>
   );

@@ -10,7 +10,7 @@ import {
   setDoc,
 } from "firebase/firestore";
 
-import { CreationData, Dog, User } from "./types";
+import { CreationData, Dog, LifeStage, User } from "./types";
 import axios, { Axios } from "axios";
 const PATH = "http://localhost:3000";
 
@@ -31,21 +31,12 @@ export const getUser = async (id: string): Promise<User> => {
   }
 };
 
-export const AddDogToUser = async (
+export const addDogToUser = async (
   userId: string,
   dogData: CreationData<Dog>
 ) => {
   try {
-    // const newDogRef = firestore.collection("dogs").doc();
-    // const dog: Dog = {
-    //   ...dogData,
-    //   id: newDogRef.id,
-    // };
-    // await newDogRef.set(dog);
-    // await updateDoc(doc(firestore, "users", userId), {
-    //   dogs: arrayUnion(newDogRef),
-    // });
-    console.log("REEEEEEEEE" + dogData.name);
+    console.log("age:" + dogData.age);
     const response = await axios.post(PATH + "/dogs/add", { dogData, userId });
     console.log(response.data);
   } catch (error) {
@@ -55,39 +46,25 @@ export const AddDogToUser = async (
 
 export const getUserDogs = async (userId: string) => {
   console.log("getting user dogs", userId);
-  const userDoc = await firestore.collection("users").doc(userId).get();
-  if (!userDoc || !userDoc.exists) {
-    return [];
+  try {
+    const response = await axios.get(PATH + "/dogs/" + userId);
+    const dogs = response.data;
+    console.log(dogs);
+    return dogs;
+  } catch (err) {
+    throw err;
   }
-  console.log("getting user dogs");
-
-  const dogRefs = userDoc.data().dogs;
-  console.log("dogRefs: " + dogRefs);
-  if (!dogRefs) return [];
-  const dogDataPromises = dogRefs.map(async (dogRef) => {
-    try {
-      const doc = await dogRef.get();
-      if (doc && doc.data()) {
-        let docData = doc.data();
-        return docData;
-      }
-      return null;
-    } catch (error) {
-      console.error("Error fetching dog data:", error);
-      return null;
-    }
-  });
-  const userDogsData = (await Promise.all(dogDataPromises)).filter(Boolean);
-  return userDogsData;
 };
 
-export const updateUserDog = (userId, dogId, dogData) => {
-  const userDog = doc(firestore, "users", userId, "dogs", dogId);
-  if (userDog) {
-    updateDoc(userDog, dogData);
-    return userDog;
-  } else {
-    throw new Error("User dog not found");
+export const updateUserDog = async (dogData: Dog) => {
+  const dogId = dogData.id;
+  console.log("dogId:" + dogId);
+  console.log(dogData);
+  try {
+    const response = await axios.put(PATH + "/dogs/update/" + dogId, dogData);
+    console.log(response.data);
+  } catch (error) {
+    console.error("error updating a dog " + error);
   }
 };
 

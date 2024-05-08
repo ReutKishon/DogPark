@@ -19,8 +19,7 @@ import { TemporaryModal } from "../../components/TemporaryModal";
 import Profile from "../profile";
 import { getUserLocation } from "../../api/location";
 import { useDogs } from "../../state/queries";
-
-
+import { confirmPasswordReset } from "firebase/auth/react-native";
 
 const Home = ({ navigation }) => {
   const bottomSheetRef = useRef(null);
@@ -69,7 +68,6 @@ const Home = ({ navigation }) => {
       }),
     ]).start();
   };
-
 
   const toggleModal = (key: string, show: boolean) => {
     if (key === "myDogs") {
@@ -122,7 +120,7 @@ const Home = ({ navigation }) => {
               size={40}
               source={{
                 uri: dog.imageUrl || "https://picsum.photos/400/400",
-              }} 
+              }}
             />
           </Marker>
         ))}
