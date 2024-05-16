@@ -67,26 +67,11 @@ export const updateUserDog = async (dogData: Dog) => {
   }
 };
 
-export const AddDogToPark = async (parkId: string, dogId: string) => {
+export const updateDogCurrentPark = async (dogId: string, parkId: string) => {
   try {
-    console.log("dogId:" + dogId);
-    const response = await axios.put(PATH + "/parks/add/" + dogId, { parkId });
-    console.log("heyyy" + response.data);
+    await axios.put(PATH + "/parks/updateDogCurrentPark/" + parkId + "/" + dogId);
   } catch (error) {
-    console.error("Error adding dogs to park:", error);
-  }
-};
-
-export const removeDogsFromPark = async (parkId, dogKeys) => {
-  const dogRefs = dogKeys.map((dogKey) => doc(firestore, "dogs", dogKey));
-  try {
-    const parkDocRef = doc(collection(firestore, "parks"), parkId);
-
-    await updateDoc(parkDocRef, {
-      currentDogs: arrayRemove(...dogRefs),
-    });
-  } catch (error) {
-    console.error("Error removing dogs from park:", error);
+    console.error("Error update dog current park:", error);
   }
 };
 

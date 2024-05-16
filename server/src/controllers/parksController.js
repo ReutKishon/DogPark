@@ -1,8 +1,7 @@
 //@ts-nocheck
 import connection from "../db.js";
-const addDogToPark = (req, res) => {
-  const { dogId } = req.params;
-  const { parkId } = req.body;
+const updateDogCurrentPark = (req, res) => {
+  const { parkId, dogId } = req.params;
   console.log(parkId, dogId);
   const sql = `UPDATE dogs
   SET current_parkId = ?
@@ -11,18 +10,17 @@ const addDogToPark = (req, res) => {
 
   connection.query(sql, values, (err, result) => {
     if (err) {
-      console.error("Error adding dog to park:", err);
-      res.status(500).json({ error: "Failed to add dog to park" });
+        console.error("Error update dog current park:", err);
+        res.status(500).json({ error: "Error update dog current park" });
     } else {
-      console.log("Dog added to the park successfully");
-      res.status(200).json({ message: "Dog added successfully" });
+      console.log("update dog current park successfully");
+      res.status(200).json({ message: "update dog current park successfully" });
     }
   });
 };
 
 const getPlayingDogs = (req, res) => {
   const { parkId } = req.params;
-  console.log("lala" + parkId);
   const sql = `SELECT * FROM dogs WHERE current_parkId =?`;
   const values = [parkId];
   connection.query(sql, values, (err, result) => {
@@ -36,6 +34,6 @@ const getPlayingDogs = (req, res) => {
 };
 
 export default {
-  addDogToPark,
+  updateDogCurrentPark,
   getPlayingDogs,
 };

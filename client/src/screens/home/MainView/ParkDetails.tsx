@@ -7,11 +7,7 @@ import { firestore } from "../../../../firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useDogs } from "../../../state/queries";
 import { ActivityIndicator, Avatar, Button } from "react-native-paper";
-import {
-  AddDogToPark,
-  getDogsInPark,
-  removeDogsFromPark,
-} from "../../../api/api";
+import { getDogsInPark, updateDogCurrentPark } from "../../../api/api";
 import DogCard from "../../Dogs/DogCard";
 import { Dog, Park, LocationCoords } from "../../../api/types";
 import { useStore } from "../../../store";
@@ -25,7 +21,7 @@ const SelectableAvatarList = ({
 }) => {
   return (
     <View className="flex flex-row gap-1">
-      {items.map((item, index) => (
+      {items.map((item: Dog, index: number) => (
         <Pressable
           key={index}
           onPress={() => handleAvatarPress(index)}
@@ -47,42 +43,30 @@ export default function ParkDetails({ navigation, route }) {
   const setLocation = useStore((state) => state.setLocation);
 
   const { data: dogs } = useDogs();
-  const [dogsCurrentlyInPark, setDogsCurrentlyInPark] = useState<Dog[]>([]);
+  const [dogsPlayingInPark, setDogsPlayingInPark] = useState<Dog[]>([]);
 
   useEffect(() => {
-    console.log("setDogsCurrentlyInPark1");
     const parkLocation: LocationCoords = {
       longitude: park?.locationCoords?.longitude,
       latitude: park?.locationCoords?.latitude,
     };
-    console.log("setDogsCurrentlyInPark2");
     setLocation(parkLocation);
-    console.log("setDogsCurrentlyInPark");
-
-    onSnapshot(doc(firestore, "parks", park.placeId), async (doc) => {
-      const dogs = await getDogsInPark(park.placeId);
-      if (dogs) {
-        setDogsCurrentlyInPark(dogs);
-      }
-    });
   }, []);
 
   const selectedDogAvatars = useMemo(() => {
-    console.log("dogsCurrentlyInPark", dogsCurrentlyInPark);
-    console.log("dogs", dogs);
-    if (!dogsCurrentlyInPark || !dogs) {
+    if (!dogs) {
       return [];
     }
-    const dogsInParkIds = dogsCurrentlyInPark.map((dog) => dog.id);
+    const dogsInParkIds = dogsPlayingInPark.map((dog) => dog.id);
     const selectedDogs = dogs
-      .map((dog, index) => {
+      .map((dog:Dog, index:number) => {
         if (dogsInParkIds.includes(dog.id)) {
           return index;
         }
       })
       .filter((item) => item !== undefined);
     return selectedDogs;
-  }, [dogsCurrentlyInPark, dogs]);
+  }, [dogsPlayingInPark, dogs]);
 
   if (!dogs) {
     return <ActivityIndicator />;
@@ -94,12 +78,11 @@ export default function ParkDetails({ navigation, route }) {
     console.log("dog", dog);
     // if dog in park leave
     if (selectedDogAvatars.includes(index)) {
-      await removeDogsFromPark(park.placeId, dog.id);
+      await updateDogCurrentPark(dog.id, null);
     }
     // if dog not in park join
     else {
-      console.log("AddDogToPark");
-      await AddDogToPark(park.placeId, dog.id);
+      await updateDogCurrentPark(dog.id, park.placeId);
     }
   };
 
@@ -115,7 +98,7 @@ export default function ParkDetails({ navigation, route }) {
       </View>
 
       <List
-        data={dogsCurrentlyInPark}
+        data={dogsPlayingInPark}
         renderItem={({ item }) => (
           <DogCard
             dog={item}
