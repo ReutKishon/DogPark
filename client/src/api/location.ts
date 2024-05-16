@@ -7,6 +7,7 @@ const API_KEY = "AIzaSyCnAEFDXfQTt0A4UYn5srE0jOGGrGfjEhk";
 export const getUserLocation = async (): Promise<LocationCoords> => {
   try {
     let { status } = await Location.requestForegroundPermissionsAsync();
+    console.log("status: " + status);
     if (status !== "granted") {
       console.log("Location permission not granted");
       return;
@@ -61,41 +62,41 @@ export const GetDistanceAndAddress = async (destinations, name) => {
   }
 };
 
-export const getNearestDogParks = async (location: LocationCoords): Promise<Park[]> => {
+export const getNearestDogParks = async (
+  location: LocationCoords
+): Promise<Park[]> => {
   //const { longitude, latitude } = location;
-  const latitude = 31.88035; // Example latitude (London, UK)
-  const longitude = 34.81082; // Example longitude (London, UK)
+  //const latitude = 31.88035; // Example latitude (London, UK)
+  //const longitude = 34.81082; // Example longitude (London, UK)
 
-  const overpassQuery = `[out:json];(node["leisure"="dog_park"](around:1000,${latitude},${longitude});way["leisure"="dog_park"](around:1000,${latitude},${longitude}););out center;`;
+  const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${
+    location.latitude
+  },${
+    location.longitude
+  }&radius=${1000}&type=park&keyword=dog%20park&key=${API_KEY}`;
   try {
-
-    const response = await axios.get(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`)
-    // Process the response
-    const parks: Park[] = response.data.elements.map((element: any) => {
-      const street = element.tags['addr:street'] || '';
-      const city = element.tags['addr:city'] || '';
-      const postcode = element.tags['addr:postcode'] || '';
-      //const address = getAddressFromCoordinates(element.lat,element.lon);
-      console.log(element.tags['name:en'])
-      const park: Park = {
-        placeId: element.id,
-        name: element.tags['name:he'] || 'Dog Park',
-        address:"address" ,
+    const response = await axios.get(url);
+    //console.log(response.data);
+    const parks: Park[] = response.data.results.map((park: any) => {
+      const parkInfo: Park = {
+        placeId: park.place_id,
+        name: park.name || "Dog Park",
+        address: park.vicinity,
         locationCoords: {
-          latitude: element.lat,
-          longitude: element.lon,
+          latitude: park.geometry.location.lat,
+          longitude: park.geometry.location.lng,
         },
       };
-      return park
+      return parkInfo;
     });
-    console.log(parks)
-    return parks
+
+    // console.log(parks);
+    return parks;
+  } catch (error) {
+    console.error("Error retrieving data from Overpass API:", error);
+    return [];
   }
-  catch (error) {
-    console.error('Error retrieving data from Overpass API:', error);
-    return []
-  };
-}
+};
 
 export const GetDistanceAndAddressByLocation = async (destinations, name) => {
   try {
@@ -138,35 +139,51 @@ export const GetDistanceAndAddressByLocation = async (destinations, name) => {
 // Function to calculate distance between two coordinates using Haversine formula
 function calculateDistance(lat1, lon1, lat2, lon2) {
   const earthRadius = 6371e3; // Earth's radius in meters
-  const phi1 = lat1 * Math.PI / 180; // Convert latitude to radians
-  const phi2 = lat2 * Math.PI / 180;
-  const deltaPhi = (lat2 - lat1) * Math.PI / 180;
-  const deltaLambda = (lon2 - lon1) * Math.PI / 180;
+  const phi1 = (lat1 * Math.PI) / 180; // Convert latitude to radians
+  const phi2 = (lat2 * Math.PI) / 180;
+  const deltaPhi = ((lat2 - lat1) * Math.PI) / 180;
+  const deltaLambda = ((lon2 - lon1) * Math.PI) / 180;
 
-  const a = Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2) +
-    Math.cos(phi1) * Math.cos(phi2) *
-    Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
+  const a =
+    Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2) +
+    Math.cos(phi1) *
+      Math.cos(phi2) *
+      Math.sin(deltaLambda / 2) *
+      Math.sin(deltaLambda / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
   const distance = earthRadius * c; // Distance in meters
   return distance;
 }
 
-
 async function getAddressFromCoordinates(latitude, longitude) {
   try {
-      const response = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+    const response = await axios.get(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+    );
 
-      const address = response.data.address;
+    const address = response.data.address;
 
-      const city = address.city || address.town || address.village || address.hamlet || address.suburb || address.city_district;
-      const street = address.road || address.pedestrian || address.footway || address.path || address.cycleway || '';
+    const city =
+      address.city ||
+      address.town ||
+      address.village ||
+      address.hamlet ||
+      address.suburb ||
+      address.city_district;
+    const street =
+      address.road ||
+      address.pedestrian ||
+      address.footway ||
+      address.path ||
+      address.cycleway ||
+      "";
 
-      const fullAddress = `${street}, ${city}`;
+    const fullAddress = `${street}, ${city}`;
 
-      return fullAddress;
+    return fullAddress;
   } catch (error) {
-      console.error('Error:', error);
-      throw error;
+    console.error("Error:", error);
+    throw error;
   }
 }

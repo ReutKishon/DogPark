@@ -8,7 +8,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { useDogs } from "../../../state/queries";
 import { ActivityIndicator, Avatar, Button } from "react-native-paper";
 import {
-  AddDogsToPark,
+  AddDogToPark,
   getDogsInPark,
   removeDogsFromPark,
 } from "../../../api/api";
@@ -16,6 +16,7 @@ import DogCard from "../../Dogs/DogCard";
 import { Dog, Park, LocationCoords } from "../../../api/types";
 import { useStore } from "../../../store";
 import { LocationObject } from "expo-location";
+import { Item } from "react-native-paper/lib/typescript/components/Drawer/Drawer";
 
 const SelectableAvatarList = ({
   items,
@@ -33,7 +34,7 @@ const SelectableAvatarList = ({
           <Avatar.Image
             size={40}
             source={{
-              uri: item.imageUrl || "https://picsum.photos/400/400",
+              uri: item.imageUrl,
             }}
           />
         </Pressable>
@@ -87,23 +88,28 @@ export default function ParkDetails({ navigation, route }) {
     return <ActivityIndicator />;
   }
 
+  const handleAvatarPress = async (index: number) => {
+    console.log("index", index);
+    const dog: Dog = dogs[index];
+    console.log("dog", dog);
+    // if dog in park leave
+    if (selectedDogAvatars.includes(index)) {
+      await removeDogsFromPark(park.placeId, dog.id);
+    }
+    // if dog not in park join
+    else {
+      console.log("AddDogToPark");
+      await AddDogToPark(park.placeId, dog.id);
+    }
+  };
+
   return (
     <View className="flex w-full px-4 gap-2">
       <Text className="font-bold text-xl">{park.name}</Text>
       <View className="py-1 my-3">
         <SelectableAvatarList
           items={dogs}
-          handleAvatarPress={async (index) => {
-            const dog = dogs[index];
-            // if dog in park leave
-            if (selectedDogAvatars.includes(index)) {
-              await removeDogsFromPark(park.placeId, [dog.id]);
-            }
-            // if dog not in park join
-            else {
-              await AddDogsToPark(park.placeId, [dog.id]);
-            }
-          }}
+          handleAvatarPress={handleAvatarPress}
           selectedAvatars={selectedDogAvatars}
         />
       </View>

@@ -39,7 +39,7 @@ const getUserDogs = (req, res) => {
 };
 
 const updateDog = (req, res) => {
-  const { dogrId } = req.params;
+  const { dogId } = req.params;
   const { dogData } = req.body;
 
   const sql = `UPDATE dogs SET name = ?, age = ?, lifeStage = ?, gender= ? WHERE dog_id = ?`;

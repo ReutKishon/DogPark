@@ -36,7 +36,6 @@ export const addDogToUser = async (
   dogData: CreationData<Dog>
 ) => {
   try {
-    console.log("age:" + dogData.age);
     const response = await axios.post(PATH + "/dogs/add", { dogData, userId });
     console.log(response.data);
   } catch (error) {
@@ -68,21 +67,11 @@ export const updateUserDog = async (dogData: Dog) => {
   }
 };
 
-export const AddDogsToPark = async (parkId, dogIds) => {
-  const dogRefs = dogIds.map((dogId) => doc(firestore, "dogs", dogId));
-
+export const AddDogToPark = async (parkId: string, dogId: string) => {
   try {
-    const parkDocRef = doc(collection(firestore, "parks"), parkId);
-    const parkDocSnapshot = await getDoc(parkDocRef);
-    if (parkDocSnapshot.exists()) {
-      await updateDoc(parkDocRef, {
-        currentDogs: arrayUnion(...dogRefs),
-      });
-      console.log("Dogs added to existing park document.");
-    } else {
-      await setDoc(parkDocRef, { currentDogs: dogRefs });
-      console.log("New park document created with dogs added.");
-    }
+    console.log("dogId:" + dogId);
+    const response = await axios.put(PATH + "/parks/add/" + dogId, { parkId });
+    console.log("heyyy" + response.data);
   } catch (error) {
     console.error("Error adding dogs to park:", error);
   }
@@ -101,60 +90,14 @@ export const removeDogsFromPark = async (parkId, dogKeys) => {
   }
 };
 
-export const getDogsInPark = async (parkId): Promise<Array<Dog>> => {
+export const getDogsInPark = async (parkId: string): Promise<Array<Dog>> => {
   try {
-    console.log("parkId:", parkId);
-    const parkDoc = await firestore.collection("parks").doc(parkId).get();
-    const parkData = parkDoc.data();
-    if (parkData) {
-      const dogRefs = parkData.currentDogs;
-      const dogDataPromises = dogRefs.map(async (dogRef) => {
-        try {
-          const doc = await dogRef.get();
-          return doc.data();
-        } catch (error) {
-          console.error("Error fetching dog data:", error);
-          return null;
-        }
-      });
-
-      const parkDogsData = (await Promise.all(dogDataPromises)).filter(Boolean);
-      return parkDogsData;
-    }
+    const response = await axios.get(PATH + "/parks/" + parkId);
+    const dogs = response.data;
+    return dogs;
+    console.log("playing:" + response.data.length);
   } catch (error) {
-    console.error("Error fetching park data:", error);
+    console.error("Error fetching dog data:", error);
     return null;
-  }
-};
-
-export const writeFollowingDocument = async (
-  currentUserId: string,
-  userIdToFollow: string
-): Promise<void> => {
-  try {
-    const followingDocRef = firestore
-      .collection("following")
-      .doc(currentUserId);
-    await followingDocRef.update({
-      following: arrayUnion(userIdToFollow),
-    });
-  } catch (error) {
-    console.error("Error writing to following collection:", error);
-  }
-};
-
-export const writeFollowersDocument = async (
-  currentUserId: string,
-  userIdToFollow: string
-): Promise<void> => {
-  try {
-    const followingDocRef = firestore
-      .collection("followers")
-      .doc(userIdToFollow);
-    await followingDocRef.update({
-      followers: arrayUnion(currentUserId),
-    });
-  } catch (error) {
-    console.error("Error writing to followers collection:", error);
   }
 };

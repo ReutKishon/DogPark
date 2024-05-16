@@ -99,7 +99,7 @@ const AddDogView = ({
         age: parseInt(age, 10),
         gender,
         lifeStage,
-        //imageUrl: uploadedImageUrl, // Uncomment if needed
+        imageUrl: uploadedImageUrl, // Uncomment if needed
         ownerId: user.id,
       };
   

@@ -36,7 +36,7 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       const location = await getUserLocation();
-      console.log("loc " + location);
+      console.log("loc " + location.latitude + " " + location.longitude);
       if (location) {
         setLocation(location);
 
@@ -127,10 +127,10 @@ const Home = ({ navigation }) => {
       </MapView.Animated>
       <BottomSheetModalProvider>
         <BottomSheet ref={bottomSheetRef} index={1} snapPoints={snapPoints}>
-          <MainView toggleModal={toggleModal} />
-          <TemporaryModal maxHeight="60%" ref={temporaryModalSheetRef}>
-            {modalViewComponent}
-          </TemporaryModal>
+            <MainView toggleModal={toggleModal} />
+            <TemporaryModal maxHeight="60%" ref={temporaryModalSheetRef}>
+              {modalViewComponent}
+            </TemporaryModal>
         </BottomSheet>
       </BottomSheetModalProvider>
     </View>

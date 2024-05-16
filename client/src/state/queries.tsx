@@ -47,7 +47,7 @@ export const useAddDog = () => {
   const user = useStore((state) => state.user);
   const queryClient = useQueryClient();
   return useMutation(
-    (dogData: CreationData<Dog>) => {
+    (dogData: Dog) => {
       return addDogToUser(user.id, dogData);
     },
     {
@@ -72,9 +72,6 @@ export const useUpdateDog = () => {
   );
 };
 
-
-
-
 export const useLocation = () => {
   return useQuery("location", () => getUserLocation());
 };
@@ -84,7 +81,6 @@ export const useParks = () => {
   return useQuery(
     "parks",
     () => {
-      console.log("fetcing parks", location);
       return getNearestDogParks(location);
     },
     { enabled: !!location }
