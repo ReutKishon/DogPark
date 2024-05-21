@@ -1,18 +1,19 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Text, View, FlatList, Pressable } from "react-native";
-import { useDatabaseSnapshot } from "@react-query-firebase/database";
 
 import List from "../../../components/List";
-import { firestore } from "../../../../firebase";
-import { doc, onSnapshot } from "firebase/firestore";
-import { useDogs } from "../../../state/queries";
+import {
+  useDogs,
+  useDogsInPark,
+  useAddDogToPark,
+  useRemoveDogFromPark,
+} from "../../../state/queries";
 import { ActivityIndicator, Avatar, Button } from "react-native-paper";
-import { getDogsInPark, updateDogCurrentPark } from "../../../api/api";
 import DogCard from "../../Dogs/DogCard";
 import { Dog, Park, LocationCoords } from "../../../api/types";
 import { useStore } from "../../../store";
-import { LocationObject } from "expo-location";
-import { Item } from "react-native-paper/lib/typescript/components/Drawer/Drawer";
+import io from "socket.io-client";
+import { useQuery, useQueryClient } from "react-query";
 
 const SelectableAvatarList = ({
   items,
@@ -40,10 +41,17 @@ const SelectableAvatarList = ({
 };
 export default function ParkDetails({ navigation, route }) {
   const { park }: { park: Park } = route.params;
-  const setLocation = useStore((state) => state.setLocation);
+  const parkId = park.placeId;
 
-  const { data: dogs } = useDogs();
-  const [dogsPlayingInPark, setDogsPlayingInPark] = useState<Dog[]>([]);
+  const setLocation = useStore((state) => state.setLocation);
+  const { data: userDogs } = useDogs();
+  const { data: dogsPlayingInPark, isLoading } = useDogsInPark(parkId);
+  const addDogToParkMutation = useAddDogToPark();
+  const removeDogFromParkMutation = useRemoveDogFromPark();
+
+  const [selectedDogAvatars, setSelectedDogAvatars] = useState<number[]>([]);
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const parkLocation: LocationCoords = {
@@ -51,38 +59,34 @@ export default function ParkDetails({ navigation, route }) {
       latitude: park?.locationCoords?.latitude,
     };
     setLocation(parkLocation);
-  }, []);
 
-  const selectedDogAvatars = useMemo(() => {
-    if (!dogs) {
-      return [];
-    }
-    const dogsInParkIds = dogsPlayingInPark.map((dog) => dog.id);
-    const selectedDogs = dogs
-      .map((dog:Dog, index:number) => {
-        if (dogsInParkIds.includes(dog.id)) {
-          return index;
-        }
-      })
-      .filter((item) => item !== undefined);
-    return selectedDogs;
-  }, [dogsPlayingInPark, dogs]);
+    const socket = io("http://localhost:5000");
 
-  if (!dogs) {
-    return <ActivityIndicator />;
-  }
+    socket.on("updateDogInPark", (data) => {
+      if (data.parkId === parkId) {
+        // Invalidate the query to refetch the dogs in the park
+        queryClient.invalidateQueries(["dogsInPark", parkId]);
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [dogsPlayingInPark]);
+
+  if (isLoading) return <ActivityIndicator />;
 
   const handleAvatarPress = async (index: number) => {
-    console.log("index", index);
-    const dog: Dog = dogs[index];
-    console.log("dog", dog);
+    const dog: Dog = userDogs[index];
     // if dog in park leave
     if (selectedDogAvatars.includes(index)) {
-      await updateDogCurrentPark(dog.id, null);
+      setSelectedDogAvatars(selectedDogAvatars.filter((i) => i !== index));
+      removeDogFromParkMutation.mutateAsync({ dogId: dog.id, parkId });
     }
     // if dog not in park join
     else {
-      await updateDogCurrentPark(dog.id, park.placeId);
+      setSelectedDogAvatars([...selectedDogAvatars, index]);
+      addDogToParkMutation.mutateAsync({ dogId: dog.id, parkId });
     }
   };
 
@@ -91,7 +95,7 @@ export default function ParkDetails({ navigation, route }) {
       <Text className="font-bold text-xl">{park.name}</Text>
       <View className="py-1 my-3">
         <SelectableAvatarList
-          items={dogs}
+          items={userDogs}
           handleAvatarPress={handleAvatarPress}
           selectedAvatars={selectedDogAvatars}
         />

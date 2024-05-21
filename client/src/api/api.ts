@@ -1,14 +1,5 @@
 import { firestore } from "../../firebase";
 
-import {
-  collection,
-  updateDoc,
-  arrayUnion,
-  doc,
-  arrayRemove,
-  getDoc,
-  setDoc,
-} from "firebase/firestore";
 
 import { CreationData, Dog, LifeStage, User } from "./types";
 import axios, { Axios } from "axios";
@@ -67,9 +58,17 @@ export const updateUserDog = async (dogData: Dog) => {
   }
 };
 
-export const updateDogCurrentPark = async (dogId: string, parkId: string) => {
+export const addDogToPark = async (dogId: string, parkId: string) => {
   try {
-    await axios.put(PATH + "/parks/updateDogCurrentPark/" + parkId + "/" + dogId);
+    await axios.put(PATH + "/parks/enter/" + parkId + "/" + dogId);
+  } catch (error) {
+    console.error("Error update dog current park:", error);
+  }
+};
+
+export const removeDogFromPark = async (dogId: string) => {
+  try {
+    await axios.put(PATH + "/parks/exit/" + dogId);
   } catch (error) {
     console.error("Error update dog current park:", error);
   }

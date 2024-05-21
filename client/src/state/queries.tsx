@@ -5,7 +5,15 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "react-query";
-import { addDogToUser, getUser, getUserDogs, updateUserDog } from "../api/api";
+import {
+  addDogToPark,
+  addDogToUser,
+  getDogsInPark,
+  getUser,
+  getUserDogs,
+  removeDogFromPark,
+  updateUserDog,
+} from "../api/api";
 import { useStore } from "../store";
 import { auth } from "../../firebase";
 import { CreationData, Dog } from "../api/types";
@@ -14,7 +22,7 @@ import { pickImage, uploadImageToStorage } from "../api/utils";
 
 export const useDogs = () => {
   const user = useStore((state) => state.user);
-  return useQuery("dogs", () => getUserDogs(user.id));
+  return useQuery("userDogs", () => getUserDogs(user.id));
 };
 
 export const useUser = () => {
@@ -52,7 +60,7 @@ export const useAddDog = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("dogs");
+        queryClient.invalidateQueries("userDogs");
       },
     }
   );
@@ -70,6 +78,39 @@ export const useUpdateDog = () => {
       },
     }
   );
+};
+
+
+export const useAddDogToPark = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ dogId, parkId }: { dogId: string; parkId: string }) => {
+      return addDogToPark(dogId, parkId);
+    },
+    {
+      onSuccess: (_, variables) => {
+        queryClient.invalidateQueries(["dogsInPark", variables.parkId]);
+      },
+    }
+  );
+};
+
+export const useRemoveDogFromPark = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ dogId, parkId }: { dogId: string; parkId: string }) => {
+      return removeDogFromPark(dogId);
+    },
+    {
+      onSuccess: (_, variables) => {
+        queryClient.invalidateQueries(["dogsInPark", variables.parkId]);
+      },
+    }
+  );
+};
+
+export const useDogsInPark = (parkId: string) => {
+  return useQuery(["dogsInPark", parkId], () => getDogsInPark(parkId));
 };
 
 export const useLocation = () => {

@@ -29,6 +29,7 @@
     "@react-query-firebase/database": "^1.0.0-dev.2",
     "@react-query-firebase/firestore": "^1.0.0-dev.7",
     "@types/react": "~18.2.14",
+    "@types/socket.io-client": "^3.0.0",
     "axios": "^1.6.2",
     "eslint-plugin-react": "^7.33.2",
     "expo": "~49.0.13",
