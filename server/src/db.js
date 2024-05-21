@@ -1,12 +1,12 @@
 // db.js
-
+require("dotenv").config();
 import { createConnection } from "mysql2";
 
 const connection = createConnection({
-  host: "dogparkappdatabase.c50awc66wvz9.us-east-1.rds.amazonaws.com",
-  user: "admin",
-  password: "P*<mgnU#%no2Cj3XfW-kVRFRtDFM",
-  database: "dogParkDatabase",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAMES,
 });
 
 connection.connect((err) => {

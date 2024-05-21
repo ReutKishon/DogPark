@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Text, View, FlatList, Pressable } from "react-native";
+import { Text, View, Pressable } from "react-native";
 
 import List from "../../../components/List";
 import {
@@ -8,12 +8,12 @@ import {
   useAddDogToPark,
   useRemoveDogFromPark,
 } from "../../../state/queries";
-import { ActivityIndicator, Avatar, Button } from "react-native-paper";
+import { ActivityIndicator, Avatar } from "react-native-paper";
 import DogCard from "../../Dogs/DogCard";
 import { Dog, Park, LocationCoords } from "../../../api/types";
 import { useStore } from "../../../store";
 import io from "socket.io-client";
-import { useQuery, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 
 const SelectableAvatarList = ({
   items,
@@ -39,6 +39,8 @@ const SelectableAvatarList = ({
     </View>
   );
 };
+
+
 export default function ParkDetails({ navigation, route }) {
   const { park }: { park: Park } = route.params;
   const parkId = park.placeId;
