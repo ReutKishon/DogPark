@@ -5,7 +5,7 @@ import { createConnection } from "mysql2";
 const connection = createConnection({
   host: "dogparkappdatabase.c50awc66wvz9.us-east-1.rds.amazonaws.com",
   user: "admin",
-  password: "k?xd5q>r~TjlHPBVD0g!:rGhD$:1",
+  password: "P*<mgnU#%no2Cj3XfW-kVRFRtDFM",
   database: "dogParkDatabase",
 });
 
