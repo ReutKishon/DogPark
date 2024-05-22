@@ -35,6 +35,11 @@ export interface Park {
   address: string;
 }
 
+export interface DogParkPair {
+  dogId: string;
+  parkId: string;
+}
+
 export interface LocationCoords {
   longitude: number;
   latitude: number;

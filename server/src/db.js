@@ -1,13 +1,18 @@
 // db.js
-require("dotenv").config();
+import dotenv from "dotenv";
+
+dotenv.config({ path: "../../.env" });
+
 import { createConnection } from "mysql2";
 
 const connection = createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAMES,
+  database: process.env.DB_NAME,
 });
+
+console.log('DB_NAME:', process.env.DB_NAME); // Add this line to check if the variable is loaded
 
 connection.connect((err) => {
   if (err) {

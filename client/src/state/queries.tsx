@@ -74,7 +74,7 @@ export const useUpdateDog = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("dogs");
+        queryClient.invalidateQueries("userDogs");
       },
     }
   );

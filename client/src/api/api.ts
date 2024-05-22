@@ -1,6 +1,5 @@
 import { firestore } from "../../firebase";
 
-
 import { CreationData, Dog, LifeStage, User } from "./types";
 import axios, { Axios } from "axios";
 const PATH = "http://localhost:3000";
@@ -34,10 +33,10 @@ export const addDogToUser = async (
   }
 };
 
-export const getUserDogs = async (userId: string) => {
+export const getUserDogs = async (userId: string): Promise<Dog[]> => {
   console.log("getting user dogs", userId);
   try {
-    const response = await axios.get(PATH + "/dogs/" + userId);
+    const response = await axios.get<Dog[]>(PATH + "/dogs/" + userId);
     const dogs = response.data;
     console.log(dogs);
     return dogs;

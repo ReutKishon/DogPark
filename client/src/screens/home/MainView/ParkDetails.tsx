@@ -26,7 +26,7 @@ const SelectableAvatarList = ({
         <Pressable
           key={index}
           onPress={() => handleAvatarPress(index)}
-          className={`${selectedAvatars.includes(index) ? "opacity-50" : ""}`}
+          className={`${selectedAvatars.includes(item.id) ? "opacity-50" : ""}`}
         >
           <Avatar.Image
             size={40}
@@ -40,18 +40,25 @@ const SelectableAvatarList = ({
   );
 };
 
-
 export default function ParkDetails({ navigation, route }) {
   const { park }: { park: Park } = route.params;
   const parkId = park.placeId;
 
-  const setLocation = useStore((state) => state.setLocation);
+  const setLocation = useStore((state) => state.setLiveLocation);
   const { data: userDogs } = useDogs();
   const { data: dogsPlayingInPark, isLoading } = useDogsInPark(parkId);
   const addDogToParkMutation = useAddDogToPark();
   const removeDogFromParkMutation = useRemoveDogFromPark();
 
-  const [selectedDogAvatars, setSelectedDogAvatars] = useState<number[]>([]);
+  const selectedDogAvatars = useMemo(() => {
+    return (
+      dogsPlayingInPark
+        ?.filter((dog) => {
+          return userDogs.some((userDog) => userDog.id === dog.id);
+        })
+        .map((dog) => dog.id) || []
+    );
+  }, [dogsPlayingInPark]);
 
   const queryClient = useQueryClient();
 
@@ -81,13 +88,11 @@ export default function ParkDetails({ navigation, route }) {
   const handleAvatarPress = async (index: number) => {
     const dog: Dog = userDogs[index];
     // if dog in park leave
-    if (selectedDogAvatars.includes(index)) {
-      setSelectedDogAvatars(selectedDogAvatars.filter((i) => i !== index));
+    if (selectedDogAvatars.includes(dog.id)) {
       removeDogFromParkMutation.mutateAsync({ dogId: dog.id, parkId });
     }
     // if dog not in park join
     else {
-      setSelectedDogAvatars([...selectedDogAvatars, index]);
       addDogToParkMutation.mutateAsync({ dogId: dog.id, parkId });
     }
   };

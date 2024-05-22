@@ -29,8 +29,8 @@ const Home = ({ navigation }) => {
     useState<React.ReactNode | null>(null);
 
   const mapRef = useRef(null);
-  const setLocation = useStore((state) => state.setLocation);
-  const location = useStore((state) => state.location);
+  const setLocation = useStore((state) => state.setLiveLocation);
+  const location = useStore((state) => state.liveLocation);
   const latitudeDelta = useAnimatedValue(0.01);
   const longitudeDelta = useAnimatedValue(0.01);
   useEffect(() => {
