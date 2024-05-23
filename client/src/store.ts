@@ -4,9 +4,6 @@ import { Park, User, LocationCoords, DogParkPair } from "./api/types";
 
 interface Store {
   liveLocation: LocationCoords;
-  dogsInPark: Record<string, string>; // Define dogsInPark as a Record with string keys and string values
-  addDogToPark: (dogId: string, parkId: string) => void;
-  removeDogFromPark: (dogId: string) => void;
   setLiveLocation: (location: LocationCoords) => void;
 
   user: User;
@@ -22,15 +19,4 @@ export const useStore = create<Store>((set) => ({
   setUser: (user) => set({ user }),
   // setParks: (parks) => set({ parks }),
   setLiveLocation: (liveLocation) => set({ liveLocation }),
-  dogsInPark: {},
-  addDogToPark: (dogId, parkId) =>
-    set((state) => ({
-      dogsInPark: { ...state.dogsInPark, [dogId]: parkId },
-    })),
-  removeDogFromPark: (dogId) =>
-    set((state) => {
-      const updatedDogsInPark = { ...state.dogsInPark };
-      delete updatedDogsInPark[dogId];
-      return { dogsInPark: updatedDogsInPark };
-    }),
 }));
