@@ -13,6 +13,7 @@ import {
   useUpdateDog,
   usePickImage,
   useUploadImage,
+  useDeleteDog,
 } from "../../state/queries";
 import styles from "../Login/signIn.style";
 import { CreationData, Dog, DogGender, LifeStage } from "../../api/types";
@@ -42,6 +43,7 @@ const AddDogView = ({
   const uploadImageMutation = useUploadImage();
   const addDogMutation = useAddDog();
   const updateDogMutation = useUpdateDog();
+  const deleteDogMutation = useDeleteDog();
 
   const animatedValue = new Animated.Value(0);
 
@@ -84,6 +86,11 @@ const AddDogView = ({
     return uploadedImageUrl;
   };
 
+  const deleteDogProfile = async () => {
+    deleteDogMutation.mutateAsync(dogData.id);
+    onClose();
+  };
+
   const onSubmit = async () => {
     const uploadedImageUrl = await uploadPickedImage();
     try {
@@ -92,8 +99,8 @@ const AddDogView = ({
         setNameBorderColor(dogName?.trim() ? "gray" : "red");
         setAgeBorderColor(age.trim() ? "gray" : "red");
         return;
-      } 
-      const dog = {
+      }
+      const dog: Dog = {
         id: buttonName === "Add" ? undefined : dogData.id, // Only include id for update
         name: dogName,
         age: parseInt(age, 10),
@@ -102,9 +109,12 @@ const AddDogView = ({
         imageUrl: uploadedImageUrl, // Uncomment if needed
         ownerId: user.id,
       };
-  
-      await (buttonName === "Add" ? addDogMutation : updateDogMutation).mutateAsync(dog);
-      onClose()
+
+      await (buttonName === "Add"
+        ? addDogMutation
+        : updateDogMutation
+      ).mutateAsync(dog);
+      onClose();
     } catch (error) {
       console.log(error);
     }
@@ -234,6 +244,18 @@ const AddDogView = ({
             </View>
           </View>
         </View>
+        {dogData ? (
+          <TouchableOpacity
+            className="flex justify-center items-center pt-8"
+            onPress={deleteDogProfile}
+          >
+            <Text className="text-center text-red-500">
+              Delete {dogData.name}'s profile
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <Text></Text>
+        )}
         <View style={{ height: 200 }} />
       </ScrollView>
     </View>

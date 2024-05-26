@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/ReutKishon/DogPark#readme",
   "dependencies": {
+    "aws-sdk": "^2.1628.0",
     "express": "^4.19.2",
     "mysql2": "^3.9.7",
     "socket.io": "^4.7.5"

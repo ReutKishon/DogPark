@@ -7,6 +7,9 @@ const router = express.Router();
 // Route to add a new dog
 router.post("/add", dogsController.addDog);
 
+router.delete("/:delete/:dogId", dogsController.deleteDog);
+
+
 // Route to update an existing dog
 router.put("/update/:dogId", dogsController.updateDog);
 

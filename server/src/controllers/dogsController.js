@@ -12,14 +12,32 @@ const addDog = (req, res) => {
     dogData.gender,
   ];
 
-  connection.query(sql, values, (err,result) => {
+  connection.query(sql, values, (err, result) => {
     if (err) {
       console.error("Error adding dog:", err);
       res.status(500).json({ error: "Failed to add dog" });
     } else {
       console.log("Dog added successfully");
       const insertedId = result.insertId; // Get the ID of the inserted row
-      res.status(200).json({ message: "Dog added successfully",dogId: insertedId });
+      res
+        .status(200)
+        .json({ message: "Dog added successfully", dogId: insertedId });
+    }
+  });
+};
+
+const deleteDog = (req, res) => {
+  const { dogId } = req.params;
+
+  const sql = `DELETE FROM dogs WHERE id = ?`;
+
+  connection.query(sql, [dogId], (err, result) => {
+    if (err) {
+      console.error("Error deleting dog:", err);
+      res.status(500).json({ error: "Failed to delete dog" });
+    } else {
+      console.log("Dog deleted successfully");
+      res.status(200).json({ message: "Dog deleted successfully" });
     }
   });
 };
@@ -39,11 +57,16 @@ const getUserDogs = (req, res) => {
 };
 
 const updateDog = (req, res) => {
-  const { dogId } = req.params;
   const { dogData } = req.body;
-
-  const sql = `UPDATE dogs SET name = ?, age = ?, lifeStage = ?, gender= ? WHERE dog_id = ?`;
-  const values = [dogData.name, dogData.age, dogData.lifeStage, dogData.gender];
+  console.log(dogData);
+  const sql = `UPDATE dogs SET name = ?, age = ?, lifeStage = ?, gender= ? WHERE id = ?`;
+  const values = [
+    dogData.name,
+    dogData.age,
+    dogData.lifeStage,
+    dogData.gender,
+    dogData.id,
+  ];
   connection.query(sql, values, (err, result) => {
     if (err) {
       console.error("Error getting user's dogs:", err);
@@ -53,7 +76,6 @@ const updateDog = (req, res) => {
     return res.status(200).json(result);
   });
 };
-
 
 const updateCurrentPark = (req, res) => {
   const { dogId } = req.params;
@@ -75,7 +97,6 @@ const updateCurrentPark = (req, res) => {
   });
 };
 
-
 const getPlayingDogs = (req, res) => {
   const { parkId } = req.params;
   console.log("lala" + parkId);
@@ -93,7 +114,8 @@ const getPlayingDogs = (req, res) => {
 
 export default {
   addDog,
+  deleteDog,
   getUserDogs,
   updateDog,
-  updateCurrentPark
+  updateCurrentPark,
 };

@@ -33,6 +33,14 @@ export const addDogToUser = async (
   }
 };
 
+export const deleteDog = async (dogId: string) => {
+  try {
+    const response = await axios.delete(PATH + "/dogs/delete/" + dogId);
+  } catch (error) {
+    console.error("error deleting dog profile " + error);
+  }
+};
+
 export const getUserDogs = async (userId: string): Promise<Dog[]> => {
   console.log("getting user dogs", userId);
   try {
@@ -50,7 +58,9 @@ export const updateUserDog = async (dogData: Dog) => {
   console.log("dogId:" + dogId);
   console.log(dogData);
   try {
-    const response = await axios.put(PATH + "/dogs/update/" + dogId, dogData);
+    const response = await axios.put(PATH + "/dogs/update/" + dogId, {
+      dogData,
+    });
     console.log(response.data);
   } catch (error) {
     console.error("error updating a dog " + error);

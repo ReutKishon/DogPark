@@ -13,6 +13,7 @@ import {
   getUserDogs,
   removeDogFromPark,
   updateUserDog,
+  deleteDog,
 } from "../api/api";
 import { useStore } from "../store";
 import { auth } from "../../firebase";
@@ -79,6 +80,19 @@ export const useUpdateDog = () => {
   return useMutation(
     (dogData: Dog) => {
       return updateUserDog(dogData);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("userDogs");
+      },
+    }
+  );
+};
+export const useDeleteDog = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (dogId: string) => {
+      return deleteDog(dogId);
     },
     {
       onSuccess: () => {
