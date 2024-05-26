@@ -99,7 +99,6 @@ const updateCurrentPark = (req, res) => {
 
 const getPlayingDogs = (req, res) => {
   const { parkId } = req.params;
-  console.log("lala" + parkId);
   const sql = `SELECT * FROM dogs WHERE current_parkId =?`;
   const values = [parkId];
   connection.query(sql, values, (err, result) => {

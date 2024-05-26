@@ -21,13 +21,6 @@ import { CreationData, Dog } from "../api/types";
 import { getNearestDogParks, getUserLocation } from "../api/location";
 import { pickImage, uploadImageToStorage } from "../api/utils";
 
-const config = {
-  bucketName: "myBucket",
-  dirName: "photos" /* optional */,
-  region: "eu-west-1",
-  accessKeyId: "ANEIFNENI4324N2NIEXAMPLE",
-  secretAccessKey: "cms21uMxçduyUxYjeg20+DEkgDxe6veFosBT7eUgEXAMPLE",
-};
 
 export const useDogs = () => {
   const user = useStore((state) => state.user);

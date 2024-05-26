@@ -3,6 +3,8 @@ import express from "express";
 import dogsRouter from "./routes/dogs.js";
 import userRouter from "./routes/user.js";
 import parksRouter from "./routes/parks.js";
+import authRouter from "./routes/auth.js";
+
 import db from "./db.js";
 import bodyParser from "body-parser";
 import { createServer } from "http";
@@ -32,7 +34,7 @@ app.use((req, res, next) => {
 app.use("/dogs", dogsRouter);
 app.use("/users", userRouter);
 app.use("/parks", parksRouter);
-
+app.use("/auth", authRouter);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

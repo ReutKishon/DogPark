@@ -1,71 +1,82 @@
 import AWS from "aws-sdk";
+import dotenv from "dotenv";
 
-AWS.config.update({ region: "us-east" });
-const cognito = new AWS.CognitoIdentityServiceProvider();
+dotenv.config({ path: "../../.env" });
 
-const signup = async (req, res) => {
-  const { email, password } = req.body;
+const cognito = new AWS.CognitoIdentityServiceProvider({
+  region: process.env.AWS_REGION,
+});
 
-  const cognitoParams = {
-    username: email,
-    password,
+const clientId = process.env.COGNITO_CLIENT_ID;
+const userPoolId = process.env.COGNITO_USER_POOL_ID;
+
+export const register = async (req, res) => {
+  const { email, password, fullName, phoneNumber } = req.body;
+  console.log(email, password, fullName, phoneNumber);
+  const db = req.db;
+
+  if (!clientId) {
+    res.status(500).json({ error: "COGNITO_CLIENT_ID is not defined" });
+    return;
+  }
+
+  const params = {
+    ClientId: clientId,
+    Username: email,
+    Password: password,
+    UserAttributes: [
+      { Name: "email", Value: email },
+      { Name: "name", Value: fullName },
+      { Name: "phone_number", Value: phoneNumber },
+    ],
   };
 
   try {
-    const cognitoUser = await new Promise((resolve, reject) => {
-      cognito.signUp(cognitoParams, (err, user) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(user);
-        }
-      });
-    });
+    console.log("userId: ");
 
-    res.status(200).send({
-      success: true,
-      message: "User registered successfully",
-      user: cognitoUser,
-    });
+    const signUpResponse = await cognito.signUp(params).promise();
+    console.log("userId2: " + signUpResponse.$response);
+
+    const userId = signUpResponse.UserSub;
+    console.log("userId: " + userId);
+    await db.execute("INSERT INTO users (user_id,name, email) VALUES (?,?,?)", [
+      userId,
+      fullName,
+      email,
+    ]);
+    console.log("User registered and stored successfully");
+    res
+      .status(200)
+      .json({ message: "User registered and stored successfully", userId });
   } catch (error) {
-    res.status(400).send({ success: false, message: error.message, error });
+    console.log("error: " + error.message);
+    res.status(400).json({ error: error.message });
   }
 };
 
-const signupConfirm = async (req, res) => {
-  const { email, code } = req.body;
-  const cognitoParams = {
-    username: email,
-    confirmationCode: code,
+export const signInUser = async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!clientId) {
+    res.status(500).json({ error: "COGNITO_CLIENT_ID is not defined" });
+    return;
+  }
+
+  const params = {
+    AuthFlow: "USER_PASSWORD_AUTH",
+    ClientId: clientId,
+    AuthParameters: {
+      USERNAME: username,
+      PASSWORD: password,
+    },
   };
 
   try {
-    await new Promise((resolve, reject) => {
-      CognitoIdentityService.signupConfirm(cognitoParams, (err, user) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(user);
-        }
-      });
-    });
-
-    // DB logic here
-    // ...
-
-    res.status(200).send({
-      success: true,
-      message: "User email confirmed successfully",
-      user: {
-        user_confirmed: true,
-      },
-    });
+    const data = await cognito.initiateAuth(params).promise();
+    res.status(200).json({ message: "User signed in successfully", data });
   } catch (error) {
-    res.status(400).send({ success: false, message: error.message, error });
+    res.status(400).json({ error: error.message });
   }
 };
 
-export default {
-  signup,
-  signupConfirm,
-};
+export default { register,signIn };

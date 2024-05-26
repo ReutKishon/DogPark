@@ -1,31 +1,35 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import styles from "./signIn.style";
-import { auth, firestore } from "../../../firebase";
 import { Keyboard } from "react-native";
 import { Button } from "react-native-paper";
 import { User } from "../../api/types";
 import axios from "axios";
+const PATH = "http://localhost:3000";
 
 const Register = () => {
-  const [name, setName] = useState("");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   // use form validation component
   // if (error.code === "auth/email-already-in-use") {
   const handleRegister = async () => {
     try {
-      const userCredential = await auth.createUserWithEmailAndPassword(
+      console.log("Register");
+      const loggedUser = await axios.post(PATH + "/auth/register/", {
         email,
-        password
-      );
-      const loggedUser = userCredential.user;
+        password,
+        fullName,
+        phoneNumber,
+      });
+      console.log("loggedUserData: " + loggedUser.data);
       const user: User = {
         dogs: [],
-        name,
+        name: fullName,
         email,
-        id: loggedUser.uid,
+        id: loggedUser.data,
         imageUrl: "",
       };
       if (loggedUser) {
@@ -38,6 +42,25 @@ const Register = () => {
   return (
     <View className="flex mt-24 px-10">
       <Text>New Account</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="name"
+        value={fullName}
+        onChangeText={setFullName}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="phone number"
+        value={phoneNumber}
+        onChangeText={setPhoneNumber}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="email"
+        value={email}
+        onChangeText={setEmail}
+      />
 
       <TextInput
         style={styles.input}
