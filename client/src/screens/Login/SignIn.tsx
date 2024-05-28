@@ -3,21 +3,29 @@ import { View, Text, TextInput, Image } from "react-native";
 import styles from "./signIn.style";
 import { auth } from "../../../firebase";
 import { useStore } from "../../store";
-import { getUser, getUserDogs } from "../../api/api";
+
 import { Button } from "react-native-paper";
-import { useSignIn } from "../../state/queries";
+import { useSignIn, useUser } from "../../state/queries";
+import axios from "axios";
+const PATH = "http://localhost:3000";
 
-const SignIn = ({ navigation }) => {
-  const [email, setEmail] = useState("elad.636@gmail.com");
-  const [password, setPassword] = useState("Elad9352221");
+const SignIn = () => {
+  const [email, setEmail] = useState("Reki8611@gmail.com");
+  const [password, setPassword] = useState("Re12345678!");
+  const [warning, setWarning] = useState("");
+
   const signInMutation = useSignIn();
-
+  const UserMutation = useUser();
+  const setUser = useStore((state) => state.setUser);
   const onPressSignIn = async () => {
     try {
-      const result = await signInMutation.mutateAsync({ email, password });
-
-      if (result) {
-        navigation.navigate("Home");
+      const loggedUser = await axios.post(PATH + "/auth/signIn/", {
+        email,
+        password,
+      });
+      if (loggedUser.status == 200) {
+        const user = await UserMutation.mutateAsync(loggedUser.data.userId);
+        setUser(user);
       }
     } catch (error) {
       console.error("Error signing in:", error);
@@ -46,6 +54,7 @@ const SignIn = ({ navigation }) => {
           onChangeText={setPassword}
         />
         <View>
+          <Text style={{ color: "red" }}>{warning}</Text>
           <Button
             loading={signInMutation.isLoading}
             mode="contained"

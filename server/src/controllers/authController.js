@@ -1,5 +1,6 @@
 import AWS from "aws-sdk";
 import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
 
 dotenv.config({ path: "../../.env" });
 
@@ -45,6 +46,7 @@ export const register = async (req, res) => {
       email,
     ]);
     console.log("User registered and stored successfully");
+
     res
       .status(200)
       .json({ message: "User registered and stored successfully", userId });
@@ -54,8 +56,8 @@ export const register = async (req, res) => {
   }
 };
 
-export const signInUser = async (req, res) => {
-  const { username, password } = req.body;
+export const signIn = async (req, res) => {
+  const { email, password } = req.body;
 
   if (!clientId) {
     res.status(500).json({ error: "COGNITO_CLIENT_ID is not defined" });
@@ -66,17 +68,20 @@ export const signInUser = async (req, res) => {
     AuthFlow: "USER_PASSWORD_AUTH",
     ClientId: clientId,
     AuthParameters: {
-      USERNAME: username,
+      USERNAME: email,
       PASSWORD: password,
     },
   };
 
   try {
     const data = await cognito.initiateAuth(params).promise();
-    res.status(200).json({ message: "User signed in successfully", data });
+    const userId = data.ChallengeParameters?.USER_ID_FOR_SRP;
+    console.log(userId);
+    res.status(200).json({ message: "User signed in successfully", userId });
   } catch (error) {
+    console.log("error: " + error.message);
     res.status(400).json({ error: error.message });
   }
 };
 
-export default { register,signIn };
+export default { register, signIn };

@@ -5,6 +5,8 @@ import { Keyboard } from "react-native";
 import { Button } from "react-native-paper";
 import { User } from "../../api/types";
 import axios from "axios";
+import { useUser } from "../../state/queries";
+import { useStore } from "../../store";
 const PATH = "http://localhost:3000";
 
 const Register = () => {
@@ -12,31 +14,23 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const UserMutation = useUser();
+  const setUser = useStore((state) => state.setUser);
 
-  // use form validation component
-  // if (error.code === "auth/email-already-in-use") {
   const handleRegister = async () => {
     try {
-      console.log("Register");
       const loggedUser = await axios.post(PATH + "/auth/register/", {
         email,
         password,
         fullName,
         phoneNumber,
       });
-      console.log("loggedUserData: " + loggedUser.data);
-      const user: User = {
-        dogs: [],
-        name: fullName,
-        email,
-        id: loggedUser.data,
-        imageUrl: "",
-      };
-      if (loggedUser) {
-        //firestore.collection("users").doc(loggedUser.uid).set(user);
-        axios.post("http://localhost:3000/user/add", user);
-      }
-    } catch (error) {}
+      const user = await UserMutation.mutateAsync(loggedUser.data.userId);
+      console.log("name:" + user.name);
+      setUser(user);
+    } catch (error) {
+      console.error("Error signing in:", error);
+    }
   };
 
   return (

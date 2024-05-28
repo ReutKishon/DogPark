@@ -1,21 +1,20 @@
-import { firestore } from "../../firebase";
-
 import { CreationData, Dog, LifeStage, User } from "./types";
 import axios, { Axios } from "axios";
 const PATH = "http://localhost:3000";
 
 export const getUser = async (id: string): Promise<User> => {
   try {
-    const doc = await firestore.collection("users").doc(id).get();
-
-    if (doc.exists) {
-      return {
-        ...doc.data(),
-        dogs: [],
-      } as User;
-    } else {
-      console.log("No such document!");
-    }
+    const response = await axios.get(PATH + "/users/getInfo/" + id);
+    const userInfo = response.data[0];
+    console.log(userInfo);
+    const user: User = {
+      dogs: [],
+      name: userInfo["name"],
+      email: userInfo["email"],
+      id: userInfo["user_id"],
+      imageUrl: "",
+    };
+    return user;
   } catch (error) {
     console.error("Error fetching user:", error);
   }
@@ -75,9 +74,9 @@ export const addDogToPark = async (dogId: string, parkId: string) => {
   }
 };
 
-export const removeDogFromPark = async (dogId: string) => {
+export const removeDogFromPark = async (dogId: string, parkId: string) => {
   try {
-    await axios.put(PATH + "/parks/exit/" + dogId);
+    await axios.put(PATH + "/parks/exit/" + parkId + "/" + dogId);
   } catch (error) {
     console.error("Error update dog current park:", error);
   }

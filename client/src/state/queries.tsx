@@ -113,7 +113,7 @@ export const useRemoveDogFromPark = () => {
   const queryClient = useQueryClient();
   return useMutation(
     ({ dogId, parkId }: { dogId: string; parkId: string }) => {
-      return removeDogFromPark(dogId);
+      return removeDogFromPark(dogId,parkId);
     },
     {
       onSuccess: (_, variables) => {

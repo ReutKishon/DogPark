@@ -34,7 +34,7 @@ const addDogToPark = (req, res) => {
 };
 
 const removeDogFromPark = (req, res) => {
-  const { dogId } = req.params;
+  const { parkId, dogId } = req.params;
   const db = req.db;
   const io = req.io;
 
@@ -48,6 +48,7 @@ const removeDogFromPark = (req, res) => {
       console.error("Error removing dog from park:", err);
       res.status(500).json({ error: "Error removing dog from park" });
     } else {
+      io.emit("updateDogInPark", { parkId, dog: dogId });
       console.log("removed dog from park successfully");
       res.status(200).json({ message: "removed dog from park successfully" });
     }

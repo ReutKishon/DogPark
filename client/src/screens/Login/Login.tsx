@@ -9,23 +9,31 @@ import { useStore } from "../../store";
 
 export default function Login({ navigation }) {
   const Stack = createStackNavigator();
-  const setUser = useStore((state) => state.setUser);
-  
+  const user = useStore((state) => state.user);
+
+
+  // useEffect(() => {
+  //   auth.onAuthStateChanged(async (loggedInUser) => {
+  //     if (loggedInUser) {
+  //       console.log("User is signed in");
+  //       const user = await getUser(loggedInUser.uid);
+  //       if (user == undefined) {
+  //         console.log("User is undefined");
+  //         return;
+  //       }
+  //       console.log("Myuser", user);
+  //       setUser(user);
+  //       navigation.navigate("Home");
+  //     }
+  //   });
+  // }, []);
+
+
   useEffect(() => {
-    auth.onAuthStateChanged(async (loggedInUser) => {
-      if (loggedInUser) {
-        console.log("User is signed in");
-        const user = await getUser(loggedInUser.uid);
-        if (user == undefined) {
-          console.log("User is undefined");
-          return;
-        }
-        console.log("Myuser", user);
-        setUser(user);
-        navigation.navigate("Home"); 
-      }
-    });
-  }, []);
+    if (user) {
+      navigation.navigate("Home");
+    }
+  }, [user, navigation]);
 
   return (
     <Stack.Navigator
