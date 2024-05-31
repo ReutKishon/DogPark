@@ -5,50 +5,58 @@ import {
   TextInput,
   Text,
   ScrollView,
-  Animated,
 } from "react-native";
-import { Avatar, Button } from "react-native-paper";
+import {  Button } from "react-native-paper";
 import {
   useAddDog,
   useUpdateDog,
   usePickImage,
   useUploadImage,
-  useDeleteDog,
 } from "../../state/queries";
+import * as ImagePicker from "expo-image-picker";
 import styles from "../Login/signIn.style";
 import { CreationData, Dog, DogGender, LifeStage } from "../../api/types";
 import { useStore } from "../../store";
-import { COLORS } from "../../constants";
+import DeleteDogFooter from "../../components/myDogProfile/DeleteDogFooter";
+import DogAvatar from "../../components/myDogProfile/DogAvatar";
 
-const AddDogView = ({
+const MyDogProfile = ({
   onClose,
   dogData,
+  buttonName,
 }: {
   onClose: () => void;
   dogData: Dog;
+  buttonName: string;
 }) => {
   const user = useStore((state) => state.user);
   const [dogName, setDogName] = useState<string>("");
   const [age, setAge] = useState<string>("");
   const [lifeStage, setLifeStage] = useState<LifeStage>(LifeStage.Adult);
   const [gender, setGender] = useState<DogGender>(DogGender.Male);
-  const [imageUrl, setImageUrl] = useState<string>(
-    "https://icons.iconarchive.com/icons/iconarchive/dog-breed/256/Beagle-icon.png"
-  );
   const [nameBorderColor, setNameBorderColor] = useState<string>();
   const [ageBorderColor, setAgeBorderColor] = useState<string>();
-  const buttonName = dogData ? "Update" : "Add";
+  const [imageUrl, setImageUrl] = useState(null);
 
   const pickImageMutation = usePickImage();
   const uploadImageMutation = useUploadImage();
   const addDogMutation = useAddDog();
   const updateDogMutation = useUpdateDog();
-  const deleteDogMutation = useDeleteDog();
 
-  const animatedValue = new Animated.Value(0);
+  const handleCameraPress = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImageUrl(result.assets[0].uri);
+    }
+  };
 
   useEffect(() => {
-    animate();
     if (dogData) {
       setDogName(dogData.name);
       setAge(dogData.age?.toString());
@@ -58,41 +66,7 @@ const AddDogView = ({
     }
   }, []); // Run once when the component mounts
 
-  const animate = () => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(animatedValue, {
-          toValue: 1,
-          duration: 1200, // Duration of the animation
-          useNativeDriver: true, // Enable native driver for better performance
-        }),
-        Animated.timing(animatedValue, {
-          toValue: -1,
-          duration: 1200, // Duration of the animation
-          useNativeDriver: true, // Enable native driver for better performance
-        }),
-      ])
-    ).start();
-  };
-
-  const uploadPickedImage = async () => {
-    if (!pickImageMutation.data) {
-      return "";
-    }
-    const response = await fetch(pickImageMutation.data);
-    const imageBlob = await response.blob();
-    const uploadedImageUrl = await uploadImageMutation.mutateAsync(imageBlob);
-    console.log("uploadedImageUrl", uploadedImageUrl);
-    return uploadedImageUrl;
-  };
-
-  const deleteDogProfile = async () => {
-    deleteDogMutation.mutateAsync(dogData.id);
-    onClose();
-  };
-
   const onSubmit = async () => {
-    const uploadedImageUrl = await uploadPickedImage();
     try {
       if (!dogName || !age) {
         console.log("error", dogName, age, gender);
@@ -106,7 +80,7 @@ const AddDogView = ({
         age: parseInt(age, 10),
         gender,
         lifeStage,
-        imageUrl: uploadedImageUrl, // Uncomment if needed
+        imageUrl: imageUrl, // Uncomment if needed
         ownerId: user.id,
       };
 
@@ -120,17 +94,12 @@ const AddDogView = ({
     }
   };
 
-  const spin = animatedValue.interpolate({
-    inputRange: [-1, 0, 1],
-    outputRange: ["-20deg", "0deg", "20deg"], // Rotate from 0 to 360 degrees
-  });
-
   return (
     <View className="flex items-center px-4 gap-1">
       <View className="w-full flex-row justify-between items-center">
         <Button onPress={() => onClose()}>Cancel</Button>
         <Button
-          icon={"plus"}
+          icon={buttonName == "Add" ? "plus" : "pencil"}
           mode="contained"
           onPress={onSubmit}
           loading={addDogMutation.isLoading || uploadImageMutation.isLoading}
@@ -140,21 +109,8 @@ const AddDogView = ({
       </View>
       <ScrollView className="flex-grow">
         <View className="items-center">
-          <Animated.View style={{ transform: [{ rotate: spin }] }}>
-            <TouchableOpacity
-              className="px-2 py-4"
-              onPress={async () => {
-                const uri = await pickImageMutation.mutateAsync();
-                setImageUrl(uri);
-              }}
-            >
-              <Avatar.Image
-                style={{ backgroundColor: COLORS.primary }}
-                size={120}
-                source={{ uri: imageUrl }}
-              ></Avatar.Image>
-            </TouchableOpacity>
-          </Animated.View>
+          <DogAvatar imageUrl={imageUrl} onCameraPress={handleCameraPress} />
+
           <View className="flex items-center gap-2">
             <View className="mb-2">
               <Text className="font-medium mb-2 ml-1">Name</Text>
@@ -244,22 +200,13 @@ const AddDogView = ({
             </View>
           </View>
         </View>
-        {dogData ? (
-          <TouchableOpacity
-            className="flex justify-center items-center pt-8"
-            onPress={deleteDogProfile}
-          >
-            <Text className="text-center text-red-500">
-              Delete {dogData.name}'s profile
-            </Text>
-          </TouchableOpacity>
-        ) : (
-          <Text></Text>
-        )}
+        {buttonName == "Edit" ? (
+          <DeleteDogFooter {...{ dogData, onClose }} />
+        ) : null}
         <View style={{ height: 200 }} />
       </ScrollView>
     </View>
   );
 };
 
-export default AddDogView;
+export default MyDogProfile;

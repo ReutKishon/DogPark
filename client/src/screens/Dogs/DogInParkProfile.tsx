@@ -26,9 +26,9 @@ const DogDetailCard = ({ text, iconName }) => {
   );
 };
 
-
-const DogProfile = ({ route }) => {
+const DogInParkProfile = ({ route }) => {
   const dog: Dog = route.params.dog;
+  console.log("imageUrl2: " + dog.imageUrl);
 
   return (
     <View className="flex-1">
@@ -76,4 +76,4 @@ const DogProfile = ({ route }) => {
   );
 };
 
-export default DogProfile;
+export default DogInParkProfile;

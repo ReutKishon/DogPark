@@ -16,6 +16,8 @@ router.put("/update/:dogId", dogsController.updateDog);
 // Route to retrieve dogs for a specific user
 router.get("/:userId", dogsController.getUserDogs);
 
+router.get("/:dog-image/:dogId", dogsController.getDogProfileImage);
+
 
 
 

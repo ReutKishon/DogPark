@@ -14,6 +14,8 @@ import {
   removeDogFromPark,
   updateUserDog,
   deleteDog,
+  signIn,
+  register,
 } from "../api/api";
 import { useStore } from "../store";
 import { auth } from "../../firebase";
@@ -21,33 +23,65 @@ import { CreationData, Dog } from "../api/types";
 import { getNearestDogParks, getUserLocation } from "../api/location";
 import { pickImage, uploadImageToStorage } from "../api/utils";
 
-
 export const useDogs = () => {
   const user = useStore((state) => state.user);
   return useQuery("userDogs", () => getUserDogs(user.id));
 };
 
 export const useUser = () => {
+  const setUser = useStore((state) => state.setUser);
+
   return useMutation(
     (userId: string) => {
       return getUser(userId);
     },
     {
-      onSuccess: () => {
-        console.log("getUser");
+      onSuccess: (data) => {
+        setUser(data);
       },
     }
   );
 };
 
-export const useSignIn = () => {
+export const useSignIn = (setWarning: any) => {
+  const { mutate: fetchUser } = useUser();
+
   return useMutation(
     ({ email, password }: { email: string; password: string }) => {
-      return auth.signInWithEmailAndPassword(email, password);
+      return signIn(email, password, setWarning);
     },
     {
-      onSuccess: () => {
-        console.log("Signed in");
+      onSuccess: (userId) => {
+        if (userId) {
+          fetchUser(userId);
+        }
+      },
+    }
+  );
+};
+
+export const useRegister = (setWarning: any) => {
+  const { mutate: fetchUser } = useUser();
+
+  return useMutation(
+    ({
+      email,
+      password,
+      fullName,
+      phoneNumber,
+    }: {
+      email: string;
+      password: string;
+      fullName: string;
+      phoneNumber: string;
+    }) => {
+      return register(email, password, fullName, phoneNumber, setWarning);
+    },
+    {
+      onSuccess: (userId) => {
+        if (userId) {
+          fetchUser(userId);
+        }
       },
     }
   );
@@ -113,7 +147,7 @@ export const useRemoveDogFromPark = () => {
   const queryClient = useQueryClient();
   return useMutation(
     ({ dogId, parkId }: { dogId: string; parkId: string }) => {
-      return removeDogFromPark(dogId,parkId);
+      return removeDogFromPark(dogId, parkId);
     },
     {
       onSuccess: (_, variables) => {

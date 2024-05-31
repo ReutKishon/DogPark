@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 dotenv.config({ path: "../../.env" });
 
 import { createConnection } from "mysql2";
-
 const connection = createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -12,15 +11,13 @@ const connection = createConnection({
   database: process.env.DB_NAME,
 });
 
-console.log('DB_NAME:', process.env.DB_NAME); // Add this line to check if the variable is loaded
-
 connection.connect((err) => {
   if (err) {
     console.error("Error connecting to database:", err);
     return;
   }
   console.log("Connected to database");
-  createTables(); // Call the function to create tables after connecting
+  createTables();
 });
 
 function createTables() {
@@ -42,12 +39,27 @@ function createTables() {
         FOREIGN KEY (user_id) REFERENCES users(user_id)
     )`;
 
+  const createFollowTable = `CREATE TABLE IF NOT EXISTS follows (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id INT NOT NULL,
+      dog_id INT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id),
+      FOREIGN KEY (dog_id) REFERENCES dogs(id),
+      UNIQUE (user_id, dog_id)
+    );
+    `;
+
   connection.query(createUsersTable, (err) => {
     if (err) throw err;
     console.log("Users table created successfully");
   });
 
   connection.query(createDogsTable, (err) => {
+    if (err) throw err;
+    console.log("Dogs table created successfully");
+  });
+  connection.query(createFollowTable, (err) => {
     if (err) throw err;
     console.log("Dogs table created successfully");
   });

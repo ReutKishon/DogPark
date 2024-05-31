@@ -2,7 +2,7 @@ import React from "react";
 import Parks from "./Parks";
 import { createStackNavigator } from "@react-navigation/stack";
 import ParkDetails from "./ParkDetails";
-import DogProfile from "../../Dogs/DogProfile";
+import DogProfile from "../../Dogs/DogInParkProfile";
 import { Button, IconButton, Text } from "react-native-paper";
 import { TouchableOpacity } from "react-native-gesture-handler";
 

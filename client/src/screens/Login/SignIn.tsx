@@ -13,23 +13,14 @@ const SignIn = () => {
   const [email, setEmail] = useState("Reki8611@gmail.com");
   const [password, setPassword] = useState("Re12345678!");
   const [warning, setWarning] = useState("");
+  const signInMutation = useSignIn((errorMessage) => {
+    setWarning(errorMessage);
+  });
 
-  const signInMutation = useSignIn();
-  const UserMutation = useUser();
-  const setUser = useStore((state) => state.setUser);
-  const onPressSignIn = async () => {
+  const handleSignIn = async () => {
     try {
-      const loggedUser = await axios.post(PATH + "/auth/signIn/", {
-        email,
-        password,
-      });
-      if (loggedUser.status == 200) {
-        const user = await UserMutation.mutateAsync(loggedUser.data.userId);
-        setUser(user);
-      }
-    } catch (error) {
-      console.error("Error signing in:", error);
-    }
+      signInMutation.mutateAsync({ email, password });
+    } catch (error) {}
   };
 
   const imageUrl =
@@ -53,12 +44,15 @@ const SignIn = () => {
           secureTextEntry={true}
           onChangeText={setPassword}
         />
+        <View style={{ height: 15 }}>
+          {warning ? <Text style={{ color: "red" }}>{warning}</Text> : null}
+        </View>
+
         <View>
-          <Text style={{ color: "red" }}>{warning}</Text>
           <Button
             loading={signInMutation.isLoading}
             mode="contained"
-            onPress={onPressSignIn}
+            onPress={handleSignIn}
           >
             Sign In
           </Button>

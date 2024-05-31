@@ -2,7 +2,7 @@ import { ActivityIndicator, Text, View } from "react-native";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import List from "../../components/List";
 import { Avatar, Button, IconButton } from "react-native-paper";
-import AddDogView from "./AddDog";
+import MyDogProfile from "./MyDogProfile";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useDogs } from "../../state/queries";
 import { TemporaryModal } from "../../components/TemporaryModal";
@@ -62,9 +62,10 @@ function MyDogs({ navigation, onClose }) {
       </View>
       <BottomSheetModalProvider>
         <TemporaryModal ref={modalRef}>
-          <AddDogView
+          <MyDogProfile
             onClose={() => toggleAddDog(false)}
             dogData={pressedDog}
+            buttonName={pressedDog ? "Edit" : "Add"}
           />
         </TemporaryModal>
       </BottomSheetModalProvider>

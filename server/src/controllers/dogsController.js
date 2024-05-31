@@ -1,5 +1,6 @@
 //@ts-nocheck
 import connection from "../db.js";
+import { getImageFromImgur, uploadImageToImgur } from "../utils/imgur.js";
 const addDog = (req, res) => {
   const { dogData, userId } = req.body;
 
@@ -18,7 +19,9 @@ const addDog = (req, res) => {
       res.status(500).json({ error: "Failed to add dog" });
     } else {
       console.log("Dog added successfully");
-      const insertedId = result.insertId; // Get the ID of the inserted row
+      const insertedId = result.insertId;
+      uploadImageToImgur(dogData.imageUrl, insertedId);
+
       res
         .status(200)
         .json({ message: "Dog added successfully", dogId: insertedId });
@@ -72,7 +75,7 @@ const updateDog = (req, res) => {
       console.error("Error getting user's dogs:", err);
       return res.status(500).json({ error: "Failed to get user's dogs" });
     }
-
+    uploadImageToImgur(dogData.imageUrl, dogData.id);
     return res.status(200).json(result);
   });
 };
@@ -111,10 +114,17 @@ const getPlayingDogs = (req, res) => {
   });
 };
 
+const getDogProfileImage = (req, res) => {
+  const { dogId } = req.params;
+  const link = getImageFromImgur(dogId);
+  return res.status(200).json({ imageUrl: link });
+};
+
 export default {
   addDog,
   deleteDog,
   getUserDogs,
   updateDog,
   updateCurrentPark,
+  getDogProfileImage,
 };

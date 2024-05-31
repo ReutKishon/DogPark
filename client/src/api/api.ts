@@ -1,6 +1,8 @@
+import { useUser } from "../state/queries";
 import { CreationData, Dog, LifeStage, User } from "./types";
 import axios, { Axios } from "axios";
 const PATH = "http://localhost:3000";
+//const PATH = process.env.PATH
 
 export const getUser = async (id: string): Promise<User> => {
   try {
@@ -44,8 +46,27 @@ export const getUserDogs = async (userId: string): Promise<Dog[]> => {
   console.log("getting user dogs", userId);
   try {
     const response = await axios.get<Dog[]>(PATH + "/dogs/" + userId);
-    const dogs = response.data;
-    console.log(dogs);
+    let dogs = response.data;
+
+    console.log("My dogs: " + dogs[0].name);
+
+    dogs = await Promise.all(
+      dogs.map(async (dog) => {
+        try {
+          const imageResponse = await axios.get(
+            `${PATH}/dogs/dog-image/${dog.id}`
+          );
+          return {
+            ...dog,
+            imageUrl: imageResponse.data.imageUrl,
+          };
+        } catch (error) {
+          console.error(`Error fetching image for dog ${dog.id}:`, error);
+          return dog; // Return the dog object as is if there's an error
+        }
+      })
+    );
+
     return dogs;
   } catch (err) {
     throw err;
@@ -90,6 +111,50 @@ export const getDogsInPark = async (parkId: string): Promise<Array<Dog>> => {
     console.log("playing:" + response.data.length);
   } catch (error) {
     console.error("Error fetching dog data:", error);
+    return null;
+  }
+};
+
+export const signIn = async (
+  email: string,
+  password: string,
+  setWaring: any
+): Promise<string> => {
+  try {
+    const loggedUser = await axios.post(PATH + "/auth/signIn/", {
+      email,
+      password,
+    });
+    if (loggedUser.status == 200) {
+      setWaring("");
+      return loggedUser.data.userId;
+    }
+  } catch (error) {
+    setWaring(error.response.data.error);
+    return null;
+  }
+};
+
+export const register = async (
+  email: string,
+  password: string,
+  fullName: string,
+  phoneNumber: string,
+  setWaring: any
+): Promise<string> => {
+  try {
+    const loggedUser = await axios.post(PATH + "/auth/register/", {
+      email,
+      password,
+      fullName,
+      phoneNumber,
+    });
+    if (loggedUser.status == 200) {
+      setWaring("");
+      return loggedUser.data.userId;
+    }
+  } catch (error) {
+    setWaring(error.response.data.error);
     return null;
   }
 };
