@@ -38,7 +38,6 @@ const MyDogProfile = ({
   const [ageBorderColor, setAgeBorderColor] = useState<string>();
   const [imageUrl, setImageUrl] = useState(null);
 
-  const pickImageMutation = usePickImage();
   const uploadImageMutation = useUploadImage();
   const addDogMutation = useAddDog();
   const updateDogMutation = useUpdateDog();

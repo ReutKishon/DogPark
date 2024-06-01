@@ -16,6 +16,9 @@ import {
   deleteDog,
   signIn,
   register,
+  followDog,
+  unfollowDog,
+  getUserFollowings,
 } from "../api/api";
 import { useStore } from "../store";
 import { auth } from "../../firebase";
@@ -203,3 +206,42 @@ export const usePickImage = () => {
     }
   );
 };
+
+export const useFollow = () => {
+  const queryClient = useQueryClient();
+  const user = useStore((state) => state.user);
+
+  return useMutation(
+    (dogId: string) => {
+      return followDog(user.id, dogId);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("userFollowing");
+      },
+    }
+  );
+};
+
+export const useUnfollow = () => {
+  const queryClient = useQueryClient();
+  const user = useStore((state) => state.user);
+
+  return useMutation(
+    (dogId: string) => {
+      return unfollowDog(user.id, dogId);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("userFollowing");
+      },
+    }
+  );
+};
+
+
+export const useFollowings = () => {
+  const user = useStore((state) => state.user);
+  return useQuery("userFollowings", () => getUserFollowings(user.id));
+};
+

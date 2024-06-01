@@ -39,15 +39,15 @@ function createTables() {
         FOREIGN KEY (user_id) REFERENCES users(user_id)
     )`;
 
-  const createFollowTable = `CREATE TABLE IF NOT EXISTS follows (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      user_id INT NOT NULL,
-      dog_id INT NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (user_id) REFERENCES users(id),
-      FOREIGN KEY (dog_id) REFERENCES dogs(id),
-      UNIQUE (user_id, dog_id)
-    );
+  const createfollowsTable = `CREATE TABLE IF NOT EXISTS follows (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(100) NOT NULL,
+    dog_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (dog_id) REFERENCES dogs(id),
+    UNIQUE (user_id, dog_id)
+  );  
     `;
 
   connection.query(createUsersTable, (err) => {
@@ -59,9 +59,9 @@ function createTables() {
     if (err) throw err;
     console.log("Dogs table created successfully");
   });
-  connection.query(createFollowTable, (err) => {
+  connection.query(createfollowsTable, (err) => {
     if (err) throw err;
-    console.log("Dogs table created successfully");
+    console.log("follows table created successfully");
   });
 }
 

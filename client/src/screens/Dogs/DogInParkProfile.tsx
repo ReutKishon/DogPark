@@ -7,10 +7,11 @@ import {
   Button,
 } from "react-native";
 import { Avatar, Icon } from "react-native-paper";
-import { useUser } from "../../state/queries";
+import { useFollowings, useUser } from "../../state/queries";
 import { Dog, LifeStage } from "../../api/types";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faVenus, faCakeCandles } from "@fortawesome/free-solid-svg-icons";
+import FollowButton from "../../components/FollowButton";
 
 const DogDetailCard = ({ text, iconName }) => {
   return (
@@ -28,7 +29,16 @@ const DogDetailCard = ({ text, iconName }) => {
 
 const DogInParkProfile = ({ route }) => {
   const dog: Dog = route.params.dog;
-  console.log("imageUrl2: " + dog.imageUrl);
+  const { data: userFollowings } = useFollowings();
+
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  useEffect(() => {
+    if (userFollowings != undefined && Array.isArray(userFollowings)) {
+      const followingStatus = userFollowings.length > 0;
+      setIsFollowing(followingStatus);
+    }
+  }, [userFollowings]);
 
   return (
     <View className="flex-1">
@@ -36,7 +46,6 @@ const DogInParkProfile = ({ route }) => {
         source={require("../../assets/images/bg1.png")}
         style={{ width: "100%", height: 100 }}
       >
-        <TouchableOpacity></TouchableOpacity>
         <Avatar.Image
           source={{ uri: dog.imageUrl }}
           size={100}
@@ -48,11 +57,15 @@ const DogInParkProfile = ({ route }) => {
           }}
         />
       </ImageBackground>
+      <View className="top-3">
+        <FollowButton isFollowing={isFollowing} setIsFollowing={setIsFollowing} dog={dog} />
+      </View>
+
       <View className="relative top-12">
         <Text className="left-9 text-xl font-bold">{dog.name}</Text>
         <View
           style={{
-            borderBottomWidth: 4,
+            borderBottomWidth: 2,
             borderColor: "gray",
             marginBottom: 10,
             marginTop: 10,

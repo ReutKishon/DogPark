@@ -158,3 +158,27 @@ export const register = async (
     return null;
   }
 };
+
+export const followDog = async (userId: string, dogId: string) => {
+  try {
+    await axios.post(PATH + "/follow/follow/" + userId + "/" + dogId);
+  } catch (error) {
+    console.error("Error follow dog:", error);
+  }
+};
+
+export const unfollowDog = async (userId: string, dogId: string) => {
+  try {
+    await axios.delete(PATH + "/follow/unfollow/" + userId + "/" + dogId);
+  } catch (error) {
+    console.error("Error unfollow dog:", error);
+  }
+};
+
+export const getUserFollowings = async (userId: string) => {
+  try {
+    await axios.get(PATH + "/follow/followings/" + userId);
+  } catch (error) {
+    console.error("Error geting user followings:", error);
+  }
+};

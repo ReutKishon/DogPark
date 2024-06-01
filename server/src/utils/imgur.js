@@ -20,7 +20,7 @@ export async function uploadImageToImgur(imageUrl, dogId) {
     }
 
     // Upload image to the newly created album
-    const response = await axios.put(
+    const response = await axios.post(
       `https://api.imgur.com/3/album/${albumId}/add`,
       {
         image: base64Image,
