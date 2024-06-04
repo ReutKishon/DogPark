@@ -14,9 +14,10 @@ router.delete("/:delete/:dogId", dogsController.deleteDog);
 router.put("/update/:dogId", dogsController.updateDog);
 
 // Route to retrieve dogs for a specific user
-router.get("/:userId", dogsController.getUserDogs);
+router.get("/userDogs/:userId", dogsController.getUserDogs);
 
-router.get("/:dog-image/:dogId", dogsController.getDogProfileImage);
+// Route to retrieve dog by its id
+router.get("/:dogId", dogsController.getDog);
 
 
 

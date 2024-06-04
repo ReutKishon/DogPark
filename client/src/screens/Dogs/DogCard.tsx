@@ -3,7 +3,6 @@ import { Avatar, Button } from "react-native-paper";
 import { LifeStage } from "../../api/types";
 
 export default function DogCard({ dog, onpress }) {
-  console.log("imageUrl1: " + dog.imageUrl);
   return (
     <TouchableOpacity onPress={onpress}>
       <View className="h-40 flex-row items-center gap-4">

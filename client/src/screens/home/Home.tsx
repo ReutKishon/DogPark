@@ -6,13 +6,15 @@ import React, {
   useCallback,
 } from "react";
 import { Animated, View, useAnimatedValue, Easing } from "react-native";
+import { createStackNavigator } from "@react-navigation/stack";
+
 import MapView, { Marker } from "react-native-maps";
 import BottomSheet, {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { useStore } from "../../store";
-import { Avatar } from "react-native-paper";
+import { Avatar, Button } from "react-native-paper";
 import MyDogs from "../Dogs/MyDogs";
 import MainView from "./MainView";
 import { TemporaryModal } from "../../components/TemporaryModal";
@@ -20,6 +22,9 @@ import Profile from "../profile";
 import { getUserLocation } from "../../api/location";
 import { useDogs } from "../../state/queries";
 import { confirmPasswordReset } from "firebase/auth/react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import ProfileStack from "../../navigation/ProfileStack";
+const Stack = createStackNavigator();
 
 const Home = ({ navigation }) => {
   const bottomSheetRef = useRef(null);
@@ -81,7 +86,7 @@ const Home = ({ navigation }) => {
       );
     } else {
       setModalViewComponent(
-        <Profile
+        <ProfileStack
           navigation={navigation}
           onClose={() => {
             temporaryModalSheetRef.current.dismiss();
@@ -127,10 +132,10 @@ const Home = ({ navigation }) => {
       </MapView.Animated>
       <BottomSheetModalProvider>
         <BottomSheet ref={bottomSheetRef} index={1} snapPoints={snapPoints}>
-            <MainView toggleModal={toggleModal} />
-            <TemporaryModal maxHeight="60%" ref={temporaryModalSheetRef}>
-              {modalViewComponent}
-            </TemporaryModal>
+          <MainView toggleModal={toggleModal} />
+          <TemporaryModal maxHeight="60%" ref={temporaryModalSheetRef}>
+            {modalViewComponent}
+          </TemporaryModal>
         </BottomSheet>
       </BottomSheetModalProvider>
     </View>

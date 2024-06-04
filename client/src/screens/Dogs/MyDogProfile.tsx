@@ -6,7 +6,7 @@ import {
   Text,
   ScrollView,
 } from "react-native";
-import {  Button } from "react-native-paper";
+import { Button } from "react-native-paper";
 import {
   useAddDog,
   useUpdateDog,
@@ -20,15 +20,7 @@ import { useStore } from "../../store";
 import DeleteDogFooter from "../../components/myDogProfile/DeleteDogFooter";
 import DogAvatar from "../../components/myDogProfile/DogAvatar";
 
-const MyDogProfile = ({
-  onClose,
-  dogData,
-  buttonName,
-}: {
-  onClose: () => void;
-  dogData: Dog;
-  buttonName: string;
-}) => {
+const MyDogProfile = ({ onClose, dogData, buttonName, navigation }) => {
   const user = useStore((state) => state.user);
   const [dogName, setDogName] = useState<string>("");
   const [age, setAge] = useState<string>("");

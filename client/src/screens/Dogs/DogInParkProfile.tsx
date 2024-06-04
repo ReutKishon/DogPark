@@ -58,7 +58,11 @@ const DogInParkProfile = ({ route }) => {
         />
       </ImageBackground>
       <View className="top-3">
-        <FollowButton isFollowing={isFollowing} setIsFollowing={setIsFollowing} dog={dog} />
+        <FollowButton
+          isFollowing={isFollowing}
+          setIsFollowing={setIsFollowing}
+          dog={dog}
+        />
       </View>
 
       <View className="relative top-12">

@@ -33,13 +33,16 @@ const unfollow = (req, res) => {
 
 const getFollowings = (req, res) => {
   const { userId } = req.params;
+  console.log("here1");
   const db = req.db;
+  console.log("here2");
   const sql = "SELECT * FROM follows WHERE user_id = ?";
   db.query(sql, [userId], (err, result) => {
     if (err) {
       res.status(500).json({ error: "Failed to get user followings" });
     } else {
-      res.status(200).json({ message: "Getting user followings successfully" });
+      console.log(result);
+      return res.status(200).json({ result });
     }
   });
 };

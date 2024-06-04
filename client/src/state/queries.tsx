@@ -217,7 +217,7 @@ export const useFollow = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("userFollowing");
+        queryClient.invalidateQueries("userFollowings");
       },
     }
   );
@@ -233,7 +233,7 @@ export const useUnfollow = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("userFollowing");
+        queryClient.invalidateQueries("userFollowings");
       },
     }
   );
@@ -244,4 +244,6 @@ export const useFollowings = () => {
   const user = useStore((state) => state.user);
   return useQuery("userFollowings", () => getUserFollowings(user.id));
 };
+
+
 

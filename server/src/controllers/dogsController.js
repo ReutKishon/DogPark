@@ -48,11 +48,25 @@ const deleteDog = (req, res) => {
 const getUserDogs = (req, res) => {
   const { userId } = req.params;
   const sql = `SELECT * FROM dogs WHERE user_id =?`;
-  const values = [userId];
-  connection.query(sql, values, (err, result) => {
+  connection.query(sql, [userId], (err, result) => {
     if (err) {
       console.error("Error getting user's dogs:", err);
       return res.status(500).json({ error: "Failed to get user's dogs" });
+    }
+
+    return res.status(200).json(result);
+  });
+};
+
+const getDog = (req, res) => {
+  const { dogId } = req.params;
+  console.log("getDog1", dogId);
+
+  const sql = `SELECT * FROM dogs WHERE id =?`;
+  connection.query(sql, [dogId], (err, result) => {
+    if (err) {
+      console.error("Error getting dog:", err);
+      return res.status(500).json({ error: err });
     }
 
     return res.status(200).json(result);
@@ -127,4 +141,5 @@ export default {
   updateDog,
   updateCurrentPark,
   getDogProfileImage,
+  getDog,
 };

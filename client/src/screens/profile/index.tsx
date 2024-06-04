@@ -4,8 +4,27 @@ import SettingSection from "../../components/Settings/SettingSection";
 import List from "../../components/List";
 import { Button, Divider, IconButton, Switch } from "react-native-paper";
 import { auth } from "../../../firebase";
+import { useFollowings } from "../../state/queries";
+import { useRef } from "react";
+import { TemporaryModal } from "../../components/TemporaryModal";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import Followings from "../Dogs/Followings";
 
-export default function Profile({ navigation, onClose }) {
+export default function Profile({ onClose, navigation }) {
+  const { data: userFollowings } = useFollowings();
+  const modalFollowingsRef = useRef(null);
+
+  const toggleModal = (
+    modalRef: React.MutableRefObject<any>,
+    show: boolean
+  ) => {
+    if (show) {
+      modalRef.current.present();
+    } else {
+      modalRef.current.dismiss();
+    }
+  };
+
   const user = useStore((state) => state.user);
   return (
     <View className="w-full">
@@ -39,6 +58,16 @@ export default function Profile({ navigation, onClose }) {
           <Button
             onPress={() => {
               {
+                toggleModal(modalFollowingsRef, true);
+              }
+            }}
+          >
+            Followings
+          </Button>
+
+          <Button
+            onPress={() => {
+              {
                 console.log("sign out");
                 auth.signOut();
                 navigation.navigate("Login");
@@ -49,6 +78,15 @@ export default function Profile({ navigation, onClose }) {
           </Button>
         </View>
       </View>
+      <BottomSheetModalProvider>
+        <TemporaryModal ref={modalFollowingsRef}>
+          <Followings
+            navigation={navigation}
+            dogs={userFollowings}
+            onClose={() => toggleModal(modalFollowingsRef, false)}
+          />
+        </TemporaryModal>
+      </BottomSheetModalProvider>
     </View>
   );
 }

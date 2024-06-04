@@ -36,38 +36,47 @@ export const addDogToUser = async (
 
 export const deleteDog = async (dogId: string) => {
   try {
-    const response = await axios.delete(PATH + "/dogs/delete/" + dogId);
+    await axios.delete(PATH + "/dogs/delete/" + dogId);
   } catch (error) {
     console.error("error deleting dog profile " + error);
   }
 };
 
 export const getUserDogs = async (userId: string): Promise<Dog[]> => {
-  console.log("getting user dogs", userId);
   try {
-    const response = await axios.get<Dog[]>(PATH + "/dogs/" + userId);
+    const response = await axios.get<Dog[]>(PATH + "/dogs/userDogs/" + userId);
     let dogs = response.data;
-
-    console.log("My dogs: " + dogs[0].name);
 
     dogs = await Promise.all(
       dogs.map(async (dog) => {
-        try {
-          const imageResponse = await axios.get(
-            `${PATH}/dogs/dog-image/${dog.id}`
-          );
-          return {
-            ...dog,
-            imageUrl: imageResponse.data.imageUrl,
-          };
-        } catch (error) {
-          console.error(`Error fetching image for dog ${dog.id}:`, error);
-          return dog; // Return the dog object as is if there's an error
-        }
+        return {
+          ...dog,
+          imageUrl: "",
+        };
       })
     );
 
     return dogs;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const getDog = async (dogId: number): Promise<Dog> => {
+  try {
+    const response = await axios.get(PATH + "/dogs/" + dogId);
+    const dogInfo = response.data[0];
+    console.log("dogInfo: ",dogInfo);
+    const dog: Dog = {
+      id: dogInfo["id"],
+      name: dogInfo["name"],
+      age: dogInfo["age"],
+      lifeStage: dogInfo["lifeStage"],
+      gender: dogInfo["gender"],
+      ownerId: dogInfo["user_id"],
+      imageUrl: "",
+    };
+    return dog;
   } catch (err) {
     throw err;
   }
@@ -108,7 +117,6 @@ export const getDogsInPark = async (parkId: string): Promise<Array<Dog>> => {
     const response = await axios.get(PATH + "/parks/" + parkId);
     const dogs = response.data;
     return dogs;
-    console.log("playing:" + response.data.length);
   } catch (error) {
     console.error("Error fetching dog data:", error);
     return null;
@@ -175,10 +183,29 @@ export const unfollowDog = async (userId: string, dogId: string) => {
   }
 };
 
-export const getUserFollowings = async (userId: string) => {
+export const getUserFollowings = async (userId: string): Promise<Dog[]> => {
   try {
-    await axios.get(PATH + "/follow/followings/" + userId);
+    const response = await axios.get(PATH + "/follow/followings/" + userId);
+    let followingDogs = response.data.result;
+    if (followingDogs !== undefined) {
+      followingDogs = await Promise.all(
+        followingDogs.map(async (item: any) => {
+          try {
+            const dog = await getDog(item.dog_id);
+            return dog;
+          } catch (error) {
+            console.error(
+              `Error fetching dog for dog_id ${item.dog_id}:`,
+              error
+            );
+            return null;
+          }
+        })
+      );
+    }
+    console.log("result3", followingDogs);
+    return followingDogs;
   } catch (error) {
-    console.error("Error geting user followings:", error);
+    throw error;
   }
 };
