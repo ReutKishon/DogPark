@@ -27,7 +27,7 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
-import ProfileStack from "./src/navigation/ProfileStack";
+import ProfileStack from "./src/navigation/ProfileNavigator";
 
 const queryClient = new QueryClient();
 
@@ -57,16 +57,16 @@ function App() {
     return null;
   }
 
-  const Stack = createStackNavigator();
+  const MainStack = createStackNavigator();
 
   return (
     <QueryClientProvider client={queryClient}>
       <PaperProvider>
         <NavigationContainer theme={{ colors: { background: "white" } }}>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Home" component={Home} />
-          </Stack.Navigator>
+          <MainStack.Navigator screenOptions={{ headerShown: false }}>
+            <MainStack.Screen name="Login" component={Login} />
+            <MainStack.Screen name="Home" component={Home} />
+          </MainStack.Navigator>
         </NavigationContainer>
       </PaperProvider>
     </QueryClientProvider>

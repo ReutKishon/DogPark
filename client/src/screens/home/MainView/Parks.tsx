@@ -22,7 +22,7 @@ const ParkItem = ({ item }) => {
 
 export default function Parks({ navigation, route }) {
   // get popModal from params navigation
-  const { toggleModal } = route.params;
+  const { setModalScreen } = route.params;
 
   const { data: parks, isLoading, isIdle } = useParks();
   if (isLoading) {
@@ -34,10 +34,10 @@ export default function Parks({ navigation, route }) {
       <View className="flex flex-row items-center justify-between">
         <Text className="text-2xl font-bold2">Parks Around</Text>
         <View className="flex flex-row">
-          <Button icon="paw" onPress={() => toggleModal("myDogs", true)}>
+          <Button icon="paw" onPress={() => setModalScreen("MyDogs")}>
             My Dogs
           </Button>
-          <TouchableOpacity onPress={() => toggleModal("profile", true)}>
+          <TouchableOpacity onPress={() => setModalScreen("Profile")}>
             <Avatar.Image
               size={40}
               source={{ uri: "http://placekitten.com/200/300" }}

@@ -19,11 +19,9 @@ const addUser = (req, res) => {
   });
 };
 
-
-
 const getUser = (req, res) => {
   const { userId } = req.params;
-
+  console.log("userId:", userId);
   const sql = `SELECT * FROM users WHERE user_id=?`;
 
   connection.query(sql, [userId], (err, result) => {

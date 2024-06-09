@@ -5,8 +5,13 @@ import React, {
   useRef,
   useCallback,
 } from "react";
-import { Animated, View, useAnimatedValue, Easing } from "react-native";
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+  Animated,
+  View,
+  useAnimatedValue,
+  Easing,
+  Dimensions,
+} from "react-native";
 
 import MapView, { Marker } from "react-native-maps";
 import BottomSheet, {
@@ -14,24 +19,23 @@ import BottomSheet, {
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { useStore } from "../../store";
-import { Avatar, Button } from "react-native-paper";
+import { Avatar, Button, Text } from "react-native-paper";
 import MyDogs from "../Dogs/MyDogs";
 import MainView from "./MainView";
-import { TemporaryModal } from "../../components/TemporaryModal";
-import Profile from "../profile";
 import { getUserLocation } from "../../api/location";
 import { useDogs } from "../../state/queries";
-import { confirmPasswordReset } from "firebase/auth/react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import ProfileStack from "../../navigation/ProfileStack";
-const Stack = createStackNavigator();
+import ProfileNavigator from "../../navigation/ProfileNavigator";
+import { createStackNavigator } from "@react-navigation/stack";
+
+const HomeStack = createStackNavigator();
 
 const Home = ({ navigation }) => {
   const bottomSheetRef = useRef(null);
+  const [modalScreen, setModalScreen] = useState(null);
   const temporaryModalSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["30%", "60%"], []);
-  const [modalViewComponent, setModalViewComponent] =
-    useState<React.ReactNode | null>(null);
+  useState<React.ReactNode | null>(null);
+  const modalSnapPoints = useMemo(() => ["30%", "60%"], []);
 
   const mapRef = useRef(null);
   const setLocation = useStore((state) => state.setLiveLocation);
@@ -54,7 +58,7 @@ const Home = ({ navigation }) => {
           },
           0
         );
-        mapRef.current.animatedCamer;
+        mapRef.current.animatedCamera;
       }
     })();
   }, []);
@@ -74,30 +78,29 @@ const Home = ({ navigation }) => {
     ]).start();
   };
 
-  const toggleModal = (key: string, show: boolean) => {
-    if (key === "myDogs") {
-      setModalViewComponent(
-        <MyDogs
-          navigation={navigation}
-          onClose={() => {
-            temporaryModalSheetRef.current.dismiss();
-          }}
-        />
-      );
-    } else {
-      setModalViewComponent(
-        <ProfileStack
-          navigation={navigation}
-          onClose={() => {
-            temporaryModalSheetRef.current.dismiss();
-          }}
-        />
-      );
+  const renderContent = useCallback(() => {
+    switch (modalScreen) {
+      case "MyDogs":
+        return <MyDogs navigation={navigation} onClose={closeModal} />;
+      case "Profile":
+        return (
+          <ProfileNavigator navigation={navigation} onClose={closeModal} />
+        );
+      default:
+        return null;
     }
-    return show
-      ? temporaryModalSheetRef.current.present()
-      : temporaryModalSheetRef.current.dismiss();
-  };
+  }, [modalScreen]);
+
+  const handleOpenModal = useCallback((screen: string) => {
+    setModalScreen(screen);
+    temporaryModalSheetRef.current?.present();
+  }, []);
+
+  const closeModal = useCallback(() => {
+    temporaryModalSheetRef.current?.dismiss();
+    setModalScreen(null);
+  }, []);
+
 
   const { data: dogs } = useDogs();
   return (
@@ -132,11 +135,16 @@ const Home = ({ navigation }) => {
       </MapView.Animated>
       <BottomSheetModalProvider>
         <BottomSheet ref={bottomSheetRef} index={1} snapPoints={snapPoints}>
-          <MainView toggleModal={toggleModal} />
-          <TemporaryModal maxHeight="60%" ref={temporaryModalSheetRef}>
-            {modalViewComponent}
-          </TemporaryModal>
+          <MainView handleOpenModal={handleOpenModal} />
         </BottomSheet>
+        <BottomSheetModal
+          ref={temporaryModalSheetRef}
+          snapPoints={modalSnapPoints}
+          enablePanDownToClose={true}
+          index={modalScreen ? 1 : -1}
+          >
+          {renderContent()}
+        </BottomSheetModal>
       </BottomSheetModalProvider>
     </View>
   );

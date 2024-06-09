@@ -2,8 +2,13 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import React, { useCallback, useMemo } from "react";
 import { View } from "react-native";
 
-export const TemporaryModal = React.forwardRef((props, ref) => {
-  const maxHeight = props.maxHeight || "100%";
+type Props = {
+  maxHeight: string;
+  children: React.ReactNode;
+}
+
+export const TemporaryModal = React.forwardRef(({maxHeight, children}: Props, ref) => {
+ 
   // variables
   const snapPoints = useMemo(() => [maxHeight], []);
 
@@ -20,7 +25,7 @@ export const TemporaryModal = React.forwardRef((props, ref) => {
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
     >
-      <View className="mt-4">{props.children}</View>
+      <View className="mt-4">{children}</View>
     </BottomSheetModal>
   );
 });

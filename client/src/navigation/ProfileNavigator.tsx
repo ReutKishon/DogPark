@@ -8,7 +8,7 @@ import { Button } from "react-native-paper";
 
 const profileStack = createStackNavigator();
 
-const ProfileStack = ({ navigation, onClose }) => {
+const ProfileNavigator = ({ navigation, onClose }) => {
   return (
     <profileStack.Navigator
       screenOptions={({ navigation }) => ({
@@ -25,7 +25,8 @@ const ProfileStack = ({ navigation, onClose }) => {
       />
       <profileStack.Screen name="Followings" component={Followings} />
     </profileStack.Navigator>
+    
   );
 };
 
-export default ProfileStack;
+export default ProfileNavigator;

@@ -78,15 +78,6 @@ export default function Profile({ onClose, navigation }) {
           </Button>
         </View>
       </View>
-      <BottomSheetModalProvider>
-        <TemporaryModal ref={modalFollowingsRef}>
-          <Followings
-            navigation={navigation}
-            dogs={userFollowings}
-            onClose={() => toggleModal(modalFollowingsRef, false)}
-          />
-        </TemporaryModal>
-      </BottomSheetModalProvider>
     </View>
   );
 }

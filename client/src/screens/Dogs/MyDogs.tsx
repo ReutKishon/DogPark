@@ -3,7 +3,10 @@ import React, { useCallback, useMemo, useRef, useState } from "react";
 import List from "../../components/List";
 import { Avatar, Button, IconButton } from "react-native-paper";
 import MyDogProfile from "./MyDogProfile";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from "@gorhom/bottom-sheet";
 import { useDogs } from "../../state/queries";
 import { TemporaryModal } from "../../components/TemporaryModal";
 import DogCard from "./DogCard";
@@ -12,6 +15,8 @@ function MyDogs({ navigation, onClose }) {
   const { data: dogs } = useDogs();
   const modalRef = useRef(null);
   const [pressedDog, setPressedDog] = useState<null>();
+  const modalSnapPoints = useMemo(() => ["50%", "100%"], []);
+
   const toggleAddDog = (show: boolean) => {
     if (show) {
       modalRef.current.present();
@@ -61,13 +66,18 @@ function MyDogs({ navigation, onClose }) {
         <View style={{ height: 100 }} />
       </View>
       <BottomSheetModalProvider>
-        <TemporaryModal ref={modalRef}>
+        <BottomSheetModal
+          ref={modalRef}
+          snapPoints={modalSnapPoints}
+          enablePanDownToClose={true}
+          index={1}
+        >
           <MyDogProfile
             onClose={() => toggleAddDog(false)}
             dogData={pressedDog}
             buttonName={pressedDog ? "Edit" : "Add"}
           />
-        </TemporaryModal>
+        </BottomSheetModal>
       </BottomSheetModalProvider>
     </View>
   );

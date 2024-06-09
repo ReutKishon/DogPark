@@ -9,10 +9,9 @@ import Followings from "../../Dogs/Followings";
 
 const Stack = createStackNavigator();
 
-export default function MainView({ toggleModal, navigation }) {
+export default function MainView({ handleOpenModal }) {
   return (
     <Stack.Navigator
-      className="h-full"
       screenOptions={({ navigation }) => ({
         headerLeft: () => (
           <Button onPress={() => navigation.goBack()}>Back</Button>
@@ -24,7 +23,7 @@ export default function MainView({ toggleModal, navigation }) {
         name="Parks"
         component={Parks}
         initialParams={{
-          toggleModal: (key: string, show: boolean) => toggleModal(key, show),
+          setModalScreen: (key: string) => handleOpenModal(key),
         }}
       />
       <Stack.Screen name="ParkDetails" component={ParkDetails} />
