@@ -34,30 +34,14 @@ import User from '../models/userModel.js';
 // };
 
 
-const addUser = async (req, res) => {
-  const { userData } = req.body;
-
-  const newUser = new User({
-    name: userData.name,
-    email: userData.email
-  });
-
-  try {
-    await newUser.save();
-    console.log("User added successfully");
-    res.status(200).json({ message: "User added successfully", userId: newUser._id });
-  } catch (err) {
-    console.error("Error adding user:", err);
-    res.status(500).json({ error: "Failed to add user" });
-  }
-};
 
 const getUser = async (req, res) => {
   const { userId } = req.params;
-  console.log("userId:", userId);
+  console.log("reut:", userId,typeof userId);
 
   try {
-    const user = await User.findById(userId);
+    const user = await User.findById(String(userId));
+    console.log("user:", user);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -69,7 +53,7 @@ const getUser = async (req, res) => {
 };
 
 export default {
-  addUser,
+  
   getUser,
 };
 

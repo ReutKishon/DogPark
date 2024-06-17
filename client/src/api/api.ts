@@ -1,19 +1,19 @@
 import { useUser } from "../state/queries";
 import { CreationData, Dog, LifeStage, User } from "./types";
 import axios, { Axios } from "axios";
-const PATH = "http://10.60.3.102:3000";
+const PATH = "http://192.168.1.171:3000";
 //const PATH = process.env.PATH
 
 export const getUser = async (id: string): Promise<User> => {
   try {
     const response = await axios.get(PATH + "/users/getInfo/" + id);
-    const userInfo = response.data[0];
+    const userInfo = response.data;
     console.log(userInfo);
     const user: User = {
       dogs: [],
       name: userInfo["name"],
       email: userInfo["email"],
-      id: userInfo["user_id"],
+      id:id,
       imageUrl: "",
     };
     return user;
@@ -148,7 +148,7 @@ export const register = async (
   password: string,
   fullName: string,
   phoneNumber: string,
-  setWaring: any
+  setWarning: (warning:string)=>void
 ): Promise<string> => {
   try {
     const loggedUser = await axios.post(PATH + "/auth/register/", {
@@ -158,11 +158,11 @@ export const register = async (
       phoneNumber,
     });
     if (loggedUser.status == 200) {
-      setWaring("");
+      setWarning("");
       return loggedUser.data.userId;
     }
   } catch (error) {
-    setWaring(error.response.data.error);
+    setWarning(error.response.data.error);
     return null;
   }
 };

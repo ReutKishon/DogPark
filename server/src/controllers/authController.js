@@ -1,20 +1,24 @@
+//@ts-nocheck
 import AWS from "aws-sdk";
 import dotenv from "dotenv";
-import jwt from "jsonwebtoken";
+import User from "../models/userModel.js";
 
 dotenv.config({ path: "../../.env" });
+
 
 const cognito = new AWS.CognitoIdentityServiceProvider({
   region: process.env.AWS_REGION,
 });
 
 const clientId = process.env.COGNITO_CLIENT_ID;
+console.log("cleintId:", clientId);
 const userPoolId = process.env.COGNITO_USER_POOL_ID;
+
+
 
 export const register = async (req, res) => {
   const { email, password, fullName, phoneNumber } = req.body;
   console.log(email, password, fullName, phoneNumber);
-  const db = req.db;
 
   if (!clientId) {
     res.status(500).json({ error: "COGNITO_CLIENT_ID is not defined" });
@@ -33,24 +37,22 @@ export const register = async (req, res) => {
   };
 
   try {
-    console.log("userId: ");
-
     const signUpResponse = await cognito.signUp(params).promise();
-    console.log("userId2: " + signUpResponse.$response);
-
     const userId = signUpResponse.UserSub;
-    console.log("userId: " + userId);
-    await db.execute("INSERT INTO users (user_id,name, email) VALUES (?,?,?)", [
-      userId,
-      fullName,
-      email,
-    ]);
-    console.log("User registered and stored successfully");
-
+    //console.log("userIdRegister:", userId);
+    const newUser = new User({
+      _id: userId,
+      name: fullName,
+      email: email
+    });  
+    console.log("hi")        
+    await newUser.save();
+    console.log("User added successfully");
     res
       .status(200)
       .json({ message: "User registered and stored successfully", userId });
   } catch (error) {
+    console.log("error: " + error.message);
     res.status(400).json({ error: error.message });
   }
 };
