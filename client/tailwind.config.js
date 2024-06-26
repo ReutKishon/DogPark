@@ -12,7 +12,7 @@ module.exports = {
       colors: {
         customColorSet:
         {
-          primary: "#90EE90",
+          primary: "#800000",
           secondary:"#FFFFFF",
         }
       },

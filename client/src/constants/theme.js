@@ -1,5 +1,5 @@
 const COLORS = {
-  primary: "#90EE90",
+  primary: "#1cd896",
 };
 
 const FONT = {
