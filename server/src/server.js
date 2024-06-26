@@ -6,13 +6,11 @@ import parksRouter from "./routes/parks.js";
 import authRouter from "./routes/auth.js";
 import followsRouter from "./routes/follows.js";
 
-import db from "./mongo.js";
+import db from "./db.js";
 import bodyParser from "body-parser";
 import { createServer } from "http";
 import { Server } from "socket.io";
-//import dotenv from "dotenv";
 
-//dotenv.config({ path: "../../.env" });
 
 const app = express();
 const io = new Server(5000);
