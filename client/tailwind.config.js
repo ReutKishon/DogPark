@@ -8,6 +8,14 @@ module.exports = {
         bold: ["Poppins_600SemiBold"],
         bold2: ["Poppins_700Bold"],
       },
+     
+      colors: {
+        customColorSet:
+        {
+          primary: "#90EE90",
+          secondary:"#FFFFFF",
+        }
+      },
     },
   },
   plugins: [],

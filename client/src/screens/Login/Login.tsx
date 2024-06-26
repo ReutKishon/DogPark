@@ -11,7 +11,6 @@ export default function Login({ navigation }) {
   const Stack = createStackNavigator();
   const user = useStore((state) => state.user);
 
-
   // useEffect(() => {
   //   auth.onAuthStateChanged(async (loggedInUser) => {
   //     if (loggedInUser) {
@@ -28,7 +27,6 @@ export default function Login({ navigation }) {
   //   });
   // }, []);
 
-
   useEffect(() => {
     if (user) {
       navigation.navigate("Home");
@@ -38,11 +36,19 @@ export default function Login({ navigation }) {
   return (
     <Stack.Navigator
       initialRouteName="Welcome"
-      screenOptions={{ headerShown: false }}
+      screenOptions={{ headerShown: false, title:"",headerBackTitleVisible: false }}
     >
       <Stack.Screen name="Welcome" component={Welcome} />
-      <Stack.Screen name="Register" component={Register} />
-      <Stack.Screen name="SignIn" component={SignIn} />
+      <Stack.Screen
+        name="Register"
+        component={Register}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="SignIn"
+        component={SignIn}
+        options={{ headerShown: true }}
+      />
     </Stack.Navigator>
   );
 }
