@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, Image } from "react-native";
 import { Button } from "react-native-paper";
 import { useSignIn } from "../../state/queries";
-
+import { COLORS } from "../../constants";
 
 const SignIn = () => {
   const [email, setEmail] = useState("Reki8611@gmail.com");
@@ -24,8 +24,9 @@ const SignIn = () => {
 
   return (
     <View className="flex items-center mt-5">
-      <Image source={{ uri: imageUrl }} style={{ width: 200, height: 200 }} />
+      <Text className="text-2xl font-semibold mb-2">Login</Text>
 
+      <Image source={{ uri: imageUrl }} style={{ width: 200, height: 200 }} />
       <View className="flex flex-col gap-8 items-center mt-1">
         <TextInput
           className="w-[300px] h-10 p-2 border-2 border-black rounded-[13px] flex items-center justify-center"
@@ -48,9 +49,10 @@ const SignIn = () => {
           loading={signInMutation.isLoading}
           mode="contained"
           onPress={handleSignIn}
-          className="w-[270px] bg-customColorSet-primary"
+          className="w-[270px]"
+          style={{ backgroundColor: COLORS.primary }}
         >
-          <Text className="font-semibold text-sm color-black">Sign In</Text>
+          <Text className="font-bold text-m color-white">Log In</Text>
         </Button>
       </View>
     </View>

@@ -14,7 +14,6 @@ import {
   useUploadImage,
 } from "../../state/queries";
 import * as ImagePicker from "expo-image-picker";
-import styles from "../Login/signIn.style";
 import { CreationData, Dog, DogGender, LifeStage } from "../../api/types";
 import { useStore } from "../../store";
 import DeleteDogFooter from "../../components/myDogProfile/DeleteDogFooter";
@@ -106,7 +105,7 @@ const MyDogProfile = ({ onClose, dogData, buttonName }) => {
             <View className="mb-2">
               <Text className="font-medium mb-2 ml-1">Name</Text>
               <TextInput
-                style={[styles.input, { borderColor: nameBorderColor }]}
+                style={[{ borderColor: nameBorderColor }]}
                 value={dogName}
                 onChangeText={setDogName}
               />
@@ -115,7 +114,6 @@ const MyDogProfile = ({ onClose, dogData, buttonName }) => {
               <View className="flex-row justify-between items-center mr-10 ml-0 mt-4">
                 <TouchableOpacity
                   style={[
-                    styles.input,
                     lifeStage === LifeStage.Adult && {
                       backgroundColor: "#E6E6FA",
                       borderColor: "purple",
@@ -128,8 +126,6 @@ const MyDogProfile = ({ onClose, dogData, buttonName }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[
-                    styles.input,
-                    ,
                     lifeStage === LifeStage.Puppy && {
                       backgroundColor: "#E6E6FA",
                       borderColor: "purple",
@@ -148,7 +144,6 @@ const MyDogProfile = ({ onClose, dogData, buttonName }) => {
                 <TextInput
                   keyboardType="numeric"
                   style={[
-                    styles.input,
                     { width: 130, height: 40, borderColor: ageBorderColor },
                   ]}
                   value={age}
@@ -161,8 +156,6 @@ const MyDogProfile = ({ onClose, dogData, buttonName }) => {
               <View className="flex-row justify-between items-center">
                 <TouchableOpacity
                   style={[
-                    styles.input,
-                    ,
                     gender === DogGender.Male && {
                       backgroundColor: "#E6E6FA",
                       borderColor: "purple",
@@ -175,8 +168,6 @@ const MyDogProfile = ({ onClose, dogData, buttonName }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[
-                    styles.input,
-                    ,
                     gender === DogGender.Female && {
                       backgroundColor: "#E6E6FA",
                       borderColor: "purple",
