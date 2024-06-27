@@ -1,7 +1,7 @@
 import { useUser } from "../state/queries";
 import { CreationData, Dog, LifeStage, User } from "./types";
 import axios, { Axios } from "axios";
-const PATH = "http://192.168.1.171:3000";
+const PATH = "http://localhost:3000";
 //const PATH = process.env.PATH
 
 export const getUser = async (id: string): Promise<User> => {

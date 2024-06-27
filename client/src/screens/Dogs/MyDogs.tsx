@@ -2,7 +2,7 @@ import { ActivityIndicator, Text, View } from "react-native";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import List from "../../components/List";
 import { Avatar, Button, IconButton } from "react-native-paper";
-import MyDogProfile from "./MyDogProfile";
+import MyDogProfile from "./AddDogForm";
 import BottomSheet, {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -10,6 +10,7 @@ import BottomSheet, {
 import { useDogs } from "../../state/queries";
 import { TemporaryModal } from "../../components/TemporaryModal";
 import DogCard from "./DogCard";
+import DogForm from "../../components/myDogProfile/DogForm";
 
 function MyDogs({ navigation, onClose }) {
   const { data: dogs } = useDogs();
@@ -72,10 +73,10 @@ function MyDogs({ navigation, onClose }) {
           enablePanDownToClose={true}
           index={1}
         >
-          <MyDogProfile
+          <DogForm
             onClose={() => toggleAddDog(false)}
-            dogData={pressedDog}
-            buttonName={pressedDog ? "Edit" : "Add"}
+            buttonLabel={pressedDog ? "Edit" : "Add"}
+            initialDogData={pressedDog}
           />
         </BottomSheetModal>
       </BottomSheetModalProvider>

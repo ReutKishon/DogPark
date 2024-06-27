@@ -6,15 +6,15 @@ export enum DogGender {
   Female = "Female",
 }
 
-export enum LifeStage {
-  Puppy = "Puppy",
-  Adult = "Adult",
-}
+// export enum LifeStage {
+//   Puppy = "Puppy",
+//   Adult = "Adult",
+// }
 export interface Dog {
   id: string;
   name: string;
   age: number;
-  lifeStage: LifeStage;
+  // lifeStage: LifeStage;
   gender: DogGender;
   imageUrl: string;
   ownerId: string;

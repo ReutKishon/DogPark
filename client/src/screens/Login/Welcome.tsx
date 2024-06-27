@@ -4,14 +4,13 @@ import { Button } from "react-native-paper";
 import { COLORS } from "../../constants";
 
 const Welcome = ({ navigation }) => {
-  const imageUrl =
+  const dogImageUrl =
     "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExbGJ4NXA5MXR3aXM2aGtkZzY1bGZpNmR1ZHBudnRqd2NvaTJvZTBjbCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/mynT1vekMKm6TCrXq4/giphy.gif";
-  // "https://media1.giphy.com/media/k6sC1yPY1fhbKzXdY4/giphy.gif?cid=ecf05e47gtkcg6y1tqza7sfmcmrcwos2vge6avgzgn2vmf04&ep=v1_stickers_search&rid=giphy.gif&ct=s";
 
   return (
     <View className="flex items-center">
       <Image
-        source={{ uri: imageUrl }}
+        source={{ uri: dogImageUrl }}
         className="h-[200px] w-[200px] mt-[90px]"
       />
       <View className="flex flex-col gap-8 items-center mt-1">
@@ -26,7 +25,7 @@ const Welcome = ({ navigation }) => {
             onPress={() => {
               navigation.navigate("SignIn");
             }}
-            style={{ backgroundColor:COLORS.primary}}
+            style={{ backgroundColor: COLORS.primary }}
             className="w-72"
           >
             <Text className="text-white font-bold text-sm">Sign In</Text>
@@ -39,10 +38,19 @@ const Welcome = ({ navigation }) => {
             className="w-72"
             style={{ borderColor: COLORS.primary }}
           >
-            <Text className="font-bold text-sm" style={{color:COLORS.primary}}>Register</Text>
+            <Text
+              className="font-bold text-sm"
+              style={{ color: COLORS.primary }}
+            >
+              Register
+            </Text>
           </Button>
         </View>
       </View>
+      <Image
+        source={require("../../assets/images/garden.png")}
+        className="h-[320px] w-[1200px] mt-[60px]"
+      />
     </View>
   );
 };

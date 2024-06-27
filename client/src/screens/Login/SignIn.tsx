@@ -3,6 +3,7 @@ import { View, Text, TextInput, Image } from "react-native";
 import { Button } from "react-native-paper";
 import { useSignIn } from "../../state/queries";
 import { COLORS } from "../../constants";
+import commonStyles from "../../styles/commonStyle";
 
 const SignIn = () => {
   const [email, setEmail] = useState("Reki8611@gmail.com");
@@ -29,13 +30,13 @@ const SignIn = () => {
       <Image source={{ uri: imageUrl }} style={{ width: 200, height: 200 }} />
       <View className="flex flex-col gap-8 items-center mt-1">
         <TextInput
-          className="w-[300px] h-10 p-2 border-2 border-black rounded-[13px] flex items-center justify-center"
+          style={commonStyles.inputbox}
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
         />
         <TextInput
-          className="w-[300px] h-10 p-2 border-2 border-black rounded-[13px] flex items-center justify-center"
+          style={commonStyles.inputbox}
           placeholder="Password"
           value={password}
           secureTextEntry={true}
@@ -55,6 +56,10 @@ const SignIn = () => {
           <Text className="font-bold text-m color-white">Log In</Text>
         </Button>
       </View>
+      <Image
+        source={require("../../assets/images/garden.png")}
+        className="h-[350px] w-[1200px] mt-[40px]"
+      />
     </View>
   );
 };

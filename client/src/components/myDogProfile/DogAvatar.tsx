@@ -27,7 +27,7 @@ export default function DogAvatar({ imageUrl, onCameraPress }) {
         icon="camera"
         size={20}
         onPress={onCameraPress}
-        className="absolute bottom-0 right-0 bg-white rounded-full p-1 border border-gray"
+        className="absolute bottom-0 right-0 bg-white rounded-full p-1 border border-[#1cd896]"
       />
     </View>
   );

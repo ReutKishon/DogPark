@@ -7,7 +7,7 @@ const commonStyles = StyleSheet.create({
     height: 40,
     padding: 10,
     borderWidth: 2,
-    borderColor: 'black',
+    borderColor: '#333',
     borderRadius: 13,
     flexDirection: 'row', // Flex direction can be row or column as per your need
     alignItems: 'center',
