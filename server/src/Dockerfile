@@ -9,4 +9,4 @@ COPY server/ ./server/
 
 EXPOSE 3000
 
-CMD ["node", "server/src/server.js"]
+CMD ["node", "./server.js"]

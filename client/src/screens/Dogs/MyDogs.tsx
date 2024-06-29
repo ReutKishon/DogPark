@@ -2,7 +2,6 @@ import { ActivityIndicator, Text, View } from "react-native";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import List from "../../components/List";
 import { Avatar, Button, IconButton } from "react-native-paper";
-import MyDogProfile from "./AddDogForm";
 import BottomSheet, {
   BottomSheetModal,
   BottomSheetModalProvider,

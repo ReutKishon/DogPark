@@ -51,8 +51,8 @@ const Home = ({ navigation }) => {
 
         mapRef.current.animateToRegion(
           {
-            latitude: location.latitude,
-            longitude: location.longitude,
+            latitude: location?.latitude,
+            longitude: location?.longitude,
             latitudeDelta: 0.05,
             longitudeDelta: 0.05,
           },
@@ -120,8 +120,8 @@ const Home = ({ navigation }) => {
           <Marker
             key={index}
             coordinate={{
-              latitude: location.latitude,
-              longitude: location.longitude,
+              latitude: location?.latitude,
+              longitude: location?.longitude,
             }}
           >
             <Avatar.Image

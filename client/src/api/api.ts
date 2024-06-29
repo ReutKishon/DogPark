@@ -28,7 +28,9 @@ export const addDogToUser = async (
 ) => {
   try {
     const response = await axios.post(PATH + "/dogs/add", { dogData, userId });
-    console.log(response.data);
+    console.log(response.data.dogId);
+
+    return response.data.dogId;
   } catch (error) {
     console.error("error adding a dog " + error);
   }

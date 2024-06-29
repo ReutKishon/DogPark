@@ -3,11 +3,11 @@ import { View, Text, StyleSheet } from "react-native";
 import Slider from "@react-native-community/slider";
 
 const AgePicker = ({ dogAge, setDogAge }) => {
-  const [age, setAge] = useState(1);
+  const [age, setAge] = useState(dogAge);
 
   useEffect(() => {
     setAge(dogAge);
-  }, []);
+  });
 
   const formatAge = (value: number) => {
     if (value < 1) {
@@ -17,10 +17,15 @@ const AgePicker = ({ dogAge, setDogAge }) => {
     const years = Math.floor(value);
     return `${years} yr`;
   };
-  const onValueChange = (value: number) => {
-    setAge(value);
-    setDogAge(value);
+
+  const onSlidingComplete = (value: number) => {
+    if (value < 1) {
+      setDogAge(value.toFixed(2));
+    } else {
+      setDogAge(Math.round(value));
+    }
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.sliderContainer}>
@@ -35,7 +40,7 @@ const AgePicker = ({ dogAge, setDogAge }) => {
             setAge(value);
           }}
           onSlidingComplete={(value) => {
-            setDogAge(value);
+            onSlidingComplete(value);
           }}
           minimumTrackTintColor="#1FB28A"
           maximumTrackTintColor="#d3d3d3"

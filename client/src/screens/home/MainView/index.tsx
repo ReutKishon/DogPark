@@ -6,6 +6,7 @@ import DogInParkProfile from "../../Dogs/DogInParkProfile";
 import { Button, IconButton, Text } from "react-native-paper";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Followings from "../../Dogs/Followings";
+import { COLORS } from "../../../constants";
 
 const Stack = createStackNavigator();
 
@@ -14,7 +15,9 @@ export default function MainView({ handleOpenModal }) {
     <Stack.Navigator
       screenOptions={({ navigation }) => ({
         headerLeft: () => (
-          <Button onPress={() => navigation.goBack()}>Back</Button>
+          <Button onPress={() => navigation.goBack()}>
+            <Text style={{ color: COLORS.secondary }}>Back</Text>
+          </Button>
         ),
         headerTitle: "",
       })}

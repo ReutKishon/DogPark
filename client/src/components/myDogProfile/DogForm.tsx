@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  TextInput,
-  Text,
-  ScrollView,
-} from "react-native";
+import { View, TextInput, Text, ScrollView } from "react-native";
 import { useStore } from "../../store";
 import { useAddDog, useUpdateDog, useUploadImage } from "../../state/queries";
 import { Dog, DogGender } from "../../api/types";
@@ -24,7 +19,7 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
   const [gender, setGender] = useState<DogGender>(DogGender.Male);
   const [nameBorderColor, setNameBorderColor] = useState<string>();
   const [ageBorderColor, setAgeBorderColor] = useState<string>();
-  const [imageUrl, setImageUrl] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
 
   const uploadImageMutation = useUploadImage();
   const addDogMutation = useAddDog();
@@ -50,7 +45,9 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
       setGender(initialDogData.gender);
       //setImageUrl(dogData.imageUrl);
     }
-  }, []); // Run once when the component mounts
+  }, []);
+
+ 
 
   const onSubmitAction = async (dogData: Dog) => {
     if (buttonLabel == "Add") {
@@ -67,6 +64,7 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
         setNameBorderColor(dogName?.trim() ? "gray" : "red");
         return;
       }
+      console.log("age: ",age)
       const dog: Dog = {
         id: initialDogData ? initialDogData.id : undefined, // Only include id for update
         name: dogName,
@@ -106,7 +104,6 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
               style={commonStyles.inputbox}
               placeholder="Name"
               value={dogName}
-              secureTextEntry={true}
               onChangeText={setDogName}
             />
             <AgePicker dogAge={age} setDogAge={setAge} />

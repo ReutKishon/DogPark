@@ -1,7 +1,6 @@
 //@ts-nocheck
 import AWS from "aws-sdk";
 import dotenv from "dotenv";
-import User from "../models/userModel.js";
 
 dotenv.config({ path: "../../.env" });
 
@@ -13,6 +12,22 @@ const cognito = new AWS.CognitoIdentityServiceProvider({
 const clientId = process.env.COGNITO_CLIENT_ID;
 console.log("cleintId:", clientId);
 const userPoolId = process.env.COGNITO_USER_POOL_ID;
+
+const addUser = (userData) => {
+
+  const sql = `INSERT INTO users (user_id,name,email) VALUES (?,?,?)`;
+  const values = [userData.id, userData.name, userData.email];
+
+  connection.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("Error adding dog:", err);
+      res.status(500).json({ error: "Failed to add dog" });
+    } else {
+      console.log("Dog added successfully");
+      res.status(200).json({ message: "Dog added successfully" });
+    }
+  });
+};
 
 
 
@@ -39,14 +54,8 @@ export const register = async (req, res) => {
   try {
     const signUpResponse = await cognito.signUp(params).promise();
     const userId = signUpResponse.UserSub;
-    //console.log("userIdRegister:", userId);
-    const newUser = new User({
-      _id: userId,
-      name: fullName,
-      email: email
-    });  
-    console.log("hi")        
-    await newUser.save();
+    const userData = {name:fullName, email,id:userId};
+    addUser(userData)
     console.log("User added successfully");
     res
       .status(200)
@@ -59,6 +68,7 @@ export const register = async (req, res) => {
 
 export const signIn = async (req, res) => {
   const { email, password } = req.body;
+  console.log("Signing in")
 
   if (!clientId) {
     res.status(500).json({ error: "COGNITO_CLIENT_ID is not defined" });
