@@ -6,7 +6,7 @@ const addDogToPark = (req, res) => {
   console.log(parkId, dogId);
   const sql = `UPDATE dogs
   SET current_parkId = ?
-  WHERE dog_id = ?;`;
+  WHERE id = ?;`;
   const values = [parkId, dogId];
 
   db.query(sql, values, (err, result) => {
@@ -14,7 +14,7 @@ const addDogToPark = (req, res) => {
       res.status(500).json({ error: "Error adding dog to park" });
       throw err;
     }
-    const fetchDogSql = "SELECT * FROM dogs WHERE dog_id = ?";
+    const fetchDogSql = "SELECT * FROM dogs WHERE id = ?";
     db.query(fetchDogSql, [dogId], (err, dogs) => {
       if (err) {
         return res.status(500).send(err);
@@ -40,7 +40,7 @@ const removeDogFromPark = (req, res) => {
 
   const sql = `UPDATE dogs
   SET current_parkId = NULL
-  WHERE dog_id = ?;`;
+  WHERE id = ?;`;
   const values = [dogId];
 
   db.query(sql, values, (err, result) => {

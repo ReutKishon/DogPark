@@ -1,6 +1,7 @@
 import { Button } from "react-native-paper";
 import { Dog } from "../api/types";
 import { useFollow, useUnfollow } from "../state/queries";
+import { COLORS } from "../constants";
 
 export default function FollowButton({ isFollowing, setIsFollowing, dog }) {
   const followMutation = useFollow();
@@ -21,6 +22,7 @@ export default function FollowButton({ isFollowing, setIsFollowing, dog }) {
       mode="contained"
       onPress={onPress}
       loading={followMutation.isLoading || unfollowMutation.isLoading}
+      style={{ backgroundColor: COLORS.primary,width:110}}
     >
       {buttonName}
     </Button>

@@ -5,24 +5,34 @@ import {
   TouchableOpacity,
   ImageBackground,
   Button,
+  ScrollView,
 } from "react-native";
 import { Avatar, Icon } from "react-native-paper";
 import { useFollowings, useUser } from "../../state/queries";
-import { Dog, LifeStage } from "../../api/types";
+import { Dog } from "../../api/types";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faVenus, faCakeCandles } from "@fortawesome/free-solid-svg-icons";
 import FollowButton from "../../components/FollowButton";
+import { COLORS } from "../../constants";
 
 const DogDetailCard = ({ text, iconName }) => {
   return (
-    <View className="flex-row items-center space-y-4">
+    <View
+      className="ml-[15px] flex-row items-center justify-center rounded-3xl w-[78px] h-[40px] p-3"
+      style={{ backgroundColor: COLORS.secondary }}
+    >
       <FontAwesomeIcon
-        style={{ marginTop: 15 }}
+        style={{ marginBottom: 3 }}
         icon={iconName}
-        size={12}
-        color="purple"
+        size={15}
+        color="white"
       />
-      <Text className="text-l ml-2">{text}</Text>
+      <Text
+        className="text-[12px] font-bold ml-2 leading-4"
+        style={{ color: "white" }}
+      >
+        {text}
+      </Text>
     </View>
   );
 };
@@ -39,9 +49,14 @@ const DogInParkProfile = ({ route }) => {
       setIsFollowing(followingStatus);
     }
   }, [userFollowings]);
-
+  const dogDetails = [
+    { text: "Male", iconName: faVenus },
+    { text: "2 yr", iconName: faCakeCandles },
+    { text: "2 mo", iconName: faCakeCandles },
+    { text: "2 y", iconName: faCakeCandles },
+  ];
   return (
-    <View className="flex-1">
+    <ScrollView className="flex-grow">
       <ImageBackground
         source={require("../../assets/images/bg1.png")}
         style={{ width: "100%", height: 100 }}
@@ -54,6 +69,9 @@ const DogInParkProfile = ({ route }) => {
             position: "absolute",
             top: 40,
             left: 20,
+            backgroundColor: COLORS.secondary,
+            borderColor: COLORS.primary,
+            borderWidth:3
           }}
         />
       </ImageBackground>
@@ -66,30 +84,17 @@ const DogInParkProfile = ({ route }) => {
       </View>
 
       <View className="relative top-12">
-        <Text className="left-9 text-xl font-bold">{dog.name}</Text>
-        <View
-          style={{
-            borderBottomWidth: 2,
-            borderColor: "gray",
-            marginBottom: 10,
-            marginTop: 10,
-            width: "100%",
-          }}
-        />
+        <Text className="left-9 text-xl font-bold pb-6">{dog.name}</Text>
 
-        <View className="left-9 mt-1">
-          <DogDetailCard text={dog.gender} iconName={faVenus} />
-          <DogDetailCard
-            text={
-              dog.age +
-              " " +
-              (dog.lifeStage == LifeStage.Adult ? "years old" : "months")
-            }
-            iconName={faCakeCandles}
-          />
+        <View className="flex flex-wrap flex-row">
+          {dogDetails.map((detail, index) => (
+            <View key={index} style={{ flexBasis: "30%", margin: "1.5%" }}>
+              <DogDetailCard text={detail.text} iconName={detail.iconName} />
+            </View>
+          ))}
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

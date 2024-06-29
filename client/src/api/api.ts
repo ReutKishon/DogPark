@@ -116,6 +116,7 @@ export const removeDogFromPark = async (dogId: string, parkId: string) => {
 
 export const getDogsInPark = async (parkId: string): Promise<Array<Dog>> => {
   try {
+    console.log("Getting parkId",parkId);
     const response = await axios.get(PATH + "/parks/" + parkId);
     const dogs = response.data;
     return dogs;
