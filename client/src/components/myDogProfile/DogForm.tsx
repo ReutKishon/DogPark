@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, TextInput, Text, ScrollView } from "react-native";
+import { View, TextInput, Text, ScrollView, Alert } from "react-native";
 import { useStore } from "../../store";
 import { useAddDog, useUpdateDog, useUploadImage } from "../../state/queries";
 import { Dog, DogGender } from "../../api/types";
@@ -11,49 +11,53 @@ import { COLORS } from "../../constants";
 import commonStyles from "../../styles/commonStyle";
 import OptionButton from "../Buttons/OptionButton";
 import AgePicker from "../AgePicker";
+import Constants from "expo-constants";
+import axios from "axios";
+import { uploadImage } from "../../api/api";
 
 const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
   const user = useStore((state) => state.user);
   const [dogName, setDogName] = useState<string>("");
   const [age, setAge] = useState<number>(1);
   const [gender, setGender] = useState<DogGender>(DogGender.Male);
-  const [nameBorderColor, setNameBorderColor] = useState<string>();
-  const [ageBorderColor, setAgeBorderColor] = useState<string>();
   const [imageUrl, setImageUrl] = useState("");
 
   const uploadImageMutation = useUploadImage();
   const addDogMutation = useAddDog();
   const updateDogMutation = useUpdateDog();
 
-  const handleCameraPress = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImageUrl(result.assets[0].uri);
-    }
-  };
-
   useEffect(() => {
+    (async () => {
+      if (Constants.platform.ios || Constants.platform.android) {
+        const { status } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          Alert.alert(
+            "Permission denied",
+            "Sorry, we need camera roll permissions to make this work!"
+          );
+        }
+      }
+    })();
     if (initialDogData) {
       setDogName(initialDogData.name);
       setAge(initialDogData.age?.toString());
       setGender(initialDogData.gender);
-      //setImageUrl(dogData.imageUrl);
+      setImageUrl("http://localhost:3000/uploads/" + initialDogData.imageName);
     }
   }, []);
 
- 
-
   const onSubmitAction = async (dogData: Dog) => {
-    if (buttonLabel == "Add") {
-      await addDogMutation.mutateAsync(dogData);
+    if (buttonLabel === "Add") {
+      const dogId = await addDogMutation.mutateAsync(dogData);
+      if (dogId && dogData.imageName) {
+        await uploadImage(imageUrl, dogData.ownerId, dogId);
+      }
     } else {
       await updateDogMutation.mutateAsync(dogData);
+      if (dogData.imageName && initialDogData.imageUrl !== imageUrl) {
+        await uploadImage(imageUrl, dogData.ownerId, dogData.id);
+      }
     }
   };
 
@@ -61,23 +65,41 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
     try {
       if (!dogName || !age) {
         console.log("error", dogName, age, gender);
-        setNameBorderColor(dogName?.trim() ? "gray" : "red");
         return;
       }
-      console.log("age: ",age)
+
       const dog: Dog = {
         id: initialDogData ? initialDogData.id : undefined, // Only include id for update
         name: dogName,
         age: age,
         gender,
-        imageUrl: imageUrl,
+        imageName: imageUrl, // Use the uploaded image file name
         ownerId: user.id,
       };
 
-      onSubmitAction(dog);
+      await onSubmitAction(dog);
       onClose();
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const openImageLibrary = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (status !== "granted") {
+      alert("Sorry, we need camera roll permissions to make this work!");
+    }
+
+    if (status === "granted") {
+      const response = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+      });
+
+      if (!response.canceled) {
+        setImageUrl(response.assets[0].uri);
+      }
     }
   };
 
@@ -97,7 +119,7 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
       </View>
       <ScrollView className="flex-grow">
         <View className="items-center">
-          <DogAvatar imageUrl={imageUrl} onCameraPress={handleCameraPress} />
+          <DogAvatar imageUrl={imageUrl} onCameraPress={openImageLibrary} />
 
           <View className="flex items-center gap-2 mt-3">
             <TextInput

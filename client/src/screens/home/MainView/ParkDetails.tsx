@@ -31,7 +31,7 @@ const SelectableAvatarList = ({
           <Avatar.Image
             size={40}
             source={{
-              uri: item.imageUrl,
+              uri: "http://localhost:3000/uploads/" + item.imageName,
             }}
           />
         </Pressable>

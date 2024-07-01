@@ -16,7 +16,7 @@ export interface Dog {
   age: number;
   // lifeStage: LifeStage;
   gender: DogGender;
-  imageUrl: string;
+  imageName: string;
   ownerId: string;
 }
 

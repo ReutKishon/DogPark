@@ -62,7 +62,7 @@ const DogInParkProfile = ({ route }) => {
         style={{ width: "100%", height: 100 }}
       >
         <Avatar.Image
-          source={{ uri: dog.imageUrl }}
+          source={{ uri: dog.imageName }}
           size={100}
           style={{
             borderRadius: 50,

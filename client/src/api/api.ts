@@ -1,5 +1,5 @@
 import { useUser } from "../state/queries";
-import { CreationData, Dog, LifeStage, User } from "./types";
+import { CreationData, Dog, User } from "./types";
 import axios, { Axios } from "axios";
 const PATH = "http://localhost:3000";
 //const PATH = process.env.PATH
@@ -13,7 +13,7 @@ export const getUser = async (id: string): Promise<User> => {
       dogs: [],
       name: userInfo["name"],
       email: userInfo["email"],
-      id:id,
+      id: id,
       imageUrl: "",
     };
     return user;
@@ -27,6 +27,7 @@ export const addDogToUser = async (
   dogData: CreationData<Dog>
 ) => {
   try {
+    console.log("hi1", dogData.imageName);
     const response = await axios.post(PATH + "/dogs/add", { dogData, userId });
     console.log(response.data.dogId);
 
@@ -43,20 +44,10 @@ export const deleteDog = async (dogId: string) => {
     console.error("error deleting dog profile " + error);
   }
 };
-
 export const getUserDogs = async (userId: string): Promise<Dog[]> => {
   try {
     const response = await axios.get<Dog[]>(PATH + "/dogs/userDogs/" + userId);
     let dogs = response.data;
-
-    dogs = await Promise.all(
-      dogs.map(async (dog) => {
-        return {
-          ...dog,
-          imageUrl: "",
-        };
-      })
-    );
 
     return dogs;
   } catch (err) {
@@ -68,15 +59,14 @@ export const getDog = async (dogId: number): Promise<Dog> => {
   try {
     const response = await axios.get(PATH + "/dogs/" + dogId);
     const dogInfo = response.data[0];
-    console.log("dogInfo: ",dogInfo);
+    console.log("dogInfo: ", dogInfo);
     const dog: Dog = {
       id: dogInfo["id"],
       name: dogInfo["name"],
       age: dogInfo["age"],
-      lifeStage: dogInfo["lifeStage"],
       gender: dogInfo["gender"],
       ownerId: dogInfo["user_id"],
-      imageUrl: "",
+      imageName: `${PATH}/uploads/${dogInfo["imageName"]}`,
     };
     return dog;
   } catch (err) {
@@ -86,8 +76,7 @@ export const getDog = async (dogId: number): Promise<Dog> => {
 
 export const updateUserDog = async (dogData: Dog) => {
   const dogId = dogData.id;
-  console.log("dogId:" + dogId);
-  console.log(dogData);
+
   try {
     const response = await axios.put(PATH + "/dogs/update/" + dogId, {
       dogData,
@@ -116,7 +105,7 @@ export const removeDogFromPark = async (dogId: string, parkId: string) => {
 
 export const getDogsInPark = async (parkId: string): Promise<Array<Dog>> => {
   try {
-    console.log("Getting parkId",parkId);
+    console.log("Getting parkId", parkId);
     const response = await axios.get(PATH + "/parks/" + parkId);
     const dogs = response.data;
     return dogs;
@@ -151,7 +140,7 @@ export const register = async (
   password: string,
   fullName: string,
   phoneNumber: string,
-  setWarning: (warning:string)=>void
+  setWarning: (warning: string) => void
 ): Promise<string> => {
   try {
     const loggedUser = await axios.post(PATH + "/auth/register/", {
@@ -210,5 +199,41 @@ export const getUserFollowings = async (userId: string): Promise<Dog[]> => {
     return followingDogs;
   } catch (error) {
     throw error;
+  }
+};
+
+export const uploadImage = async (
+  imageUri: string,
+  userId: string,
+  dogId: string
+) => {
+  const response = await fetch(imageUri);
+  const blob = await response.blob();
+
+  const formData = new FormData();
+  formData.append("file", {
+    uri: imageUri,
+    name: `${userId}_${dogId}_profile.jpg`,
+    type: blob.type,
+  });
+
+  try {
+    const response = await axios.post(
+      `${PATH}/dogs/upload/${dogId}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    if (response.data && response.data.filePath) {
+      const imageUrl = `http://localhost:3000${response.data.filePath}`;
+      console.log("Uploaded file path:", imageUrl);
+      return imageUrl;
+    }
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    return null;
   }
 };

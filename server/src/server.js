@@ -1,4 +1,3 @@
-// import "../types/custom.d.ts";
 import express from "express";
 import dogsRouter from "./routes/dogs.js";
 import userRouter from "./routes/user.js";
@@ -6,10 +5,13 @@ import parksRouter from "./routes/parks.js";
 import authRouter from "./routes/auth.js";
 import followsRouter from "./routes/follows.js";
 import db from "./db.js";
-
+import path from 'path';
 import bodyParser from "body-parser";
-import { createServer } from "http";
 import { Server } from "socket.io";
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
 const app = express();
@@ -30,6 +32,9 @@ app.use((req, res, next) => {
   next();
 });
 
+
+
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.use("/dogs", dogsRouter);
 app.use("/users", userRouter);
 app.use("/parks", parksRouter);
@@ -40,3 +45,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+export function single(arg0) {
+    throw new Error("Function not implemented.");
+}
+

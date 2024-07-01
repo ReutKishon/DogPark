@@ -127,7 +127,7 @@ const Home = ({ navigation }) => {
             <Avatar.Image
               size={40}
               source={{
-                uri: dog.imageUrl || "https://picsum.photos/400/400",
+                uri: dog.imageName || "https://picsum.photos/400/400",
               }}
             />
           </Marker>

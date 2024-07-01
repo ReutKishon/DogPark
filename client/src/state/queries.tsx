@@ -196,16 +196,6 @@ export const useUploadImage = () => {
   );
 };
 
-export const usePickImage = () => {
-  return useMutation(
-    () => {
-      return pickImage();
-    },
-    {
-      onSuccess: () => {},
-    }
-  );
-};
 
 export const useFollow = () => {
   const queryClient = useQueryClient();

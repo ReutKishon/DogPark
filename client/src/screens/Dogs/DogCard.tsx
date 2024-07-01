@@ -5,6 +5,7 @@ import { Avatar, Button } from "react-native-paper";
 export default function DogCard({ dog, onpress }) {
   const [dogIsAdult, setDogIsAdult] = useState(true);
   const [age, setAge] = useState<number>(null);
+
   useEffect(() => {
     if (dog.age < 1) {
       setDogIsAdult(false);
@@ -19,7 +20,11 @@ export default function DogCard({ dog, onpress }) {
       <View className="h-40 flex-row items-center gap-4">
         <Avatar.Image
           size={50}
-          source={require("../../assets/images/golder-retriever-puppy.jpeg")}
+          source={
+            dog.imageName
+              ? { uri: "http://localhost:3000/uploads/" + dog.imageName }
+              : require("../../assets/images/defaultDogIcon.jpeg")
+          }
         />
         <View className="flex-col">
           <Text className="font-bold text-xl">{dog.name}</Text>

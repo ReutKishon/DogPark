@@ -2,10 +2,9 @@
 
 const addDog = (req, res) => {
   const { dogData, userId } = req.body;
-  console.log("userId:", userId, "age:", dogData.age);
+
   const sql = `INSERT INTO dogs (name,user_id,age,gender) VALUES (?,?,?,?)`;
   const values = [dogData.name, userId, dogData.age, dogData.gender];
-
   req.db.query(sql, values, (err, result) => {
     if (err) {
       console.error("Error adding dog:", err);
@@ -16,6 +15,27 @@ const addDog = (req, res) => {
       res
         .status(200)
         .json({ message: "Dog added successfully", dogId: insertedId });
+    }
+  });
+};
+
+const uploadDogImage = (req, res) => {
+  const { dogId } = req.params;
+  const fileName = req.file ? req.file.filename : null;
+  console.log("filename: ", filename);
+  if (!req.file) {
+    return res.status(400).send("No file uploaded.");
+  }
+  const sql = `UPDATE dogs SET imageName = ? WHERE id = ?`;
+  const values = [fileName, dogId];
+
+  req.db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("Error uploading dog image:", err);
+      res.status(500).json({ error: "Failed to upload dog image" });
+    } else {
+      console.log("Dog image uploaded successfully");
+      res.status(200).json({ message: "Dog image uploaded successfully" });
     }
   });
 };
@@ -38,7 +58,7 @@ const deleteDog = (req, res) => {
 
 const getUserDogs = (req, res) => {
   const { userId } = req.params;
-  const sql = `SELECT * FROM dogs WHERE user_id =?`;
+  const sql = `SELECT * from dogs WHERE user_id =?`;
   req.db.query(sql, [userId], (err, result) => {
     if (err) {
       console.error("Error getting user's dogs:", err);
@@ -65,7 +85,6 @@ const getDog = (req, res) => {
 
 const updateDog = (req, res) => {
   const { dogData } = req.body;
-  console.log("age:", dogData.age, "gender:", dogData.gender,"id:", dogData.id);
 
   const sql = `UPDATE dogs SET name = ?, age = ?, gender= ? WHERE id = ?`;
   const values = [dogData.name, dogData.age, dogData.gender, dogData.id];
@@ -101,6 +120,7 @@ const updateCurrentPark = (req, res) => {
 
 export default {
   addDog,
+  uploadDogImage,
   deleteDog,
   getUserDogs,
   updateDog,
