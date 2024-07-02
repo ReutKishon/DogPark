@@ -3,7 +3,12 @@ import { Dog } from "../api/types";
 import { useFollow, useUnfollow } from "../state/queries";
 import { COLORS } from "../constants";
 
-export default function FollowButton({ isFollowing, setIsFollowing, dog }) {
+export default function FollowButton({
+  isFollowing,
+  setIsFollowing,
+  dog,
+  isOwner,
+}) {
   const followMutation = useFollow();
   const unfollowMutation = useUnfollow();
   const buttonName = isFollowing ? "Unfollow" : "Follow";
@@ -22,7 +27,8 @@ export default function FollowButton({ isFollowing, setIsFollowing, dog }) {
       mode="contained"
       onPress={onPress}
       loading={followMutation.isLoading || unfollowMutation.isLoading}
-      style={{ backgroundColor: COLORS.primary,width:110}}
+      style={{ backgroundColor: COLORS.primary, width: 110 }}
+      disabled={isOwner}
     >
       {buttonName}
     </Button>

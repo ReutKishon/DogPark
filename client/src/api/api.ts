@@ -65,7 +65,7 @@ export const getDog = async (dogId: number): Promise<Dog> => {
       name: dogInfo["name"],
       age: dogInfo["age"],
       gender: dogInfo["gender"],
-      ownerId: dogInfo["user_id"],
+      user_id: dogInfo["user_id"],
       imageName: `${PATH}/uploads/${dogInfo["imageName"]}`,
     };
     return dog;

@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faVenus, faCakeCandles } from "@fortawesome/free-solid-svg-icons";
 import FollowButton from "../../components/FollowButton";
 import { COLORS } from "../../constants";
+import { useStore } from "../../store";
 
 const DogDetailCard = ({ text, iconName }) => {
   return (
@@ -40,6 +41,8 @@ const DogDetailCard = ({ text, iconName }) => {
 const DogInParkProfile = ({ route }) => {
   const dog: Dog = route.params.dog;
   const { data: userFollowings } = useFollowings();
+  const user = useStore((state) => state.user);
+  console.log("dog.owner:", dog.user_id, "userId:", user.id);
 
   const [isFollowing, setIsFollowing] = useState(false);
 
@@ -62,16 +65,13 @@ const DogInParkProfile = ({ route }) => {
         style={{ width: "100%", height: 100 }}
       >
         <Avatar.Image
-          source={{ uri: dog.imageName }}
+          source={{ uri: "http://localhost:3000/uploads/" + dog.imageName }}
           size={100}
           style={{
             borderRadius: 50,
             position: "absolute",
             top: 40,
-            left: 20,
-            backgroundColor: COLORS.secondary,
-            borderColor: COLORS.primary,
-            borderWidth:3
+            left: 29,
           }}
         />
       </ImageBackground>
@@ -80,11 +80,12 @@ const DogInParkProfile = ({ route }) => {
           isFollowing={isFollowing}
           setIsFollowing={setIsFollowing}
           dog={dog}
+          isOwner={dog.user_id === user.id}
         />
       </View>
 
       <View className="relative top-12">
-        <Text className="left-9 text-xl font-bold pb-6">{dog.name}</Text>
+        <Text className="left-12 text-xl font-bold pb-6">{dog.name}</Text>
 
         <View className="flex flex-wrap flex-row">
           {dogDetails.map((detail, index) => (

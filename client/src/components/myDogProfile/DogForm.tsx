@@ -51,12 +51,12 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
     if (buttonLabel === "Add") {
       const dogId = await addDogMutation.mutateAsync(dogData);
       if (dogId && dogData.imageName) {
-        await uploadImage(imageUrl, dogData.ownerId, dogId);
+        await uploadImage(imageUrl, dogData.user_id, dogId);
       }
     } else {
       await updateDogMutation.mutateAsync(dogData);
       if (dogData.imageName && initialDogData.imageUrl !== imageUrl) {
-        await uploadImage(imageUrl, dogData.ownerId, dogData.id);
+        await uploadImage(imageUrl, dogData.user_id, dogData.id);
       }
     }
   };
@@ -74,7 +74,7 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
         age: age,
         gender,
         imageName: imageUrl, // Use the uploaded image file name
-        ownerId: user.id,
+        user_id: user.id,
       };
 
       await onSubmitAction(dog);
