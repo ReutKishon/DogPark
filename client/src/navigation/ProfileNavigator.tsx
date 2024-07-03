@@ -1,8 +1,8 @@
 // ProfileStack.js
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import Profile from "../screens/profile";
-import Followings from "../screens/Dogs/Followings";
+import { UserProfile } from "../screens";
+import Followings from "../screens/userProfile/Followings";
 import { Button } from "react-native-paper";
 // Import other profile-related screens here
 
@@ -21,11 +21,10 @@ const ProfileNavigator = ({ navigation, onClose }) => {
       <profileStack.Screen
         name="Profile"
         initialParams={{ onClose: onClose, navigation: navigation }}
-        component={Profile}
+        component={UserProfile}
       />
       <profileStack.Screen name="Followings" component={Followings} />
     </profileStack.Navigator>
-    
   );
 };
 

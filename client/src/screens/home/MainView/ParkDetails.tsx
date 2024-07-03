@@ -1,16 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Text, View, Pressable } from "react-native";
 
-import List from "../../../components/List";
+import { List, DogCard } from "../../../components/common";
 import {
   useDogs,
   useDogsInPark,
   useAddDogToPark,
   useRemoveDogFromPark,
-} from "../../../state/queries";
+} from "../../../queries";
 import { ActivityIndicator, Avatar } from "react-native-paper";
-import DogCard from "../../Dogs/DogCard";
-import { Dog, Park, LocationCoords } from "../../../api/types";
+import { Dog, Park, LocationCoords } from "../../../types";
 import { useStore } from "../../../store";
 import io from "socket.io-client";
 import { useQueryClient } from "react-query";

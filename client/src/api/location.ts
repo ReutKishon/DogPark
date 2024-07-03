@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as Location from "expo-location";
-import { Park, LocationCoords } from "./types";
+import { Park, LocationCoords } from "../types";
 
 const API_KEY = "AIzaSyCnAEFDXfQTt0A4UYn5srE0jOGGrGfjEhk";
 //const API_KEY = "AIzaSyC0uwBYSX6PD3eTkyhzf1Fq4heW0Ayz5Og"

@@ -1,5 +1,7 @@
-export { default as Register } from "./Login/Register";
-export { default as SignIn } from "./Login/SignIn";
-export { default as Welcome } from "./Login/Welcome";
-export { default as MyDogs } from "./Dogs/MyDogs";
-export { default as DogInParkProfile } from "./Dogs/DogInParkProfile";
+export { default as Register } from "./login/Register";
+export { default as SignIn } from "./login/SignIn";
+export { default as Welcome } from "./login/Welcome";
+export { default as Login } from "./login/Login";
+export { default as MyDogs } from "./dogs/MyDogs";
+export { default as UserProfile } from "./userProfile";
+export { default as DogInParkProfile } from "./home/MainView/DogProfile";

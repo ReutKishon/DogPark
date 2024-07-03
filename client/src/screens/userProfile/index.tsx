@@ -1,16 +1,14 @@
 import { Text, View } from "react-native";
 import { useStore } from "../../store";
 import SettingSection from "../../components/Settings/SettingSection";
-import List from "../../components/List";
 import { Button, Divider, IconButton, Switch } from "react-native-paper";
-import { auth } from "../../../firebase";
-import { useFollowings } from "../../state/queries";
+import { useFollowings } from "../../queries";
 import { useRef } from "react";
-import { TemporaryModal } from "../../components/TemporaryModal";
+import { TemporaryModal } from "../../components/common";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import Followings from "../Dogs/Followings";
+import Followings from "./Followings";
 
-export default function Profile({ onClose, navigation }) {
+export default function UserProfile({ onClose, navigation }) {
   const { data: userFollowings } = useFollowings();
   const modalFollowingsRef = useRef(null);
 
@@ -69,7 +67,7 @@ export default function Profile({ onClose, navigation }) {
             onPress={() => {
               {
                 console.log("sign out");
-                auth.signOut();
+                //auth.signOut();
                 navigation.navigate("Login");
               }
             }}

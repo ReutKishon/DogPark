@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Image } from "react-native";
 import { Button } from "react-native-paper";
-import { useRegister, useUser } from "../../state/queries";
+import { useRegister, useUser } from "../../queries";
 import { COLORS } from "../../constants/theme";
 import commonStyles from "../../styles/commonStyle";
 

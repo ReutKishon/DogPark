@@ -2,19 +2,17 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
   ImageBackground,
-  Button,
   ScrollView,
 } from "react-native";
 import { Avatar, Icon } from "react-native-paper";
-import { useFollowings, useUser } from "../../state/queries";
-import { Dog } from "../../api/types";
+import { useFollowings, useUser } from "../../../queries";
+import { Dog, LifeStage } from "../../../types";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faVenus, faCakeCandles } from "@fortawesome/free-solid-svg-icons";
-import FollowButton from "../../components/FollowButton";
-import { COLORS } from "../../constants";
-import { useStore } from "../../store";
+import FollowButton from "../../../components/dogProfile/FollowButton";
+import { COLORS } from "../../../constants";
+import { useStore } from "../../../store";
 
 const DogDetailCard = ({ text, iconName }) => {
   return (
@@ -38,11 +36,10 @@ const DogDetailCard = ({ text, iconName }) => {
   );
 };
 
-const DogInParkProfile = ({ route }) => {
+const DogProfile = ({ route }) => {
   const dog: Dog = route.params.dog;
   const { data: userFollowings } = useFollowings();
   const user = useStore((state) => state.user);
-  console.log("dog.owner:", dog.user_id, "userId:", user.id);
 
   const [isFollowing, setIsFollowing] = useState(false);
 
@@ -53,15 +50,16 @@ const DogInParkProfile = ({ route }) => {
     }
   }, [userFollowings]);
   const dogDetails = [
-    { text: "Male", iconName: faVenus },
-    { text: "2 yr", iconName: faCakeCandles },
-    { text: "2 mo", iconName: faCakeCandles },
-    { text: "2 y", iconName: faCakeCandles },
+    { text: dog.gender, iconName: faVenus },
+    {
+      text: dog.age + " " + (dog.lifeStage == LifeStage.Adult ? "yr" : "mo"),
+      iconName: faCakeCandles,
+    },
   ];
   return (
     <ScrollView className="flex-grow">
       <ImageBackground
-        source={require("../../assets/images/bg1.png")}
+        source={require("../../../assets/images/bg1.png")}
         style={{ width: "100%", height: 100 }}
       >
         <Avatar.Image
@@ -99,4 +97,4 @@ const DogInParkProfile = ({ route }) => {
   );
 };
 
-export default DogInParkProfile;
+export default DogProfile;

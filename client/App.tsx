@@ -4,7 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { PaperProvider } from "react-native-paper";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Home from "./src/screens/home/Home";
-import Login from "./src/screens/Login/Login";
+import { Login } from "./src/screens";
 
 import {
   useFonts,

@@ -1,10 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { Button } from "react-native-paper";
 import MainView from "../screens/home/MainView";
-import { TemporaryModal } from "../components/TemporaryModal";
-import { useEffect, useRef, useState } from "react";
-import { MyDogs } from "../screens";
-import ProfileStack from "./ProfileNavigator";
+import { TemporaryModal } from "../components/common";
 import React from "react";
 
 const Stack = createStackNavigator();
@@ -23,7 +19,6 @@ const BottomSheetNavigator = React.forwardRef(
       </TemporaryModal>
     );
 
-    console.log("ref: ", ref);
     return (
       <Stack.Navigator
         screenOptions={({ navigation }) => ({

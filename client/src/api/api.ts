@@ -1,5 +1,4 @@
-import { useUser } from "../state/queries";
-import { CreationData, Dog, User } from "./types";
+import { CreationData, Dog, LifeStage, User } from "../types";
 import axios, { Axios } from "axios";
 const PATH = "http://localhost:3000";
 //const PATH = process.env.PATH
@@ -10,7 +9,6 @@ export const getUser = async (id: string): Promise<User> => {
     const userInfo = response.data;
     console.log(userInfo);
     const user: User = {
-      dogs: [],
       name: userInfo["name"],
       email: userInfo["email"],
       id: id,
@@ -47,7 +45,13 @@ export const deleteDog = async (dogId: string) => {
 export const getUserDogs = async (userId: string): Promise<Dog[]> => {
   try {
     const response = await axios.get<Dog[]>(PATH + "/dogs/userDogs/" + userId);
-    let dogs = response.data;
+    const dogsData: Array<Dog> = response.data;
+
+    const dogs: Array<Dog> = dogsData.map((dog: Dog) => ({
+      ...dog,
+      age: dog.age < 1 ? Math.round(dog.age * 12) : dog.age,
+      lifeStage: dog.age < 1 ? LifeStage.Puppy : LifeStage.Adult,
+    }));
 
     return dogs;
   } catch (err) {
@@ -64,6 +68,7 @@ export const getDog = async (dogId: number): Promise<Dog> => {
       id: dogInfo["id"],
       name: dogInfo["name"],
       age: dogInfo["age"],
+      lifeStage: dogInfo["age"] < 1 ? LifeStage.Puppy : LifeStage.Adult,
       gender: dogInfo["gender"],
       user_id: dogInfo["user_id"],
       imageName: `${PATH}/uploads/${dogInfo["imageName"]}`,
@@ -107,7 +112,14 @@ export const getDogsInPark = async (parkId: string): Promise<Array<Dog>> => {
   try {
     console.log("Getting parkId", parkId);
     const response = await axios.get(PATH + "/parks/" + parkId);
-    const dogs = response.data;
+    const dogsData: Array<Dog> = response.data;
+
+    const dogs: Array<Dog> = dogsData.map((dog: Dog) => ({
+      ...dog,
+      age: dog.age < 1 ? Math.round(dog.age * 12) : dog.age,
+      lifeStage: dog.age < 1 ? LifeStage.Puppy : LifeStage.Adult,
+    }));
+
     return dogs;
   } catch (error) {
     console.error("Error fetching dog data:", error);

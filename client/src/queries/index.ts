@@ -21,10 +21,8 @@ import {
   getUserFollowings,
 } from "../api/api";
 import { useStore } from "../store";
-import { auth } from "../../firebase";
-import { CreationData, Dog } from "../api/types";
+import { Dog } from "../types";
 import { getNearestDogParks, getUserLocation } from "../api/location";
-import { pickImage, uploadImageToStorage } from "../api/utils";
 
 export const useDogs = () => {
   const user = useStore((state) => state.user);
@@ -179,22 +177,6 @@ export const useParks = () => {
   );
 };
 
-export const useUploadImage = () => {
-  const user = useStore((state) => state.user);
-  const userId = user.id;
-  const lastIndexDog = user.dogs.length;
-  const id = userId + lastIndexDog;
-  return useMutation(
-    (imageUrl: Blob) => {
-      return uploadImageToStorage(id, imageUrl);
-    },
-    {
-      onSuccess: () => {
-        //queryClient.invalidateQueries("dogs");
-      },
-    }
-  );
-};
 
 
 export const useFollow = () => {

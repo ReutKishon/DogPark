@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Text, View, TouchableOpacity } from "react-native";
-import { useDeleteDog } from "../../state/queries";
+import { useDeleteDog } from "../../queries";
 import DeleteDogModal from "./DeleteDogModal";
 
 export default function DeleteDogFooter({ dogData, onClose }) {

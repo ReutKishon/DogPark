@@ -19,15 +19,13 @@ import BottomSheet, {
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
 import { useStore } from "../../store";
-import { Avatar, Button, Text } from "react-native-paper";
-import MyDogs from "../Dogs/MyDogs";
+import { Avatar } from "react-native-paper";
+import MyDogs from "../dogs/MyDogs";
 import MainView from "./MainView";
 import { getUserLocation } from "../../api/location";
-import { useDogs } from "../../state/queries";
+import { useDogs } from "../../queries";
 import ProfileNavigator from "../../navigation/ProfileNavigator";
-import { createStackNavigator } from "@react-navigation/stack";
 
-const HomeStack = createStackNavigator();
 
 const Home = ({ navigation }) => {
   const bottomSheetRef = useRef(null);

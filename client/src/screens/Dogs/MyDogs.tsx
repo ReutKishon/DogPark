@@ -1,15 +1,13 @@
 import { ActivityIndicator, Text, View } from "react-native";
 import React, { useCallback, useMemo, useRef, useState } from "react";
-import List from "../../components/List";
-import { Avatar, Button, IconButton } from "react-native-paper";
-import BottomSheet, {
+import { List, DogCard } from "../../components/common";
+import { Button, IconButton } from "react-native-paper";
+import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
-import { useDogs } from "../../state/queries";
-import { TemporaryModal } from "../../components/TemporaryModal";
-import DogCard from "./DogCard";
-import DogForm from "../../components/myDogProfile/DogForm";
+import { useDogs } from "../../queries";
+import DogForm from "./DogForm";
 
 function MyDogs({ navigation, onClose }) {
   const { data: dogs } = useDogs();

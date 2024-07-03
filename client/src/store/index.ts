@@ -1,6 +1,6 @@
 import { LocationObject } from "expo-location";
 import { create } from "zustand";
-import { Park, User, LocationCoords, DogParkPair } from "./api/types";
+import { Park, User, LocationCoords, DogParkPair } from "../types";
 
 interface Store {
   liveLocation: LocationCoords;

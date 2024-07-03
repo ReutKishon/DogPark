@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { View, TextInput, Text, ScrollView, Alert } from "react-native";
 import { useStore } from "../../store";
-import { useAddDog, useUpdateDog, useUploadImage } from "../../state/queries";
-import { Dog, DogGender } from "../../api/types";
+import { useAddDog, useUpdateDog } from "../../queries";
+import { Dog, DogGender } from "../../types";
 import * as ImagePicker from "expo-image-picker";
 import { Button } from "react-native-paper";
-import DogAvatar from "./DogAvatar";
-import DeleteDogFooter from "./DeleteDogFooter";
+import {
+  DogAvatar,
+  DeleteDogFooter,
+  OptionButton,
+  AgePicker,
+} from "../../components/dogForm";
 import { COLORS } from "../../constants";
 import commonStyles from "../../styles/commonStyle";
-import OptionButton from "../Buttons/OptionButton";
-import AgePicker from "../AgePicker";
 import Constants from "expo-constants";
-import axios from "axios";
 import { uploadImage } from "../../api/api";
 
 const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
@@ -22,7 +23,7 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
   const [gender, setGender] = useState<DogGender>(DogGender.Male);
   const [imageUrl, setImageUrl] = useState("");
 
-  const uploadImageMutation = useUploadImage();
+  // const uploadImageMutation = useUploadImage();
   const addDogMutation = useAddDog();
   const updateDogMutation = useUpdateDog();
 
@@ -75,6 +76,7 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
         gender,
         imageName: imageUrl, // Use the uploaded image file name
         user_id: user.id,
+        lifeStage: null,
       };
 
       await onSubmitAction(dog);
@@ -111,7 +113,7 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
           icon={buttonLabel == "Add" ? "plus" : "pencil"}
           mode="contained"
           onPress={onSubmit}
-          loading={addDogMutation.isLoading || uploadImageMutation.isLoading}
+          loading={addDogMutation.isLoading} //||uploadImageMutation.isLoading
           style={{ backgroundColor: COLORS.primary }}
         >
           <Text className="font-bold">{buttonLabel}</Text>

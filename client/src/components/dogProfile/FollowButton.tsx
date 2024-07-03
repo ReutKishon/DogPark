@@ -1,7 +1,7 @@
 import { Button } from "react-native-paper";
-import { Dog } from "../api/types";
-import { useFollow, useUnfollow } from "../state/queries";
-import { COLORS } from "../constants";
+import { Dog } from "../../types";
+import { useFollow, useUnfollow } from "../../queries";
+import { COLORS } from "../../constants";
 
 export default function FollowButton({
   isFollowing,

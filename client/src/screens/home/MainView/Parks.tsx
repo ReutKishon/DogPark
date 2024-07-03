@@ -1,10 +1,10 @@
 import React from "react";
 import { Text, View } from "react-native";
-import List from "../../../components/List";
+import {List} from "../../../components/common";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useParks } from "../../../state/queries";
+import { useParks } from "../../../queries";
 import { ActivityIndicator, Avatar, Button } from "react-native-paper";
-import { Park } from "../../../api/types";
+import { Park } from "../../../types";
 import { COLORS } from "../../../constants";
 
 const ParkItem = ({ item }) => {
