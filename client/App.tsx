@@ -1,5 +1,6 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { View, Text } from "react-native";
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { PaperProvider } from "react-native-paper";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -27,7 +28,6 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
-import ProfileStack from "./src/navigation/ProfileNavigator";
 
 const queryClient = new QueryClient();
 
@@ -57,13 +57,34 @@ function App() {
     return null;
   }
 
+  const MyTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: "white",
+      border: "transparent",
+    },
+  };
+
+  const CustomHeader = () => {
+    return (
+      <View className="h-12 bg-white justify-center items-center border-b border-gray-200">
+        <Text className="text-lg font-bold">Custom Header</Text>
+      </View>
+    );
+  };
+
   const MainStack = createStackNavigator();
 
   return (
     <QueryClientProvider client={queryClient}>
       <PaperProvider>
-        <NavigationContainer theme={{ colors: { background: "white" } }}>
-          <MainStack.Navigator screenOptions={{ headerShown: false }}>
+        <NavigationContainer theme={MyTheme}>
+          <MainStack.Navigator
+            screenOptions={{
+              header: () => <CustomHeader />,
+            }}
+          >
             <MainStack.Screen name="Login" component={Login} />
             <MainStack.Screen name="Home" component={Home} />
           </MainStack.Navigator>

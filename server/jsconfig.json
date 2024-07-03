@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+      "checkJs": true,         // Enable type checking for JavaScript files
+      "module": "nodenext",    // Specify module code generation
+      "target": "ES6",         // Specify ECMAScript target version
+      "allowSyntheticDefaultImports": true,
+      "baseUrl": "./",
+      "paths": {
+        "*": ["node_modules/@types", "*"]
+      }
+    },
+    "include": ["src/**/*.js"],  // Adjust path to include your JS files
+    "exclude": ["node_modules"]
+  }
+  

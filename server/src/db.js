@@ -1,13 +1,14 @@
 import { createConnection } from "mysql2";
 import dotenv from "dotenv";
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 dotenv.config();
 
+// @ts-ignore
 const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 
 const connection = createConnection({
@@ -27,7 +28,7 @@ connection.connect(async (err) => {
 
   // Function to execute SQL scripts
   async function executeSqlScript(scriptPath) {
-    const sql = fs.readFileSync(scriptPath, 'utf8');
+    const sql = fs.readFileSync(scriptPath, "utf8");
     try {
       await connection.promise().query(sql);
       console.log(`Successfully executed ${path.basename(scriptPath)}`);
@@ -37,17 +38,17 @@ connection.connect(async (err) => {
   }
 
   // Directory where SQL scripts are located
-  const scriptsDir = path.join(__dirname, 'sql-scripts');
+  const scriptsDir = path.join(__dirname, "sql-scripts");
 
   // Read all SQL script files from directory
   fs.readdir(scriptsDir, (err, files) => {
     if (err) {
-      console.error('Error reading SQL scripts directory:', err);
+      console.error("Error reading SQL scripts directory:", err);
       return;
     }
 
     // Execute each SQL script file sequentially
-    files.forEach(file => {
+    files.forEach((file) => {
       const scriptPath = path.join(scriptsDir, file);
       executeSqlScript(scriptPath);
     });
