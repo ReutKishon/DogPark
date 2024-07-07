@@ -8,20 +8,22 @@ import { TemporaryModal } from "../../components/common";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import Followings from "./Followings";
 
-export default function UserProfile({ onClose, navigation }) {
+export default function UserProfile({ navigation, route }) {
+  const { onClose, parentNavigation } = route.params;
+
   const { data: userFollowings } = useFollowings();
   const modalFollowingsRef = useRef(null);
 
-  const toggleModal = (
-    modalRef: React.MutableRefObject<any>,
-    show: boolean
-  ) => {
-    if (show) {
-      modalRef.current.present();
-    } else {
-      modalRef.current.dismiss();
-    }
-  };
+  // const toggleModal = (
+  //   modalRef: React.MutableRefObject<any>,
+  //   show: boolean
+  // ) => {
+  //   if (show) {
+  //     modalRef.current.present();
+  //   } else {
+  //     modalRef.current.dismiss();
+  //   }
+  // };
 
   const user = useStore((state) => state.user);
   return (
@@ -35,7 +37,7 @@ export default function UserProfile({ onClose, navigation }) {
             icon={"close"}
             size={18}
             mode="contained"
-            onPress={() => onClose()}
+            onPress={onClose}
           />
         </View>
 
@@ -56,7 +58,8 @@ export default function UserProfile({ onClose, navigation }) {
           <Button
             onPress={() => {
               {
-                toggleModal(modalFollowingsRef, true);
+                // toggleModal(modalFollowingsRef, true);
+                navigation.navigate("Followings");
               }
             }}
           >
@@ -68,7 +71,7 @@ export default function UserProfile({ onClose, navigation }) {
               {
                 console.log("sign out");
                 //auth.signOut();
-                navigation.navigate("Login");
+                parentNavigation.navigate("Login");
               }
             }}
           >

@@ -23,16 +23,8 @@ export default function Login({ navigation }) {
       }}
     >
       <Stack.Screen name="Welcome" component={Welcome} />
-      <Stack.Screen
-        name="Register"
-        component={Register}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen
-        name="SignIn"
-        component={SignIn}
-        options={{ headerShown: true }}
-      />
+      <Stack.Screen name="Register" component={Register} />
+      <Stack.Screen name="SignIn" component={SignIn} />
     </Stack.Navigator>
   );
 }

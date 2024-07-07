@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { Text, View } from "react-native";
-import {List} from "../../../components/common";
+import { List } from "../../../components/common";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useParks } from "../../../queries";
 import { ActivityIndicator, Avatar, Button } from "react-native-paper";
 import { Park } from "../../../types";
 import { COLORS } from "../../../constants";
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from "@gorhom/bottom-sheet";
+import ProfileNavigator from "../../../navigation/ProfileNavigator";
+import MyDogs from "../../dogs/MyDogs";
 
 const ParkItem = ({ item }) => {
   return (
@@ -21,15 +27,40 @@ const ParkItem = ({ item }) => {
   );
 };
 
-export default function Parks({ navigation, route }) {
-  // get popModal from params navigation
-  const { setModalScreen } = route.params;
+export default function Parks({navigation, parentNavigation }) {
+  const [modalScreen, setModalScreen] = useState(null);
+  const temporaryModalSheetRef = useRef(null);
+  const modalSnapPoints = useMemo(() => ["30%", "200%"], []);
 
   const { data: parks, isLoading, isIdle } = useParks();
+
+  const handleOpenModal = useCallback((screen: string) => {
+    setModalScreen(screen);
+    temporaryModalSheetRef.current?.present();
+  }, []);
+
+  const closeModal = useCallback(() => {
+    temporaryModalSheetRef.current?.dismiss();
+    setModalScreen(null);
+  }, []);
+
+ 
+  const renderContent = useCallback(() => {
+    switch (modalScreen) {
+      case "MyDogs":
+        return <MyDogs onClose={closeModal} />;
+      case "Profile":
+        return (
+          <ProfileNavigator onClose={closeModal} parentNavigation={parentNavigation} />
+        );
+      default:
+        return null;
+    }
+  }, [modalScreen,closeModal]);
+
   if (isLoading) {
     return <ActivityIndicator />;
   }
-
   return (
     <View className="w-full h-full px-4">
       <View className="flex flex-row items-center justify-between">
@@ -40,11 +71,11 @@ export default function Parks({ navigation, route }) {
           <Button
             textColor={COLORS.secondary}
             icon="paw"
-            onPress={() => setModalScreen("MyDogs")}
+            onPress={() => handleOpenModal("MyDogs")}
           >
             My Dogs
           </Button>
-          <TouchableOpacity onPress={() => setModalScreen("Profile")}>
+          <TouchableOpacity onPress={() => handleOpenModal("Profile")}>
             <Avatar.Image
               size={40}
               source={require("../../../assets/images/user_profile.jpg")}
@@ -67,6 +98,16 @@ export default function Parks({ navigation, route }) {
           )}
         />
       </View>
+      <BottomSheetModalProvider>
+        <BottomSheetModal
+          ref={temporaryModalSheetRef}
+          snapPoints={modalSnapPoints}
+          enablePanDownToClose={true}
+          index={modalScreen ? 1 : -1}
+        >
+          {renderContent()}
+        </BottomSheetModal>
+      </BottomSheetModalProvider>
     </View>
   );
 }

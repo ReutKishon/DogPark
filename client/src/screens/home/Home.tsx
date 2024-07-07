@@ -25,15 +25,13 @@ import MainView from "./MainView";
 import { getUserLocation } from "../../api/location";
 import { useDogs } from "../../queries";
 import ProfileNavigator from "../../navigation/ProfileNavigator";
-
+import { createStackNavigator } from "@react-navigation/stack";
 
 const Home = ({ navigation }) => {
   const bottomSheetRef = useRef(null);
-  const [modalScreen, setModalScreen] = useState(null);
-  const temporaryModalSheetRef = useRef(null);
+
   const snapPoints = useMemo(() => ["30%", "60%"], []);
   useState<React.ReactNode | null>(null);
-  const modalSnapPoints = useMemo(() => ["30%", "60%"], []);
 
   const mapRef = useRef(null);
   const setLocation = useStore((state) => state.setLiveLocation);
@@ -76,30 +74,6 @@ const Home = ({ navigation }) => {
     ]).start();
   };
 
-  const renderContent = useCallback(() => {
-    switch (modalScreen) {
-      case "MyDogs":
-        return <MyDogs navigation={navigation} onClose={closeModal} />;
-      case "Profile":
-        return (
-          <ProfileNavigator navigation={navigation} onClose={closeModal} />
-        );
-      default:
-        return null;
-    }
-  }, [modalScreen]);
-
-  const handleOpenModal = useCallback((screen: string) => {
-    setModalScreen(screen);
-    temporaryModalSheetRef.current?.present();
-  }, []);
-
-  const closeModal = useCallback(() => {
-    temporaryModalSheetRef.current?.dismiss();
-    setModalScreen(null);
-  }, []);
-
-
   const { data: dogs } = useDogs();
   return (
     <View className="flex items-center justify-start h-full w-full relative">
@@ -133,16 +107,8 @@ const Home = ({ navigation }) => {
       </MapView.Animated>
       <BottomSheetModalProvider>
         <BottomSheet ref={bottomSheetRef} index={1} snapPoints={snapPoints}>
-          <MainView handleOpenModal={handleOpenModal} />
+          <MainView navigation={navigation} />
         </BottomSheet>
-        <BottomSheetModal
-          ref={temporaryModalSheetRef}
-          snapPoints={modalSnapPoints}
-          enablePanDownToClose={true}
-          index={modalScreen ? 1 : -1}
-          >
-          {renderContent()}
-        </BottomSheetModal>
       </BottomSheetModalProvider>
     </View>
   );

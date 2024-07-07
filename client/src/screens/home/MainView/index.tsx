@@ -7,10 +7,11 @@ import { Button, IconButton, Text } from "react-native-paper";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Followings from "../../userProfile/Followings";
 import { COLORS } from "../../../constants";
+import ProfileNavigator from "../../../navigation/ProfileNavigator";
 
 const Stack = createStackNavigator();
 
-export default function MainView({ handleOpenModal }) {
+export default function MainView({  navigation: parentNavigation  }) {
   return (
     <Stack.Navigator
       screenOptions={({ navigation }) => ({
@@ -23,12 +24,10 @@ export default function MainView({ handleOpenModal }) {
       })}
     >
       <Stack.Screen
-        name="Parks"
-        component={Parks}
-        initialParams={{
-          setModalScreen: (key: string) => handleOpenModal(key),
-        }}
-      />
+        name="Parks">
+        {(props) => <Parks {...props} parentNavigation={parentNavigation} />}
+        </Stack.Screen>
+
       <Stack.Screen name="ParkDetails" component={ParkDetails} />
       <Stack.Screen name="DogProfile" component={DogProfile} />
     </Stack.Navigator>

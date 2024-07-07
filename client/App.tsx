@@ -6,6 +6,7 @@ import { PaperProvider } from "react-native-paper";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Home from "./src/screens/home/Home";
 import { Login } from "./src/screens";
+import ProfileNavigator from "./src/navigation/ProfileNavigator";
 
 import {
   useFonts,
@@ -28,6 +29,8 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
+import ModalNavigator from "./src/navigation/ProfileNavigator";
+import HomeNavigator from "./src/navigation/HomeNavogator";
 
 const queryClient = new QueryClient();
 
@@ -65,32 +68,44 @@ function App() {
       border: "transparent",
     },
   };
-
   const CustomHeader = () => {
-    return (
-      <View className="h-12 bg-white justify-center items-center border-b border-gray-200">
-        <Text className="text-lg font-bold">Custom Header</Text>
-      </View>
-    );
+    return <View className="h-12 bg-white justify-center items-center"></View>;
   };
-
-  const MainStack = createStackNavigator();
+  const Stack = createStackNavigator();
 
   return (
     <QueryClientProvider client={queryClient}>
       <PaperProvider>
         <NavigationContainer theme={MyTheme}>
-          <MainStack.Navigator
+          <Stack.Navigator
             screenOptions={{
               header: () => <CustomHeader />,
             }}
           >
-            <MainStack.Screen name="Login" component={Login} />
-            <MainStack.Screen name="Home" component={Home} />
-          </MainStack.Navigator>
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Home" component={HomeNavigator} />
+          </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>
     </QueryClientProvider>
+  );
+}
+const MainStack = createStackNavigator();
+
+function MainNavigator() {
+  const CustomHeader = () => {
+    return <View className="h-12 bg-white justify-center items-center"></View>;
+  };
+
+  return (
+    <MainStack.Navigator
+      screenOptions={{
+        header: () => <CustomHeader />,
+      }}
+    >
+      <MainStack.Screen name="Login" component={Login} />
+      <MainStack.Screen name="Home" component={Home} />
+    </MainStack.Navigator>
   );
 }
 

@@ -9,7 +9,7 @@ import {
 import { useDogs } from "../../queries";
 import DogForm from "./DogForm";
 
-function MyDogs({ navigation, onClose }) {
+function MyDogs({  onClose }) {
   const { data: dogs } = useDogs();
   const modalRef = useRef(null);
   const [pressedDog, setPressedDog] = useState<null>();
