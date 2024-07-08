@@ -6,15 +6,17 @@ const PATH = "http://localhost:3000";
 export const getUser = async (id: string): Promise<User> => {
   try {
     const response = await axios.get(PATH + "/users/getInfo/" + id);
-    const userInfo = response.data;
-    console.log(userInfo);
-    const user: User = {
-      name: userInfo["name"],
-      email: userInfo["email"],
-      id: id,
-      imageUrl: "",
-    };
-    return user;
+    if (response.status == 200) {
+      const userInfo = response.data[0];
+      console.log(JSON.stringify(userInfo));
+      const user: User = {
+        name: userInfo["name"],
+        email: userInfo["email"],
+        id: id,
+        imageUrl: "",
+      };
+      return user;
+    }
   } catch (error) {
     console.error("Error fetching user:", error);
   }
@@ -64,11 +66,12 @@ export const getDog = async (dogId: number): Promise<Dog> => {
     const response = await axios.get(PATH + "/dogs/" + dogId);
     const dogInfo = response.data[0];
     console.log("dogInfo: ", dogInfo);
+    const dogAge = dogInfo["age"];
     const dog: Dog = {
       id: dogInfo["id"],
       name: dogInfo["name"],
-      age: dogInfo["age"],
-      lifeStage: dogInfo["age"] < 1 ? LifeStage.Puppy : LifeStage.Adult,
+      age: dogAge < 1 ? Math.round(dogAge * 12) : dogAge,
+      lifeStage: dogAge < 1 ? LifeStage.Puppy : LifeStage.Adult,
       gender: dogInfo["gender"],
       user_id: dogInfo["user_id"],
       imageName: `${PATH}/uploads/${dogInfo["imageName"]}`,
@@ -140,9 +143,9 @@ export const signIn = async (
     // if (loggedUser.status == 200) {
     //   setWaring("");
     //   return loggedUser.data.userId;
-      
+
     // }
-    return "64881408-90f1-7021-bdd1-bd10b5008f44"
+    return "64881408-90f1-7021-bdd1-bd10b5008f44";
   } catch (error) {
     setWaring(error.response.data.error);
     return null;

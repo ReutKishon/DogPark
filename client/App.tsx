@@ -29,8 +29,6 @@ import {
   Poppins_900Black,
   Poppins_900Black_Italic,
 } from "@expo-google-fonts/poppins";
-import ModalNavigator from "./src/navigation/ProfileNavigator";
-import HomeNavigator from "./src/navigation/HomeNavogator";
 
 const queryClient = new QueryClient();
 
@@ -83,7 +81,7 @@ function App() {
             }}
           >
             <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Home" component={HomeNavigator} />
+            <Stack.Screen name="Home" component={Home} />
           </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>

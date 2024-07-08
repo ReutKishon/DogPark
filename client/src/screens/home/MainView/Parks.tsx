@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
-import { Text, View } from "react-native";
+import { Dimensions, Text, View } from "react-native";
 import { List } from "../../../components/common";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useParks } from "../../../queries";
@@ -27,11 +27,10 @@ const ParkItem = ({ item }) => {
   );
 };
 
-export default function Parks({navigation, parentNavigation }) {
+export default function Parks({ navigation, parentNavigation }) {
   const [modalScreen, setModalScreen] = useState(null);
   const temporaryModalSheetRef = useRef(null);
   const modalSnapPoints = useMemo(() => ["30%", "200%"], []);
-
   const { data: parks, isLoading, isIdle } = useParks();
 
   const handleOpenModal = useCallback((screen: string) => {
@@ -39,24 +38,26 @@ export default function Parks({navigation, parentNavigation }) {
     temporaryModalSheetRef.current?.present();
   }, []);
 
-  const closeModal = useCallback(() => {
+  const handleCloseModal = useCallback(() => {
     temporaryModalSheetRef.current?.dismiss();
     setModalScreen(null);
   }, []);
 
- 
   const renderContent = useCallback(() => {
     switch (modalScreen) {
       case "MyDogs":
-        return <MyDogs onClose={closeModal} />;
+        return <MyDogs onClose={handleCloseModal} />;
       case "Profile":
         return (
-          <ProfileNavigator onClose={closeModal} parentNavigation={parentNavigation} />
-        );
+          <ProfileNavigator
+            parentNavigation={parentNavigation}
+            onClose={handleCloseModal}
+          />
+        ); //parentNavigation={parentNavigation}
       default:
         return null;
     }
-  }, [modalScreen,closeModal]);
+  }, [modalScreen]);
 
   if (isLoading) {
     return <ActivityIndicator />;

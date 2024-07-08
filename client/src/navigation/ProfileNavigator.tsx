@@ -6,12 +6,20 @@ import { Button } from "react-native-paper";
 
 const modalStack = createStackNavigator();
 
-const ProfileNavigator = ({ onClose, parentNavigation }) => {
+const ProfileNavigator = ({ parentNavigation, onClose }) => {
   return (
     <modalStack.Navigator>
       <modalStack.Screen
         name="Profile"
-        initialParams={{ onClose, parentNavigation }}
+        initialParams={{
+          onLogout: () => {
+            console.log("Logging out...");
+            parentNavigation.navigate("Login");
+          },
+          handleCloseModal: () => {
+            onClose();
+          },
+        }}
         component={UserProfile}
         options={{
           headerTitle: "",
@@ -22,6 +30,11 @@ const ProfileNavigator = ({ onClose, parentNavigation }) => {
       <modalStack.Screen
         name="Followings"
         component={Followings}
+        initialParams={{
+          handleCloseModal: () => {
+            onClose();
+          },
+        }}
         options={({ navigation }) => ({
           headerTitle: "",
           headerBackTitleVisible: false,

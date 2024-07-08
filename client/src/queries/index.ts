@@ -54,6 +54,7 @@ export const useSignIn = (setWarning: any) => {
     {
       onSuccess: (userId) => {
         if (userId) {
+          console.log(`User ${userId}`)
           fetchUser(userId);
         }
       },

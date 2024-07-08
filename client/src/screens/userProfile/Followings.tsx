@@ -1,10 +1,12 @@
 import { View, Text } from "react-native";
 import { List, DogCard } from "../../components/common";
-
 import { IconButton } from "react-native-paper";
+import { useFollowings } from "../../queries";
 
-export default function Followings({ navigation, dogs, onClose }) {
-  console.log("Followings: ", dogs);
+export default function Followings({ navigation,route }) {
+  const { handleCloseModal } = route.params;
+  const { data: userFollowings } = useFollowings();
+
   return (
     <View className="flex w-full px-4 gap-2">
       <View className="flex flex-row justify-between">
@@ -13,11 +15,11 @@ export default function Followings({ navigation, dogs, onClose }) {
           icon={"close"}
           size={18}
           mode="contained"
-          onPress={() => onClose()}
+          onPress={() => handleCloseModal()}
         />
       </View>
       <List
-        data={dogs}
+        data={userFollowings}
         renderItem={({ item }) => (
           <DogCard
             dog={item}

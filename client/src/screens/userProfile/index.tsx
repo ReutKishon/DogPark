@@ -2,17 +2,11 @@ import { Text, View } from "react-native";
 import { useStore } from "../../store";
 import SettingSection from "../../components/Settings/SettingSection";
 import { Button, Divider, IconButton, Switch } from "react-native-paper";
-import { useFollowings } from "../../queries";
-import { useRef } from "react";
-import { TemporaryModal } from "../../components/common";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import Followings from "./Followings";
+
 
 export default function UserProfile({ navigation, route }) {
-  const { onClose, parentNavigation } = route.params;
+  const { onLogout ,handleCloseModal} = route.params;
 
-  const { data: userFollowings } = useFollowings();
-  const modalFollowingsRef = useRef(null);
 
   // const toggleModal = (
   //   modalRef: React.MutableRefObject<any>,
@@ -26,6 +20,7 @@ export default function UserProfile({ navigation, route }) {
   // };
 
   const user = useStore((state) => state.user);
+  console.log(user);
   return (
     <View className="w-full">
       <View className="flex gap-4 ">
@@ -37,7 +32,7 @@ export default function UserProfile({ navigation, route }) {
             icon={"close"}
             size={18}
             mode="contained"
-            onPress={onClose}
+            onPress={() => handleCloseModal()}
           />
         </View>
 
@@ -70,8 +65,9 @@ export default function UserProfile({ navigation, route }) {
             onPress={() => {
               {
                 console.log("sign out");
+                onLogout();
                 //auth.signOut();
-                parentNavigation.navigate("Login");
+                //parentNavigation.navigate("Login");
               }
             }}
           >

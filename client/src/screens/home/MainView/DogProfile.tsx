@@ -78,7 +78,7 @@ const DogProfile = ({ route }) => {
           isFollowing={isFollowing}
           setIsFollowing={setIsFollowing}
           dog={dog}
-          isOwner={dog.user_id === user.id}
+          isOwner={false}//{dog.user_id === user.id}
         />
       </View>
 
