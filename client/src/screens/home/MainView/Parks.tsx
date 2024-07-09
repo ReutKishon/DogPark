@@ -5,11 +5,11 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Dimensions, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { List } from "../../../components/common";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useDogsInPark, useParks } from "../../../queries";
-import { ActivityIndicator, Avatar, Button } from "react-native-paper";
+import { ActivityIndicator, Avatar, Button, Icon } from "react-native-paper";
 import { Park } from "../../../types";
 import { COLORS } from "../../../constants";
 import {
@@ -28,13 +28,29 @@ const ParkItem: React.FC<{ item: Park }> = React.memo(({ item }) => {
     <View className="w-full flex justify-center py-10 gap-2">
       <View className="flex flex-row justify-between">
         <Text className="font-bold">{item.name}</Text>
-        <Text style={{ color: COLORS.primary }}>{item.distance}</Text>
+        <Text
+          style={{ color: COLORS.primary, fontWeight: "bold", fontSize: 13 }}
+        >
+          {item.distance + " meters"}
+        </Text>
       </View>
       <View className="flex flex-row justify-between">
         <Text className="font-regular" style={{ fontSize: 12 }}>
           {item.address}
         </Text>
-        <Text style={{ color: COLORS.primary }}>{dogsInPark?.length}</Text>
+        <View className="flex flex-row justify-between">
+          <Icon size={17} source={require("../../../assets/icons/dog.png")} />
+          <Text
+            style={{
+              color: COLORS.primary,
+              fontSize: 14,
+              fontWeight: "bold",
+              marginLeft: 5,
+            }}
+          >
+            {dogsInPark?.length}
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -45,7 +61,7 @@ export default function Parks({ navigation, parentNavigation }) {
   const temporaryModalSheetRef = useRef(null);
   const modalSnapPoints = useMemo(() => ["30%", "200%"], []);
   const { data: parks, isLoading, isIdle } = useParks();
-  
+
   const handleOpenModal = useCallback((screen: string) => {
     setModalScreen(screen);
     temporaryModalSheetRef.current?.present();
@@ -66,7 +82,7 @@ export default function Parks({ navigation, parentNavigation }) {
             parentNavigation={parentNavigation}
             onClose={handleCloseModal}
           />
-        ); //parentNavigation={parentNavigation}
+        );
       default:
         return null;
     }

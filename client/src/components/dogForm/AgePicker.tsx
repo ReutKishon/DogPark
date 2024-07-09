@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Slider from "@react-native-community/slider";
+import { LifeStage } from "../../types";
 
-const AgePicker = ({ dogAge, setDogAge }) => {
+const AgePicker = ({ dogAge, dogLifeStage, setDogAge }) => {
   const [age, setAge] = useState(dogAge);
 
   useEffect(() => {
-    setAge(dogAge);
+    if (dogLifeStage === LifeStage.Puppy) {
+      setAge((dogAge / 12));
+      console.log("setAge")
+    } else {
+      setAge(dogAge);
+    }
   });
 
   const formatAge = (value: number) => {

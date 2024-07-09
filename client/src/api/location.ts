@@ -24,7 +24,7 @@ export const getUserLocation = async (): Promise<LocationCoords> => {
   }
 };
 
-export const GetDistanceAndAddress = async (destinations, name) => {
+export const GetDistance = async (destinations) => {
   try {
     const location = await getUserLocation();
     const origins = location[0] + "," + location[1];
@@ -40,19 +40,11 @@ export const GetDistanceAndAddress = async (destinations, name) => {
       data.rows[0].elements.length > 0
     ) {
       const distance = data.rows[0].elements[0].distance.text;
-      let address = data.destination_addresses[0];
-
-      if (address) {
-        const firstSubstring = address.split(",")[0];
-        if (firstSubstring == name) {
-          address = address.substring(firstSubstring.length + 1);
-        }
-      }
 
       //const distanceMeters= data.rows[0].elements[0].distance.value;
       //console.log(`Distance: ${distanceKm}`);
       //console.log(`Distance in meters: ${distanceMeters}`);
-      return { distance, address };
+      return distance;
     } else {
       console.error("Invalid data received from Google Maps API");
     }
@@ -78,14 +70,24 @@ export const getNearestDogParks = async (
     const response = await axios.get(url);
     //console.log(response.data);
     const parks: Park[] = response.data.results.map((park: any) => {
+      const parkLatitude = park.geometry.location.lat;
+      const parkLongitude = park.geometry.location.lng;
+      console.log("onee: " + parkLatitude, parkLongitude);
       const parkInfo: Park = {
         placeId: park.place_id,
         name: park.name || "Dog Park",
         address: park.vicinity,
-        distance: "500 meters",
+        distance: Math.round(
+          calculateDistance(
+            location.latitude,
+            location.longitude,
+            parkLatitude,
+            parkLongitude
+          )
+        ),
         locationCoords: {
-          latitude: park.geometry.location.lat,
-          longitude: park.geometry.location.lng,
+          latitude: parkLatitude,
+          longitude: parkLongitude,
         },
         dogsInParkIds: [],
       };
@@ -139,7 +141,12 @@ export const GetDistanceAndAddressByLocation = async (destinations, name) => {
 };
 
 // Function to calculate distance between two coordinates using Haversine formula
-function calculateDistance(lat1, lon1, lat2, lon2) {
+export const calculateDistance = (
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+) => {
   const earthRadius = 6371e3; // Earth's radius in meters
   const phi1 = (lat1 * Math.PI) / 180; // Convert latitude to radians
   const phi2 = (lat2 * Math.PI) / 180;
@@ -156,36 +163,4 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 
   const distance = earthRadius * c; // Distance in meters
   return distance;
-}
-
-async function getAddressFromCoordinates(latitude, longitude) {
-  try {
-    const response = await axios.get(
-      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-    );
-
-    const address = response.data.address;
-
-    const city =
-      address.city ||
-      address.town ||
-      address.village ||
-      address.hamlet ||
-      address.suburb ||
-      address.city_district;
-    const street =
-      address.road ||
-      address.pedestrian ||
-      address.footway ||
-      address.path ||
-      address.cycleway ||
-      "";
-
-    const fullAddress = `${street}, ${city}`;
-
-    return fullAddress;
-  } catch (error) {
-    console.error("Error:", error);
-    throw error;
-  }
-}
+};
