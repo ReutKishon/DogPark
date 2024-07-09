@@ -54,7 +54,7 @@ export const useSignIn = (setWarning: any) => {
     {
       onSuccess: (userId) => {
         if (userId) {
-          console.log(`User ${userId}`)
+          console.log(`User ${userId}`);
           fetchUser(userId);
         }
       },
@@ -133,13 +133,28 @@ export const useDeleteDog = () => {
 
 export const useAddDogToPark = () => {
   const queryClient = useQueryClient();
+
   return useMutation(
-    ({ dogId, parkId }: { dogId: string; parkId: string }) => {
+    ({
+      dogId,
+      parkId,
+      previousParkId,
+    }: {
+      dogId: string;
+      parkId: string;
+      previousParkId: string;
+    }) => {
       return addDogToPark(dogId, parkId);
     },
     {
       onSuccess: (_, variables) => {
         queryClient.invalidateQueries(["dogsInPark", variables.parkId]);
+        if (variables.previousParkId) {
+          queryClient.invalidateQueries([
+            "dogsInPark",
+            variables.previousParkId,
+          ]);
+        }
       },
     }
   );
@@ -147,13 +162,14 @@ export const useAddDogToPark = () => {
 
 export const useRemoveDogFromPark = () => {
   const queryClient = useQueryClient();
+
   return useMutation(
     ({ dogId, parkId }: { dogId: string; parkId: string }) => {
       return removeDogFromPark(dogId, parkId);
     },
     {
       onSuccess: (_, variables) => {
-        queryClient.invalidateQueries(["dogsInPark", variables.parkId]);
+        queryClient.invalidateQueries("parks");
       },
     }
   );
@@ -169,16 +185,20 @@ export const useLocation = () => {
 
 export const useParks = () => {
   const { data: location } = useLocation();
+  const setParks = useStore((state) => state.setParks);
   return useQuery(
     "parks",
     () => {
       return getNearestDogParks(location);
     },
-    { enabled: !!location }
+    {
+      enabled: !!location,
+      onSuccess: (data) => {
+        setParks(data);
+      },
+    }
   );
 };
-
-
 
 export const useFollow = () => {
   const queryClient = useQueryClient();
@@ -212,11 +232,7 @@ export const useUnfollow = () => {
   );
 };
 
-
 export const useFollowings = () => {
   const user = useStore((state) => state.user);
   return useQuery("userFollowings", () => getUserFollowings(user.id));
 };
-
-
-

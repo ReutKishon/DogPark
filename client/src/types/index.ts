@@ -18,6 +18,7 @@ export interface Dog {
   gender: DogGender;
   imageName: string;
   user_id: string;
+  current_parkId: string;
 }
 
 export interface User {
@@ -32,6 +33,8 @@ export interface Park {
   name: string;
   locationCoords: LocationCoords;
   address: string;
+  distance: string;
+  dogsInParkIds: string[];
 }
 
 export interface DogParkPair {

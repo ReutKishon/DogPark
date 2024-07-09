@@ -82,10 +82,12 @@ export const getNearestDogParks = async (
         placeId: park.place_id,
         name: park.name || "Dog Park",
         address: park.vicinity,
+        distance: "500 meters",
         locationCoords: {
           latitude: park.geometry.location.lat,
           longitude: park.geometry.location.lng,
         },
+        dogsInParkIds: [],
       };
       return parkInfo;
     });

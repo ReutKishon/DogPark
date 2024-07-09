@@ -23,7 +23,6 @@ io.on("connection", (socket) => {
   console.log("A client connected");
 });
 
-// @ts-ignore
 app.use((req, res, next) => {
   // @ts-ignore
   req.db = db;
@@ -45,7 +44,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-export function single(arg0) {
-    throw new Error("Function not implemented.");
-}
+
 

@@ -80,7 +80,7 @@ export default function ParkDetails({ navigation, route }) {
     return () => {
       socket.disconnect();
     };
-  }, [dogsPlayingInPark]);
+  }, []);
 
   if (isLoading) return <ActivityIndicator />;
 
@@ -92,7 +92,11 @@ export default function ParkDetails({ navigation, route }) {
     }
     // if dog not in park join
     else {
-      addDogToParkMutation.mutateAsync({ dogId: dog.id, parkId });
+      addDogToParkMutation.mutateAsync({
+        dogId: dog.id,
+        parkId,
+        previousParkId: dog.current_parkId,
+      });
     }
   };
 
