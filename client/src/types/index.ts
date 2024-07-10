@@ -33,7 +33,7 @@ export interface Park {
   name: string;
   locationCoords: LocationCoords;
   address: string;
-  distance: string;
+  distance: number;
   dogsInParkIds: string[];
 }
 

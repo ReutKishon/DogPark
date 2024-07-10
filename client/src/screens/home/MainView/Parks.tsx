@@ -28,7 +28,9 @@ const ParkItem: React.FC<{ item: Park }> = React.memo(({ item }) => {
     <View className="w-full flex justify-center py-10 gap-2">
       <View className="flex flex-row justify-between">
         <Text className="font-bold">{item.name}</Text>
-        <Text style={{ color: COLORS.primary }}>{item.distance}</Text>
+        <Text style={{ color: COLORS.primary, fontWeight: "bold" }}>
+          {item.distance} meters
+        </Text>
       </View>
       <View className="flex flex-row justify-between">
         <Text className="font-regular" style={{ fontSize: 12 }}>
@@ -36,7 +38,9 @@ const ParkItem: React.FC<{ item: Park }> = React.memo(({ item }) => {
         </Text>
         <View className="flex flex-row">
           <Icon size={18} source={require("../../../assets/icons/dog.png")} />
-          <Text style={{ color: COLORS.primary, marginLeft: 5 }}>
+          <Text
+            style={{ color: COLORS.primary, marginLeft: 5, fontWeight: "bold" }}
+          >
             {dogsInPark?.length}
           </Text>
         </View>
