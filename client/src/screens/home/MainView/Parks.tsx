@@ -9,7 +9,7 @@ import { Dimensions, Text, View } from "react-native";
 import { List } from "../../../components/common";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useDogsInPark, useParks } from "../../../queries";
-import { ActivityIndicator, Avatar, Button } from "react-native-paper";
+import { ActivityIndicator, Avatar, Button, Icon } from "react-native-paper";
 import { Park } from "../../../types";
 import { COLORS } from "../../../constants";
 import {
@@ -34,7 +34,12 @@ const ParkItem: React.FC<{ item: Park }> = React.memo(({ item }) => {
         <Text className="font-regular" style={{ fontSize: 12 }}>
           {item.address}
         </Text>
-        <Text style={{ color: COLORS.primary }}>{dogsInPark?.length}</Text>
+        <View className="flex flex-row">
+          <Icon size={18} source={require("../../../assets/icons/dog.png")} />
+          <Text style={{ color: COLORS.primary, marginLeft: 5 }}>
+            {dogsInPark?.length}
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -45,7 +50,7 @@ export default function Parks({ navigation, parentNavigation }) {
   const temporaryModalSheetRef = useRef(null);
   const modalSnapPoints = useMemo(() => ["30%", "200%"], []);
   const { data: parks, isLoading, isIdle } = useParks();
-  
+
   const handleOpenModal = useCallback((screen: string) => {
     setModalScreen(screen);
     temporaryModalSheetRef.current?.present();
@@ -98,7 +103,7 @@ export default function Parks({ navigation, parentNavigation }) {
           </TouchableOpacity>
         </View>
       </View>
-      <View className="px-2">
+      <View style={{ height: "90%" }} className="px-2">
         <List
           data={parks}
           renderItem={({ item }: { item: Park }) => (

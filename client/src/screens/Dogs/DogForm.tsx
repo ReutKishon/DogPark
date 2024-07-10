@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, TextInput, Text, ScrollView, Alert } from "react-native";
 import { useStore } from "../../store";
 import { useAddDog, useUpdateDog } from "../../queries";
-import { Dog, DogGender } from "../../types";
+import { Dog, DogGender, LifeStage } from "../../types";
 import * as ImagePicker from "expo-image-picker";
 import { Button } from "react-native-paper";
 import {
@@ -21,6 +21,7 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
   const [dogName, setDogName] = useState<string>("");
   const [age, setAge] = useState<number>(1);
   const [gender, setGender] = useState<DogGender>(DogGender.Male);
+  const [dogLifeStage, setDogLifeStage] = useState<LifeStage>(LifeStage.Adult);
   const [imageUrl, setImageUrl] = useState("");
 
   // const uploadImageMutation = useUploadImage();
@@ -44,6 +45,7 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
       setDogName(initialDogData.name);
       setAge(initialDogData.age?.toString());
       setGender(initialDogData.gender);
+      setDogLifeStage(initialDogData.lifeStage);
       setImageUrl("http://localhost:3000/uploads/" + initialDogData.imageName);
     }
   }, []);
@@ -77,6 +79,7 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
         imageName: imageUrl, // Use the uploaded image file name
         user_id: user.id,
         lifeStage: null,
+        current_parkId: null,
       };
 
       await onSubmitAction(dog);
@@ -130,7 +133,11 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
               value={dogName}
               onChangeText={setDogName}
             />
-            <AgePicker dogAge={age} setDogAge={setAge} />
+            <AgePicker
+              dogAge={age}
+              dogLifeStage={dogLifeStage}
+              setDogAge={setAge}
+            />
             <View
               style={{ gap: 10 }}
               className="flex-row justify-between items-center mr-[150] mt-4"
