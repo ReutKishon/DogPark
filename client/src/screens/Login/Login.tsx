@@ -2,6 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Register, SignIn, Welcome } from "./index";
 import { useEffect } from "react";
 import { useStore } from "../../store";
+import { getUserLocation } from "../../api/location";
 
 export default function Login({ navigation }) {
   const Stack = createStackNavigator();

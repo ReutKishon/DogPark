@@ -30,7 +30,9 @@ const SelectableAvatarList = ({
           <Avatar.Image
             size={40}
             source={{
-              uri: "http://localhost:3000/uploads/" + item.imageName,
+              uri: item.imageName
+                ? "http://localhost:3000/uploads/" + item.imageName
+                : null,
             }}
           />
         </Pressable>
@@ -44,6 +46,8 @@ export default function ParkDetails({ navigation, route }) {
   const parkId = park.placeId;
 
   const setLocation = useStore((state) => state.setLiveLocation);
+  const setDogsOnTheMap = useStore((state) => state.setDogsOnTheMap);
+
   const { data: userDogs } = useDogs();
   const { data: dogsPlayingInPark, isLoading } = useDogsInPark(parkId);
   const addDogToParkMutation = useAddDogToPark();
@@ -53,7 +57,7 @@ export default function ParkDetails({ navigation, route }) {
     return (
       dogsPlayingInPark
         ?.filter((dog) => {
-          return userDogs.some((userDog) => userDog.id === dog.id);
+          return userDogs?.some((userDog) => userDog.id === dog.id);
         })
         .map((dog) => dog.id) || []
     );
@@ -67,7 +71,7 @@ export default function ParkDetails({ navigation, route }) {
       latitude: park?.locationCoords?.latitude,
     };
     setLocation(parkLocation);
-
+    setDogsOnTheMap(dogsPlayingInPark);
     const socket = io("http://localhost:5000");
 
     socket.on("updateDogInPark", (data) => {
@@ -88,15 +92,16 @@ export default function ParkDetails({ navigation, route }) {
     const dog: Dog = userDogs[index];
     // if dog in park leave
     if (selectedDogAvatars.includes(dog.id)) {
-      removeDogFromParkMutation.mutateAsync({ dogId: dog.id, parkId });
+      await removeDogFromParkMutation.mutateAsync({ dogId: dog.id, parkId });
     }
     // if dog not in park join
     else {
-      addDogToParkMutation.mutateAsync({
+      await addDogToParkMutation.mutateAsync({
         dogId: dog.id,
         parkId,
         previousParkId: dog.current_parkId,
       });
+      setDogsOnTheMap(dogsPlayingInPark);
     }
   };
 
@@ -104,11 +109,13 @@ export default function ParkDetails({ navigation, route }) {
     <View className="flex w-full px-4 gap-2">
       <Text className="font-bold text-xl">{park.name}</Text>
       <View className="py-1 my-3">
-        <SelectableAvatarList
-          items={userDogs}
-          handleAvatarPress={handleAvatarPress}
-          selectedAvatars={selectedDogAvatars}
-        />
+        {userDogs && (
+          <SelectableAvatarList
+            items={userDogs}
+            handleAvatarPress={handleAvatarPress}
+            selectedAvatars={selectedDogAvatars}
+          />
+        )}
       </View>
 
       <List
@@ -117,7 +124,7 @@ export default function ParkDetails({ navigation, route }) {
           <DogCard
             dog={item}
             onpress={() => {
-              console.log("item: " + typeof item);
+              console.log("item2: " + item.imageName);
               navigation.navigate("DogProfile", { dog: item });
             }}
           />

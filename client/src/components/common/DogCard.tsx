@@ -12,7 +12,7 @@ export default function DogCard({ dog, onpress }) {
           source={
             dog.imageName
               ? { uri: "http://localhost:3000/uploads/" + dog.imageName }
-              : require("../../assets/images/defaultDogIcon.jpeg")
+              : null
           }
         />
         <View className="flex-col">

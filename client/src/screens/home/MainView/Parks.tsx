@@ -19,6 +19,8 @@ import {
 import ProfileNavigator from "../../../navigation/ProfileNavigator";
 import MyDogs from "../../dogs/MyDogs";
 import { io } from "socket.io-client";
+import { getUserLocation } from "../../../api/location";
+import { useStore } from "../../../store";
 
 const ParkItem: React.FC<{ item: Park }> = React.memo(({ item }) => {
   const { data: dogsInPark } = useDogsInPark(item.placeId);
@@ -54,6 +56,9 @@ export default function Parks({ navigation, parentNavigation }) {
   const temporaryModalSheetRef = useRef(null);
   const modalSnapPoints = useMemo(() => ["30%", "200%"], []);
   const { data: parks, isLoading, isIdle } = useParks();
+  const setLiveLocation = useStore((state) => state.setLiveLocation);
+
+  
 
   const handleOpenModal = useCallback((screen: string) => {
     setModalScreen(screen);

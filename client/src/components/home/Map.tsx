@@ -3,46 +3,37 @@ import MapView, { Marker } from "react-native-maps";
 import { Animated, useAnimatedValue } from "react-native";
 import { useStore } from "../../store";
 import { Avatar } from "react-native-paper";
-import { getUserLocation } from "../../api/location";
 
-const Map = ({}) => {
+const Map = () => {
   const mapRef = useRef(null);
-  const latitudeDelta = useAnimatedValue(0.01);
-  const longitudeDelta = useAnimatedValue(0.01);
+  const latitudeDelta = useAnimatedValue(0.001);
+  const longitudeDelta = useAnimatedValue(0.001);
   const location = useStore((state) => state.liveLocation);
-  const setLocation = useStore((state) => state.setLiveLocation);
   const dogsOnTheMap = useStore((state) => state.dogsOnTheMap);
 
   useEffect(() => {
-    (async () => {
-      const userLocation = await getUserLocation();
-      //console.log("loc " + location.latitude + " " + location.longitude);
-      if (userLocation) {
-        setLocation(userLocation);
-
-        mapRef.current.animateToRegion(
-          {
-            latitude: location?.latitude,
-            longitude: location?.longitude,
-            latitudeDelta: 0.05,
-            longitudeDelta: 0.05,
-          },
-          0
-        );
-        mapRef.current.animatedCamera;
-      }
-    })();
-  }, []);
+    if (location && mapRef.current) {
+      mapRef.current.animateToRegion(
+        {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.001,
+          longitudeDelta: 0.001,
+        },
+        1000
+      );
+    }
+  }, [location, dogsOnTheMap]);
 
   const animateZoomIn = () => {
     Animated.parallel([
       Animated.timing(latitudeDelta, {
-        toValue: 0.005, // Desired zoom level
+        toValue: 0.001, // Desired zoom level
         duration: 3000, // Animation duration
         useNativeDriver: true,
       }),
       Animated.timing(longitudeDelta, {
-        toValue: 0.005,
+        toValue: 0.001,
         duration: 3000,
         useNativeDriver: true,
       }),
@@ -61,8 +52,8 @@ const Map = ({}) => {
       zoomEnabled
       onPress={() => animateZoomIn()}
     >
-      {dogsOnTheMap?.map((dog, index) => {
-        const offset = 0.002 * index;
+      {dogsOnTheMap.map((dog, index) => {
+        const offset = 0.00006 * index;
         const newLatitude = location?.latitude + offset;
         const newLongitude = location?.longitude + offset;
 
