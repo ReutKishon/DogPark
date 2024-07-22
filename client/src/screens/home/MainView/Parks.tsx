@@ -19,6 +19,8 @@ import {
 import ProfileNavigator from "../../../navigation/ProfileNavigator";
 import MyDogs from "../../dogs/MyDogs";
 import { io } from "socket.io-client";
+import { getUserLocation } from "../../../api/location";
+import { useStore } from "../../../store";
 
 const ParkItem: React.FC<{ item: Park }> = React.memo(({ item }) => {
   const { data: dogsInPark } = useDogsInPark(item.placeId);
@@ -28,29 +30,13 @@ const ParkItem: React.FC<{ item: Park }> = React.memo(({ item }) => {
     <View className="w-full flex justify-center py-10 gap-2">
       <View className="flex flex-row justify-between">
         <Text className="font-bold">{item.name}</Text>
-        <Text
-          style={{ color: COLORS.primary, fontWeight: "bold", fontSize: 13 }}
-        >
-          {item.distance + " meters"}
-        </Text>
+        <Text style={{ color: COLORS.primary }}>{item.distance}</Text>
       </View>
       <View className="flex flex-row justify-between">
         <Text className="font-regular" style={{ fontSize: 12 }}>
           {item.address}
         </Text>
-        <View className="flex flex-row justify-between">
-          <Icon size={17} source={require("../../../assets/icons/dog.png")} />
-          <Text
-            style={{
-              color: COLORS.primary,
-              fontSize: 14,
-              fontWeight: "bold",
-              marginLeft: 5,
-            }}
-          >
-            {dogsInPark?.length}
-          </Text>
-        </View>
+        <Text style={{ color: COLORS.primary }}>{dogsInPark?.length}</Text>
       </View>
     </View>
   );
@@ -61,7 +47,7 @@ export default function Parks({ navigation, parentNavigation }) {
   const temporaryModalSheetRef = useRef(null);
   const modalSnapPoints = useMemo(() => ["30%", "200%"], []);
   const { data: parks, isLoading, isIdle } = useParks();
-
+  
   const handleOpenModal = useCallback((screen: string) => {
     setModalScreen(screen);
     temporaryModalSheetRef.current?.present();
@@ -114,7 +100,7 @@ export default function Parks({ navigation, parentNavigation }) {
           </TouchableOpacity>
         </View>
       </View>
-      <View className="px-2">
+      <View style={{ height: "90%" }} className="px-2">
         <List
           data={parks}
           renderItem={({ item }: { item: Park }) => (

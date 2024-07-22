@@ -7,9 +7,8 @@ const AgePicker = ({ dogAge, dogLifeStage, setDogAge }) => {
   const [age, setAge] = useState(dogAge);
 
   useEffect(() => {
-    if (dogLifeStage === LifeStage.Puppy) {
-      setAge((dogAge / 12));
-      console.log("setAge")
+    if (dogLifeStage == LifeStage.Puppy) {
+      setAge(dogAge / 12);
     } else {
       setAge(dogAge);
     }

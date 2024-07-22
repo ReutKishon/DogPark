@@ -72,6 +72,7 @@ export const getDog = async (dogId: number): Promise<Dog> => {
       name: dogInfo["name"],
       age: dogAge < 1 ? Math.round(dogAge * 12) : dogAge,
       lifeStage: dogAge < 1 ? LifeStage.Puppy : LifeStage.Adult,
+      current_parkId: dogInfo["current_parkId"],
       gender: dogInfo["gender"],
       user_id: dogInfo["user_id"],
       imageName: `${PATH}/uploads/${dogInfo["imageName"]}`,

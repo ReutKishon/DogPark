@@ -1,4 +1,3 @@
-import { LocationObject } from "expo-location";
 
 // gender enum
 export enum DogGender {
@@ -34,7 +33,7 @@ export interface Park {
   locationCoords: LocationCoords;
   address: string;
   distance: number;
-  dogsInParkIds: string[];
+  dogsInPark: Dog[];
 }
 
 export interface DogParkPair {

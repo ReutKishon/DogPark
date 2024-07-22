@@ -70,24 +70,21 @@ export const getNearestDogParks = async (
     const response = await axios.get(url);
     //console.log(response.data);
     const parks: Park[] = response.data.results.map((park: any) => {
-      const parkLatitude = park.geometry.location.lat;
-      const parkLongitude = park.geometry.location.lng;
-      console.log("onee: " + parkLatitude, parkLongitude);
+      const parkLat = park.geometry.location.lat;
+      const parkLng = park.geometry.location.lng;
       const parkInfo: Park = {
         placeId: park.place_id,
         name: park.name || "Dog Park",
         address: park.vicinity,
-        distance: Math.round(
-          calculateDistance(
-            location.latitude,
-            location.longitude,
-            parkLatitude,
-            parkLongitude
-          )
+        distance: calculateDistance(
+          location.latitude,
+          location.longitude,
+          parkLat,
+          parkLng
         ),
         locationCoords: {
-          latitude: parkLatitude,
-          longitude: parkLongitude,
+          latitude: parkLat,
+          longitude: parkLng,
         },
         dogsInParkIds: [],
       };
@@ -141,12 +138,12 @@ export const GetDistanceAndAddressByLocation = async (destinations, name) => {
 };
 
 // Function to calculate distance between two coordinates using Haversine formula
-export const calculateDistance = (
+function calculateDistance(
   lat1: number,
   lon1: number,
   lat2: number,
   lon2: number
-) => {
+) {
   const earthRadius = 6371e3; // Earth's radius in meters
   const phi1 = (lat1 * Math.PI) / 180; // Convert latitude to radians
   const phi2 = (lat2 * Math.PI) / 180;
@@ -161,6 +158,6 @@ export const calculateDistance = (
       Math.sin(deltaLambda / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-  const distance = earthRadius * c; // Distance in meters
+  const distance = Math.round(earthRadius * c); // Distance in meters
   return distance;
-};
+}

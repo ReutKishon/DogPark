@@ -1,10 +1,4 @@
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-  QueryClientProvider,
-} from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import {
   addDogToPark,
   addDogToUser,
@@ -169,14 +163,19 @@ export const useRemoveDogFromPark = () => {
     },
     {
       onSuccess: (_, variables) => {
-        queryClient.invalidateQueries("parks");
+        queryClient.invalidateQueries(["dogsInPark", variables.parkId]);
       },
     }
   );
 };
-
 export const useDogsInPark = (parkId: string) => {
-  return useQuery(["dogsInPark", parkId], () => getDogsInPark(parkId));
+  const setDogsOnTheMap = useStore((state) => state.setDogsOnTheMap);
+
+  return useQuery(["dogsInPark", parkId], () => getDogsInPark(parkId), {
+    onSuccess: (data) => {
+      setDogsOnTheMap(data);
+    },
+  });
 };
 
 export const useLocation = () => {
@@ -185,7 +184,7 @@ export const useLocation = () => {
 
 export const useParks = () => {
   const { data: location } = useLocation();
-  const setParks = useStore((state) => state.setParks);
+  // const setParks = useStore((state) => state.setParks);
   return useQuery(
     "parks",
     () => {
@@ -194,7 +193,7 @@ export const useParks = () => {
     {
       enabled: !!location,
       onSuccess: (data) => {
-        setParks(data);
+        // setParks(data);
       },
     }
   );

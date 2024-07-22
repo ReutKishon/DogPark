@@ -21,7 +21,7 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
   const [dogName, setDogName] = useState<string>("");
   const [age, setAge] = useState<number>(1);
   const [gender, setGender] = useState<DogGender>(DogGender.Male);
-  const [lifeStage, setLifeStage] = useState<LifeStage>(LifeStage.Adult);
+  const [dogLifeStage, setDogLifeStage] = useState<LifeStage>(LifeStage.Adult);
   const [imageUrl, setImageUrl] = useState("");
 
   // const uploadImageMutation = useUploadImage();
@@ -45,7 +45,7 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
       setDogName(initialDogData.name);
       setAge(initialDogData.age);
       setGender(initialDogData.gender);
-      setLifeStage(initialDogData.lifeStage);
+      setDogLifeStage(initialDogData.lifeStage);
       setImageUrl("http://localhost:3000/uploads/" + initialDogData.imageName);
     }
   }, []);
@@ -78,7 +78,7 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
         gender,
         imageName: imageUrl, // Use the uploaded image file name
         user_id: user.id,
-        lifeStage: age < 1 ? LifeStage.Puppy : LifeStage.Adult,
+        lifeStage: null,
         current_parkId: null,
       };
 
@@ -135,7 +135,7 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
             />
             <AgePicker
               dogAge={age}
-              dogLifeStage={lifeStage}
+              dogLifeStage={dogLifeStage}
               setDogAge={setAge}
             />
             <View
