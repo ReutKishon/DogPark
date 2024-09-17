@@ -24,7 +24,6 @@ import { useStore } from "../../../store";
 
 const ParkItem: React.FC<{ item: Park }> = React.memo(({ item }) => {
   const { data: dogsInPark } = useDogsInPark(item.placeId);
-  useEffect(() => {}, [dogsInPark]);
 
   return (
     <View className="w-full flex justify-center py-10 gap-2">

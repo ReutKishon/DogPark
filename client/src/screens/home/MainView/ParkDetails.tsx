@@ -13,6 +13,7 @@ import { Dog, Park, LocationCoords } from "../../../types";
 import { useStore } from "../../../store";
 import io from "socket.io-client";
 import { useQueryClient } from "react-query";
+import { PATH } from "@env";
 
 const SelectableAvatarList = ({
   items,
@@ -31,7 +32,7 @@ const SelectableAvatarList = ({
             size={40}
             source={{
               uri: item.imageName
-                ? "http://localhost:3000/uploads/" + item.imageName
+                ? PATH+"/uploads/" + item.imageName
                 : null,
             }}
           />
@@ -50,6 +51,7 @@ export default function ParkDetails({ navigation, route }) {
 
   const { data: userDogs } = useDogs();
   const { data: dogsPlayingInPark, isLoading } = useDogsInPark(parkId);
+
   const addDogToParkMutation = useAddDogToPark();
   const removeDogFromParkMutation = useRemoveDogFromPark();
 
@@ -101,7 +103,6 @@ export default function ParkDetails({ navigation, route }) {
         parkId,
         previousParkId: dog.current_parkId,
       });
-      setDogsOnTheMap(dogsPlayingInPark);
     }
   };
 
@@ -124,7 +125,6 @@ export default function ParkDetails({ navigation, route }) {
           <DogCard
             dog={item}
             onpress={() => {
-              console.log("item2: " + item.imageName);
               navigation.navigate("DogProfile", { dog: item });
             }}
           />

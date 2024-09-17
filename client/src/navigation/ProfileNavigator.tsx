@@ -4,17 +4,17 @@ import { UserProfile } from "../screens";
 import Followings from "../screens/userProfile/Followings";
 import { Button } from "react-native-paper";
 
-const modalStack = createStackNavigator();
+const profileStack = createStackNavigator();
 
 const ProfileNavigator = ({ parentNavigation, onClose }) => {
   return (
-    <modalStack.Navigator>
-      <modalStack.Screen
+    <profileStack.Navigator>
+      <profileStack.Screen
         name="Profile"
         initialParams={{
           onLogout: () => {
             console.log("Logging out...");
-            parentNavigation.navigate("Login");
+            parentNavigation.navigate("Login",{ screen: "Welcome" });
           },
           handleCloseModal: () => {
             onClose();
@@ -27,7 +27,7 @@ const ProfileNavigator = ({ parentNavigation, onClose }) => {
           headerLeft: null,
         }}
       />
-      <modalStack.Screen
+      <profileStack.Screen
         name="Followings"
         component={Followings}
         initialParams={{
@@ -43,7 +43,7 @@ const ProfileNavigator = ({ parentNavigation, onClose }) => {
           ),
         })}
       />
-    </modalStack.Navigator>
+    </profileStack.Navigator>
   );
 };
 

@@ -13,6 +13,8 @@ import { faVenus, faCakeCandles } from "@fortawesome/free-solid-svg-icons";
 import FollowButton from "../../../components/dogProfile/FollowButton";
 import { COLORS } from "../../../constants";
 import { useStore } from "../../../store";
+import { PATH } from "@env";
+
 
 const DogDetailCard = ({ text, iconName }) => {
   return (
@@ -43,12 +45,7 @@ const DogProfile = ({ route }) => {
 
   const [isFollowing, setIsFollowing] = useState(false);
 
-  useEffect(() => {
-    if (userFollowings != undefined && Array.isArray(userFollowings)) {
-      const followingStatus = userFollowings.length > 0;
-      setIsFollowing(followingStatus);
-    }
-  }, [userFollowings]);
+
   const dogDetails = [
     { text: dog.gender, iconName: faVenus },
     {
@@ -63,7 +60,7 @@ const DogProfile = ({ route }) => {
         style={{ width: "100%", height: 100 }}
       >
         <Avatar.Image
-          source={{ uri: "http://localhost:3000/uploads/" + dog.imageName }}
+          source={{ uri: PATH+"/uploads/" + dog.imageName }}
           size={100}
           style={{
             borderRadius: 50,
