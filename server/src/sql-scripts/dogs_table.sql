@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS dogs (
     age DOUBLE,
     gender Enum('Male', 'Female'),
     imageName VARCHAR(255),
-    FOREIGN KEY (user_id) REFERENCES users (user_id),
+    FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
     current_parkId VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
