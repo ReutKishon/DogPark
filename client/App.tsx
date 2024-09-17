@@ -88,23 +88,23 @@ function App() {
     </QueryClientProvider>
   );
 }
-const MainStack = createStackNavigator();
+// const MainStack = createStackNavigator();
 
-function MainNavigator() {
-  const CustomHeader = () => {
-    return <View className="h-12 bg-white justify-center items-center"></View>;
-  };
+// function MainNavigator() {
+//   const CustomHeader = () => {
+//     return <View className="h-12 bg-white justify-center items-center"></View>;
+//   };
 
-  return (
-    <MainStack.Navigator
-      screenOptions={{
-        header: () => <CustomHeader />,
-      }}
-    >
-      <MainStack.Screen name="Login" component={Login} />
-      <MainStack.Screen name="Home" component={Home} />
-    </MainStack.Navigator>
-  );
-}
+//   return (
+//     <MainStack.Navigator
+//       screenOptions={{
+//         header: () => <CustomHeader />,
+//       }}
+//     >
+//       <MainStack.Screen name="Login" component={Login} />
+//       <MainStack.Screen name="Home" component={Home} />
+//     </MainStack.Navigator>
+//   );
+// }
 
 export default App;

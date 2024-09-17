@@ -1,14 +1,13 @@
 import { CreationData, Dog, LifeStage, User } from "../types";
-import axios, { Axios } from "axios";
-const PATH = "http://localhost:3000";
-//const PATH = process.env.PATH
+import axios from "axios";
+import { PATH } from "@env";
 
 export const getUser = async (id: string): Promise<User> => {
   try {
     const response = await axios.get(PATH + "/users/getInfo/" + id);
     if (response.status == 200) {
       const userInfo = response.data[0];
-      console.log(JSON.stringify(userInfo));
+      // console.log(JSON.stringify(userInfo));
       const user: User = {
         name: userInfo["name"],
         email: userInfo["email"],
@@ -27,7 +26,6 @@ export const addDogToUser = async (
   dogData: CreationData<Dog>
 ) => {
   try {
-    console.log("hi1", dogData.imageName);
     const response = await axios.post(PATH + "/dogs/add", { dogData, userId });
     console.log(response.data.dogId);
 
@@ -44,6 +42,7 @@ export const deleteDog = async (dogId: string) => {
     console.error("error deleting dog profile " + error);
   }
 };
+
 export const getUserDogs = async (userId: string): Promise<Dog[]> => {
   try {
     const response = await axios.get<Dog[]>(PATH + "/dogs/userDogs/" + userId);

@@ -4,10 +4,11 @@ import { Button } from "react-native-paper";
 import { useSignIn } from "../../queries";
 import { COLORS } from "../../constants";
 import commonStyles from "../../styles/commonStyle";
+import { USER_EMAIL, USER_PASSWORD } from "@env";
 
 const SignIn = () => {
-  const [email, setEmail] = useState("Reki8611@gmail.com");
-  const [password, setPassword] = useState("Rr123456789!");
+  const [email, setEmail] = useState(USER_EMAIL);
+  const [password, setPassword] = useState(USER_PASSWORD);
   const [warning, setWarning] = useState("");
   const signInMutation = useSignIn((errorMessage) => {
     setWarning(errorMessage);

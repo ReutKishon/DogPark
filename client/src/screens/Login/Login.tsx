@@ -20,7 +20,7 @@ export default function Login({ navigation }) {
       screenOptions={{
         headerShown: false,
         title: "",
-        headerBackTitleVisible: false,
+        headerBackTitleVisible: false, 
       }}
     >
       <Stack.Screen name="Welcome" component={Welcome} />
