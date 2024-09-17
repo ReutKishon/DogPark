@@ -1,9 +1,8 @@
 import axios from "axios";
 import * as Location from "expo-location";
 import { Park, LocationCoords } from "../types";
+import { LOCATION_API_KEY } from "@env";
 
-const API_KEY = "AIzaSyCnAEFDXfQTt0A4UYn5srE0jOGGrGfjEhk";
-//const API_KEY = "AIzaSyC0uwBYSX6PD3eTkyhzf1Fq4heW0Ayz5Og"
 export const getUserLocation = async (): Promise<LocationCoords> => {
   try {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -24,36 +23,6 @@ export const getUserLocation = async (): Promise<LocationCoords> => {
   }
 };
 
-export const GetDistance = async (destinations) => {
-  try {
-    const location = await getUserLocation();
-    const origins = location[0] + "," + location[1];
-    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origins}&destinations=${destinations}&key=${API_KEY}`;
-
-    const response = await axios.get(url);
-    const data = response.data;
-    //console.log("data:" + JSON.stringify(data));
-    if (
-      data.rows &&
-      data.rows.length > 0 &&
-      data.rows[0].elements &&
-      data.rows[0].elements.length > 0
-    ) {
-      const distance = data.rows[0].elements[0].distance.text;
-
-      //const distanceMeters= data.rows[0].elements[0].distance.value;
-      //console.log(`Distance: ${distanceKm}`);
-      //console.log(`Distance in meters: ${distanceMeters}`);
-      return distance;
-    } else {
-      console.error("Invalid data received from Google Maps API");
-    }
-  } catch (error) {
-    console.error("Error fetching data from Google Maps API", error);
-    throw error;
-  }
-};
-
 export const getNearestDogParks = async (
   location: LocationCoords
 ): Promise<Park[]> => {
@@ -65,7 +34,7 @@ export const getNearestDogParks = async (
     location.latitude
   },${
     location.longitude
-  }&radius=${1000}&type=park&keyword=dog%20park&key=${API_KEY}`;
+  }&radius=${1000}&type=park&keyword=dog%20park&key=${LOCATION_API_KEY}`;
   try {
     const response = await axios.get(url);
     //console.log(response.data);
@@ -86,7 +55,7 @@ export const getNearestDogParks = async (
           latitude: parkLat,
           longitude: parkLng,
         },
-        dogsInParkIds: [],
+        // dogsInPark: [],
       };
       return parkInfo;
     });
@@ -96,44 +65,6 @@ export const getNearestDogParks = async (
   } catch (error) {
     console.error("Error retrieving data from Overpass API:", error);
     return [];
-  }
-};
-
-export const GetDistanceAndAddressByLocation = async (destinations, name) => {
-  try {
-    const location = await getUserLocation();
-    const origins = location[0] + "," + location[1];
-    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origins}&destinations=${destinations}&key=${API_KEY}`;
-
-    const response = await axios.get(url);
-    const data = response.data;
-    //console.log("data:" + JSON.stringify(data));
-    if (
-      data.rows &&
-      data.rows.length > 0 &&
-      data.rows[0].elements &&
-      data.rows[0].elements.length > 0
-    ) {
-      const distance = data.rows[0].elements[0].distance.text;
-      let address = data.destination_addresses[0];
-
-      if (address) {
-        const firstSubstring = address.split(",")[0];
-        if (firstSubstring == name) {
-          address = address.substring(firstSubstring.length + 1);
-        }
-      }
-
-      //const distanceMeters= data.rows[0].elements[0].distance.value;
-      //console.log(`Distance: ${distanceKm}`);
-      //console.log(`Distance in meters: ${distanceMeters}`);
-      return { distance, address };
-    } else {
-      console.error("Invalid data received from Google Maps API");
-    }
-  } catch (error) {
-    console.error("Error fetching data from Google Maps API", error);
-    throw error;
   }
 };
 

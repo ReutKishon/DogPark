@@ -30,7 +30,7 @@ const ParkItem: React.FC<{ item: Park }> = React.memo(({ item }) => {
     <View className="w-full flex justify-center py-10 gap-2">
       <View className="flex flex-row justify-between">
         <Text className="font-bold">{item.name}</Text>
-        <Text style={{ color: COLORS.primary }}>{item.distance}</Text>
+        <Text style={{ color: COLORS.primary }}>{item.distance} meters</Text>
       </View>
       <View className="flex flex-row justify-between">
         <Text className="font-regular" style={{ fontSize: 12 }}>

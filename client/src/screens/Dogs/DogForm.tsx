@@ -15,6 +15,7 @@ import { COLORS } from "../../constants";
 import commonStyles from "../../styles/commonStyle";
 import Constants from "expo-constants";
 import { uploadImage } from "../../api/api";
+import { PATH } from "@env";
 
 const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
   const user = useStore((state) => state.user);
@@ -46,7 +47,7 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
       setAge(initialDogData.age);
       setGender(initialDogData.gender);
       setDogLifeStage(initialDogData.lifeStage);
-      setImageUrl("http://localhost:3000/uploads/" + initialDogData.imageName);
+      setImageUrl(PATH + "/uploads/" + initialDogData.imageName);
     }
   }, []);
 
@@ -116,7 +117,7 @@ const DogForm = ({ onClose, buttonLabel = "Add", initialDogData }) => {
           icon={buttonLabel == "Add" ? "plus" : "pencil"}
           mode="contained"
           onPress={onSubmit}
-          loading={addDogMutation.isLoading} //||uploadImageMutation.isLoading
+          loading={addDogMutation.isLoading || updateDogMutation.isLoading} //||uploadImageMutation.isLoading
           style={{ backgroundColor: COLORS.primary }}
         >
           <Text className="font-bold">{buttonLabel}</Text>
