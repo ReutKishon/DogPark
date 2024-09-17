@@ -7,6 +7,20 @@ import db from "../db.js";
 // Route to add a new dog
 router.post("/add", dogsController.addDog);
 
+
+router.delete("/:delete/:dogId", dogsController.deleteDog);
+
+// Route to update an existing dog
+router.put("/update/:dogId", dogsController.updateDog);
+
+// Route to retrieve dogs for a specific user
+router.get("/userDogs/:userId", dogsController.getUserDogs);
+
+// Route to retrieve dog by its id
+router.get("/:dogId", dogsController.getDog);
+
+
+
 // Route to upload an image for a specific dog
 router.post("/upload/:dogId", upload.single("file"), function (req, res) {
   console.log("Upload:", req.file);
@@ -35,15 +49,5 @@ router.post("/upload/:dogId", upload.single("file"), function (req, res) {
   });
 });
 
-router.delete("/:delete/:dogId", dogsController.deleteDog);
-
-// Route to update an existing dog
-router.put("/update/:dogId", dogsController.updateDog);
-
-// Route to retrieve dogs for a specific user
-router.get("/userDogs/:userId", dogsController.getUserDogs);
-
-// Route to retrieve dog by its id
-router.get("/:dogId", dogsController.getDog);
 
 export default router;

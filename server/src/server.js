@@ -5,14 +5,13 @@ import parksRouter from "./routes/parks.js";
 import authRouter from "./routes/auth.js";
 import followsRouter from "./routes/follows.js";
 import db from "./db.js";
-import path from 'path';
+import path from "path";
 import bodyParser from "body-parser";
 import { Server } from "socket.io";
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+const filePath = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filePath);
 
 const app = express();
 const io = new Server(5000);
@@ -31,18 +30,14 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.use("/dogs", dogsRouter);
 app.use("/users", userRouter);
 app.use("/parks", parksRouter);
 app.use("/auth", authRouter);
 app.use("/follow", followsRouter);
+app.use("/uploads", express.static(path.join(dirname, "../uploads")));
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-

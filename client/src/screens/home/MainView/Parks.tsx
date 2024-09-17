@@ -1,6 +1,5 @@
 import React, {
   useCallback,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -18,9 +17,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import ProfileNavigator from "../../../navigation/ProfileNavigator";
 import MyDogs from "../../dogs/MyDogs";
-import { io } from "socket.io-client";
-import { getUserLocation } from "../../../api/location";
-import { useStore } from "../../../store";
+
 
 const ParkItem: React.FC<{ item: Park }> = React.memo(({ item }) => {
   const { data: dogsInPark } = useDogsInPark(item.placeId);

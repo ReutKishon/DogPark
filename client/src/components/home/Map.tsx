@@ -3,6 +3,7 @@ import MapView, { Marker } from "react-native-maps";
 import { Animated, useAnimatedValue } from "react-native";
 import { useStore } from "../../store";
 import { Avatar } from "react-native-paper";
+import { PATH } from "@env";
 
 const Map = () => {
   const mapRef = useRef(null);
@@ -29,7 +30,7 @@ const Map = () => {
     Animated.parallel([
       Animated.timing(latitudeDelta, {
         toValue: 0.001, // Desired zoom level
-        duration: 3000, // Animation duration
+        duration: 3000, // Animation duration 3 seconds
         useNativeDriver: true,
       }),
       Animated.timing(longitudeDelta, {
@@ -75,7 +76,7 @@ const Map = () => {
               size={40}
               source={
                 dog.imageName
-                  ? { uri: "http://localhost:3000/uploads/" + dog.imageName }
+                  ? { uri: PATH+"/uploads/" + dog.imageName }
                   : { uri: null }
               }
             />
